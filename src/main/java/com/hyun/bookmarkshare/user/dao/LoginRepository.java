@@ -4,8 +4,10 @@ import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Optional;
+
 @Mapper
 public interface LoginRepository {
 
-    User findByLoginRequestDto(LoginRequestDto loginRequestDto);
+    Optional<User> findByLoginRequestDto(LoginRequestDto loginRequestDto);
 }

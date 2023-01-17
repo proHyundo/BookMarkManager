@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.hyun.bookmarkshare.user.dao.LoginMapper">
-    <select id="findByLoginRequestDto" resultType="User">
-        SELECT * FROM TUSER where ;
+<mapper namespace="com.hyun.bookmarkshare.user.dao.LoginRepository">
+    <select id="findByLoginRequestDto" resultType="com.hyun.bookmarkshare.user.entity.User" parameterType="com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto">
+        SELECT * FROM TUSERACCOUNT WHERE USER_EMAIL = #{email} AND USER_PWD = #{pwd} ;
     </select>
 
 

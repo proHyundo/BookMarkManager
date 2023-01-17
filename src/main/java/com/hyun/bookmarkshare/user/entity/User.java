@@ -10,7 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    String email;
-    String pwd;
+    String USER_EMAIL;
+    String USER_NAME;
+    String USER_STATE;
+    String USER_GRADE;
+    String USER_ROLE;
 
 }
