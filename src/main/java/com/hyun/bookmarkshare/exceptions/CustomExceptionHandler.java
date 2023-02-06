@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.exceptions;
 
+import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.user.controller.dto.LoginErrorResponseEntity;
 import com.hyun.bookmarkshare.user.exceptions.LoginInputValidateFailException;
 import com.hyun.bookmarkshare.user.exceptions.LoginProcessException;
@@ -26,6 +27,11 @@ public class CustomExceptionHandler {
     @ExceptionHandler(LoginProcessException.class)
     protected ResponseEntity<LoginErrorResponseEntity> handleLoginProcessException(LoginProcessException e){
         return LoginErrorResponseEntity.toResponseEntity(NOT_FOUND_USER);
+    }
+
+    @ExceptionHandler(FolderRequestException.class)
+    protected ResponseEntity<CustomErrorResponseEntity> handleFolderProcessException(FolderRequestException e){
+        return CustomErrorResponseEntity.toResponseEntity(e.getFolderExceptionErrorCode());
     }
 
 }

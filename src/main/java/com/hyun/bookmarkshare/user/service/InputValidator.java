@@ -13,11 +13,11 @@ public class InputValidator {
     public void emailMeter(String emailInput) {
 
         // 길이 조건 검증
-        if(emailInput == null || emailInput.isEmpty() || emailInput.length()<4 || emailInput.length()>20 ){
+        if(emailInput == null || emailInput.isEmpty() || emailInput.length()<6 || emailInput.length()>20 ){
             throw new LoginInputValidateFailException(LoginExceptionErrorCode.BAD_INPUT_LENGTH, "Bad Input Length");
         }
 
-        // 이메일 앞부분 문자열 검증
+        // 이메일 문자열 검증
 
         if( Pattern.matches("\\w+@\\w+\\.\\w+(\\.\\w+)?", emailInput) == false){
             throw new LoginInputValidateFailException(LoginExceptionErrorCode.BAD_INPUT_EMAIL, "Bad Input Email");
