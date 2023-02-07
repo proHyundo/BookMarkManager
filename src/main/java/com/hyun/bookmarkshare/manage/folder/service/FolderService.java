@@ -25,4 +25,6 @@ public interface FolderService {
     Folder createFolder(FolderRequestDto requestDto);
 
     Long deleteFolder(FolderRequestDto requestDto);
+
+    Folder updateFolder(FolderRequestDto requestDto);
 }

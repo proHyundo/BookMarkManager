@@ -26,7 +26,7 @@ public class FolderResponseEntity {
                 .body(FolderResponseEntity.builder()
                         .statusCode(HttpStatus.OK.value())
                         .statusDescription(HttpStatus.OK.name())
-                        .message("폴더 생성 완료")
+                        .message("폴더 생성 또는 수정 완료")
                         .folder(paramFolder)
                         .build());
     }

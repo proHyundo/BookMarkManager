@@ -21,7 +21,8 @@
     <select id="findByFolderSeq" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">
         SELECT *
         FROM TFOLDER
-        WHERE FOLDER_SEQ = #{folderSeq} AND FOLDER_DEL_FLAG = 'n';
+        WHERE FOLDER_SEQ = #{folderSeq} AND FOLDER_DEL_FLAG = 'n'
+        LIMIT 1;
     </select>
 
     <!--  INSERT  -->
@@ -74,6 +75,15 @@
         SET FOLDER_UPD_DATE = NOW(),
             FOLDER_DEL_FLAG = 'y'
             WHERE FOLDER_SEQ = #{folderSeq}
+    </update>
+
+    <update id="updateByFolderRequestDto" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto">
+        UPDATE TFOLDER
+        SET FOLDER_NAME = #{folderName},
+            FOLDER_CAPTION = #{folderCaption},
+            FOLDER_SCOPE = #{folderScope},
+            FOLDER_UPD_DATE = NOW()
+            WHERE FOLDER_SEQ = #{folderSeq} AND USER_SEQ = #{userId}
     </update>
 
 </mapper>

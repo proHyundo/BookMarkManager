@@ -48,15 +48,24 @@ public class FolderServiceImpl implements FolderService{
         // 검증 ( 폴더식별번호가 혹시 0은 아닌지, 삭제할 대상이 있는지)
         validator.check(requestDto);
 
-        // 폴더 삭제 전, 북마크 먼저 값 변경? 필요 없음. 폴더만 제어하면 됨.
-
-        // 삭제처리
         int deletedRows = repository.deleteByFolderSeq(requestDto.getFolderSeq());
 
-        // 삭제 안되면 예외발생
+        // Duplicate method Refactoring Possible. (insert, delete, update => 1)
         if(deletedRows != 1){
             throw new FolderRequestException(FolderExceptionErrorCode.DELETE_FOLDER_FAIL, "Delete Folder Fail");
         }
         return requestDto.getFolderSeq();
+    }
+
+    @Override
+    public Folder updateFolder(FolderRequestDto requestDto) {
+        validator.check(requestDto);
+
+        int updatedRows = repository.updateByFolderRequestDto(requestDto);
+        if(updatedRows != 1){
+            throw new FolderRequestException(FolderExceptionErrorCode.UPDATE_FOLDER_FAIL, "Update Folder Fail");
+        }
+        return repository.findByFolderSeq(requestDto.getFolderSeq())
+                .orElseThrow(()->new NoSuchElementException("Not Found Folder"));
     }
 }

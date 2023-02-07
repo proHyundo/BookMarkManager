@@ -15,9 +15,10 @@ public interface FolderRepository {
     List<Folder> findAllByUserId(String userId);
     Optional<Folder> findByFolderSeq(Long folderSeq);
 
-
     // INSERT
     Long saveNewFolder(FolderRequestDto requestDto);
-
     int deleteByFolderSeq(Long folderSeq);
+
+    // UPDATE
+    int updateByFolderRequestDto(FolderRequestDto requestDto);
 }
