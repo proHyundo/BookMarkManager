@@ -1,9 +1,7 @@
 package com.hyun.bookmarkshare.manage.folder.controller.dto;
 
-import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -12,22 +10,21 @@ import java.util.List;
 
 @Getter
 @Builder
-public class FolderListResponseEntity {
-
+public class FolderReorderResponseEntity {
     private final LocalDateTime timestamp = LocalDateTime.now();
     private final int statusCode;
     private final String statusDescription;
     private final String message;
-    private final List<Folder> folderList;
+    private final List<Long> folderParentSeqList;
 
-    public static ResponseEntity<FolderListResponseEntity> toResponseEntity(List<Folder> paramFolderList){
+    public static ResponseEntity<FolderReorderResponseEntity> toResponseEntity(List<Long> folderParentSeqListParam){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(FolderListResponseEntity.builder()
+                .body(FolderReorderResponseEntity.builder()
                         .statusCode(HttpStatus.OK.value())
                         .statusDescription(HttpStatus.OK.name())
-                        .message("폴더 리스트 관련 요청 성공")
-                        .folderList(paramFolderList)
+                        .message("폴더 순서 변경 요청 성공")
+                        .folderParentSeqList(folderParentSeqListParam)
                         .build());
     }
 }

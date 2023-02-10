@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 public class FolderRestController {
@@ -34,18 +37,25 @@ public class FolderRestController {
         return FolderSeqResponseEntity.toResponseEntity(folderService.deleteFolder(requestDto));
     }
 
-    // 특정 폴더명 수정
+    // 특정 폴더 정보 수정
     @PatchMapping("/manage/folder/update")
     public ResponseEntity<FolderResponseEntity> updateFolderRequest(@RequestBody FolderRequestDto requestDto){
         return FolderResponseEntity.toResponseEntity(folderService.updateFolder(requestDto));
     }
 
-    // 특정 부모폴더 내부의 순서 수정
-//    @PostMapping("/manage/folder/reorder")
-//    public ResponseEntity<FolderResponseEntity> reorderFolderRequest(FolderReOrderRequestDto requestDto){
-//        return null;
-//    }
-
-    // 폴더 순서 수정
+    // 특정 부모폴더들 내부의 순서 수정
+    @PostMapping("/manage/folder/reorder")
+    public ResponseEntity<FolderReorderResponseEntity> reorderFolderRequest(@RequestBody List<FolderReorderRequestDto> requestDtoList){
+        /*
+        * JSON DATA REQUEST FORMAT EXAMPLE
+        *
+            [
+                {"folderParentSeq": 1, "userId": 1, "folderSeqOrder":[3,14,15,16]},
+                {"folderParentSeq": 2, "userId": 1, "folderSeqOrder":[5,14,42,43]}
+            ]
+        *
+        * */
+        return FolderReorderResponseEntity.toResponseEntity(folderService.updateFolderOrder(requestDtoList));
+    }
 
 }

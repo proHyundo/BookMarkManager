@@ -86,4 +86,12 @@
             WHERE FOLDER_SEQ = #{folderSeq} AND USER_SEQ = #{userId}
     </update>
 
+    <update id="updateOrderByFolderRequestDto" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto">
+        <foreach collection="folderSeqOrder" item="sequence" index="i" separator=";">
+        UPDATE TFOLDER
+        SET FOLDER_ORDER = (#{i}+1)
+        WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq} AND FOLDER_SEQ = #{sequence}
+        </foreach>
+    </update>
+
 </mapper>

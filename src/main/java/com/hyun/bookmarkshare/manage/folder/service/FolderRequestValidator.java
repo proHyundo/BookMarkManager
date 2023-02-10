@@ -1,6 +1,7 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderListRequestDto;
+import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
@@ -9,6 +10,7 @@ import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -17,18 +19,22 @@ public class FolderRequestValidator {
 
     private final FolderRepository repository;
 
-    // Overload
+    /** #Overload */
     public void check(FolderListRequestDto requestDto){
-
 //        existUser();
         availableFolderSeq();
 //        haveAuthority(requestDto.getFolderParentSeq(), requestDto.getUserId());
     }
 
-    // Overload
+    /** #Overload */
     public void check(FolderRequestDto requestDto){
         haveAuthority(requestDto.getFolderSeq(), requestDto.getUserId());
         availableFolderSeq();
+    }
+
+    /** #Overload */
+    public void check(List<FolderReorderRequestDto> requestDtoList) {
+
     }
 
     // 해당 유저가 접근 권한이 있는지
@@ -43,7 +49,6 @@ public class FolderRequestValidator {
     // 존재하는 유저인지
     private void existUser() {
     }
-
 
 
 }

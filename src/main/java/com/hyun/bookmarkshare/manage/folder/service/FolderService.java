@@ -2,6 +2,7 @@ package com.hyun.bookmarkshare.manage.folder.service;
 
 import com.hyun.bookmarkshare.manage.common.controller.dto.UserRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderListRequestDto;
+import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import org.springframework.stereotype.Service;
@@ -27,4 +28,6 @@ public interface FolderService {
     Long deleteFolder(FolderRequestDto requestDto);
 
     Folder updateFolder(FolderRequestDto requestDto);
+
+    List<Long> updateFolderOrder(List<FolderReorderRequestDto> requestDtoList);
 }
