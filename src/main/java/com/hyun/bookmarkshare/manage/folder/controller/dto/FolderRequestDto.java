@@ -16,7 +16,7 @@ public class FolderRequestDto {
     private String folderName;
     private String folderCaption;
     private String folderScope;
-    private String folderParentSeq;
+    private Long folderParentSeq;
 
 
 }

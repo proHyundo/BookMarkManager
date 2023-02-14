@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class FolderRestController {
 
     // 특정 부모폴더 내부에 속한 폴더 List 조회
     @GetMapping("/manage/folder/list")
-    public ResponseEntity<FolderListResponseEntity> getFolderListRequest(@RequestBody FolderListRequestDto requestDto){
+    public ResponseEntity<FolderListResponseEntity> getFolderListRequest(@Valid @RequestBody FolderListRequestDto requestDto){
         return FolderListResponseEntity.toResponseEntity(folderService.findFolderList(requestDto));
     }
 

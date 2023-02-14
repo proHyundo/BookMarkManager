@@ -1,7 +1,7 @@
 package com.hyun.bookmarkshare.user.service;
 
 import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
-import com.hyun.bookmarkshare.user.dao.LoginRepository;
+import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.exceptions.LoginExceptionErrorCode;
 import com.hyun.bookmarkshare.user.exceptions.LoginInputValidateFailException;

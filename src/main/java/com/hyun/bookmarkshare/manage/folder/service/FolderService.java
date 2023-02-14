@@ -13,9 +13,9 @@ import java.util.List;
 @Service
 public interface FolderService {
 
-    /** @implSpec
-     * @param requestDto
-     * @return
+    /** 사용자의 특정 부모 폴더 내부에 속한 모든 폴더들을 조회한다.
+     * @param requestDto FolderListRequestDto
+     * @return list of folder
      * */
     List<Folder> findFolderList(FolderListRequestDto requestDto);
 
