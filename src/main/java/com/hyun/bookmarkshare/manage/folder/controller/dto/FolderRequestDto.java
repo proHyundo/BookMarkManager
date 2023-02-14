@@ -11,11 +11,12 @@ import lombok.ToString;
 @ToString
 public class FolderRequestDto {
 
+    private Long folderSeq;
     private Long userId;
     private String folderName;
     private String folderCaption;
     private String folderScope;
-    private String folderParentSeq;
-    private Long folderSeq;
+    private Long folderParentSeq;
+
 
 }

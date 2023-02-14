@@ -14,7 +14,7 @@ public enum FolderExceptionErrorCode {
     /* 409 CONFLICT */
     CREATE_FOLDER_FAIL(HttpStatus.CONFLICT, "Create Folder Fail"),
     DELETE_FOLDER_FAIL(HttpStatus.CONFLICT, "Delete Folder Fail"),
-
+    UPDATE_FOLDER_FAIL(HttpStatus.CONFLICT, "Update Folder Fail"),
     ;
 
     private final HttpStatus httpStatus;

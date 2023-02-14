@@ -12,12 +12,12 @@ import lombok.Setter;
 public class Folder {
 
     Long FOLDER_SEQ;
+    String USER_SEQ;
     Integer FOLDER_PARENT;
     String FOLDER_ORDER;
     String FOLDER_NAME;
     String FOLDER_CAPTION;
     String FOLDER_SCOPE;
-    String USER_SEQ;
 
     @Override
     public String toString() {
