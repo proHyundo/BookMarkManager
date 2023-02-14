@@ -1,33 +1,30 @@
 package com.hyun.bookmarkshare.manage.folder.controller.dto;
 
-import com.hyun.bookmarkshare.manage.folder.entity.Folder;
-import com.hyun.bookmarkshare.user.entity.User;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
-public class FolderResponseEntity {
-
+public class FolderReorderResponseEntity {
     private final LocalDateTime timestamp = LocalDateTime.now();
     private final int statusCode;
     private final String statusDescription;
     private final String message;
-    private final Folder folder;
+    private final List<Long> folderParentSeqList;
 
-    public static ResponseEntity<FolderResponseEntity> toResponseEntity(Folder paramFolder){
+    public static ResponseEntity<FolderReorderResponseEntity> toResponseEntity(List<Long> folderParentSeqListParam){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(FolderResponseEntity.builder()
+                .body(FolderReorderResponseEntity.builder()
                         .statusCode(HttpStatus.OK.value())
                         .statusDescription(HttpStatus.OK.name())
-                        .message("폴더 생성 또는 수정 완료")
-                        .folder(paramFolder)
+                        .message("폴더 순서 변경 요청 성공")
+                        .folderParentSeqList(folderParentSeqListParam)
                         .build());
     }
 }

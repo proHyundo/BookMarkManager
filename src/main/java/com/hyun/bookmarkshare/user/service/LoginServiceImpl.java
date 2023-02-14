@@ -1,7 +1,7 @@
 package com.hyun.bookmarkshare.user.service;
 
 import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
-import com.hyun.bookmarkshare.user.dao.LoginRepository;
+import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.exceptions.LoginExceptionErrorCode;
 import com.hyun.bookmarkshare.user.exceptions.LoginProcessException;
@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService{
 
-    private final LoginRepository loginRepository;
+    private final UserRepository userRepository;
     private final InputValidator validator;
     private final PwdEncoder pwdEncoder;
 
@@ -33,7 +33,7 @@ public class LoginServiceImpl implements LoginService{
         }
 
         // 3. DB select & return User Entity
-        return loginRepository.findByLoginRequestDto(loginRequestDto)
+        return userRepository.findByLoginRequestDto(loginRequestDto)
                 .orElseThrow(()-> new LoginProcessException(LoginExceptionErrorCode.NOT_FOUND_USER));
     }
 

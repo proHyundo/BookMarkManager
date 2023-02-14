@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class FolderListRequestDto {
 
-    private String userId;
-    private String folderRootSeq;
-    private String folderParentSeq;
-    // 검증이 필요할텐데..
+    @Positive
+    private Long userId;
+    //private Long folderRootSeq; // rootSeq 는 왜 필요했더라..ㅋ?
+    @Positive
+    private Long folderParentSeq;
 }

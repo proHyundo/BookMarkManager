@@ -20,7 +20,6 @@ public class CustomExceptionHandler {
     protected ResponseEntity<LoginErrorResponseEntity> handleLoginInputValidateFailException(LoginInputValidateFailException e){
         log.info("LoginInputValidateFailException getMessage() >> "+e.getMessage());
         log.info("LoginInputValidateFailException getLoginExceptionErrorCode() >> "+e.getLoginExceptionErrorCode());
-
         return LoginErrorResponseEntity.toResponseEntity(e.getLoginExceptionErrorCode());
     }
 
@@ -31,6 +30,8 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(FolderRequestException.class)
     protected ResponseEntity<CustomErrorResponseEntity> handleFolderProcessException(FolderRequestException e){
+        log.info("FolderRequestException getMessage() >> "+e.getMessage());
+        log.info("FolderRequestException getFolderExceptionErrorCode() >> "+e.getFolderExceptionErrorCode());
         return CustomErrorResponseEntity.toResponseEntity(e.getFolderExceptionErrorCode());
     }
 

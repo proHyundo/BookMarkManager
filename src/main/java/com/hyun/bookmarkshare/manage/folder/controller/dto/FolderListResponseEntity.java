@@ -26,7 +26,7 @@ public class FolderListResponseEntity {
                 .body(FolderListResponseEntity.builder()
                         .statusCode(HttpStatus.OK.value())
                         .statusDescription(HttpStatus.OK.name())
-                        .message("폴더 리스트 조회 성공")
+                        .message("폴더 리스트 관련 요청 성공")
                         .folderList(paramFolderList)
                         .build());
     }
