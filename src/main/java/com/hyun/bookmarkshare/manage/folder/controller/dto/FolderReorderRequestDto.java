@@ -2,6 +2,9 @@ package com.hyun.bookmarkshare.manage.folder.controller.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Getter
@@ -10,7 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class FolderReorderRequestDto {
-    Long folderParentSeq;
-    Long userId;
-    List<Integer> folderSeqOrder;
+
+    @NotBlank
+    @Positive
+    private Long userId;
+
+    @NotBlank
+    @PositiveOrZero
+    private Long folderParentSeq;
+
+    @NotBlank
+    private List<Integer> folderSeqOrder;
 }

@@ -27,26 +27,26 @@ public class FolderRestController {
 
     // 특정 부모폴더 내부에 신규 폴더 생성
     @PostMapping("/manage/folder/addFolder")
-    public ResponseEntity<FolderResponseEntity> addFolderRequest(@RequestBody FolderRequestDto requestDto){
+    public ResponseEntity<FolderResponseEntity> addFolderRequest(@Valid @RequestBody FolderCreateRequestDto requestDto){
         Folder resultFolder = folderService.createFolder(requestDto);
         return FolderResponseEntity.toResponseEntity(resultFolder);
     }
 
     // 특정 폴더 삭제
     @DeleteMapping("/manage/folder/delete")
-    public ResponseEntity<FolderSeqResponseEntity> deleteFolderRequest(@RequestBody FolderRequestDto requestDto){
+    public ResponseEntity<FolderSeqResponseEntity> deleteFolderRequest(@Valid @RequestBody FolderRequestDto requestDto){
         return FolderSeqResponseEntity.toResponseEntity(folderService.deleteFolder(requestDto));
     }
 
     // 특정 폴더 정보 수정
     @PatchMapping("/manage/folder/update")
-    public ResponseEntity<FolderResponseEntity> updateFolderRequest(@RequestBody FolderRequestDto requestDto){
+    public ResponseEntity<FolderResponseEntity> updateFolderRequest(@Valid @RequestBody FolderRequestDto requestDto){
         return FolderResponseEntity.toResponseEntity(folderService.updateFolder(requestDto));
     }
 
     // 특정 부모폴더들 내부의 순서 수정
     @PostMapping("/manage/folder/reorder")
-    public ResponseEntity<FolderReorderResponseEntity> reorderFolderRequest(@RequestBody List<FolderReorderRequestDto> requestDtoList){
+    public ResponseEntity<FolderReorderResponseEntity> reorderFolderRequest(@Valid @RequestBody List<FolderReorderRequestDto> requestDtoList){
         /*
         * JSON DATA REQUEST FORMAT EXAMPLE
         *
