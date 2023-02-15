@@ -1,6 +1,7 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
 import com.hyun.bookmarkshare.manage.common.controller.dto.UserRequestDto;
+import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderListRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
@@ -29,7 +30,7 @@ public class FolderServiceImpl implements FolderService{
     }
 
     @Override
-    public Folder createFolder(FolderRequestDto requestDto) {
+    public Folder createFolder(FolderCreateRequestDto requestDto) {
         // 검증 ( 폴더명, 폴더레벨, 공유범위) - 미 충족 시 예외
         int insertedRows = repository.saveNewFolder(requestDto);
         validateSqlUpdatedRows(insertedRows);
