@@ -5,6 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,10 +17,19 @@ import lombok.ToString;
 public class FolderRequestDto {
 
     private Long folderSeq;
+
+    @NotBlank
+    @Positive
     private Long userId;
+
     private String folderName;
     private String folderCaption;
+
+    @Pattern(regexp = "[pou]")
     private String folderScope;
+
+    @NotBlank
+    @PositiveOrZero
     private Long folderParentSeq;
 
 
