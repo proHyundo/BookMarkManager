@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.manage.folder.dao;
 
+import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
@@ -24,7 +25,7 @@ public interface FolderRepository {
     Optional<Folder> findByFolderSeq(Long folderSeq);
 
     // INSERT
-    int saveNewFolder(FolderRequestDto requestDto);
+    int saveNewFolder(FolderCreateRequestDto requestDto);
     int deleteByFolderSeq(Long folderSeq);
 
     // UPDATE

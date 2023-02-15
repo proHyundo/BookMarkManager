@@ -28,7 +28,7 @@
     <!--  INSERT  -->
 
     <!--    1) 정상 동작 확인 완료 -->
-    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto" useGeneratedKeys="true" keyProperty="folderSeq">
+    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto" useGeneratedKeys="true" keyProperty="folderSeq">
         INSERT
         INTO TFOLDER(USER_SEQ, FOLDER_ORDER, FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT)
         VALUES (#{userId}, (
