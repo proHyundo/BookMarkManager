@@ -25,7 +25,7 @@ public class FolderServiceImpl implements FolderService{
 
     @Override
     public List<Folder> findFolderList(FolderListRequestDto requestDto) {
-        validator.check(requestDto);
+//        validator.check(requestDto);
         return repository.findAllByUserIdAndParentSeq(requestDto.getUserId(), requestDto.getFolderParentSeq());
     }
 
