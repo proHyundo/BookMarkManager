@@ -26,7 +26,6 @@ public class FolderCreateRequestDto {
     @Size(min = 1, max = 50)
     private String folderName;
 
-
     private String folderCaption;
 
     @Pattern(regexp = "[pou]")
