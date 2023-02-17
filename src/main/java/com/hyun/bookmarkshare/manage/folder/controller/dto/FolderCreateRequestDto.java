@@ -11,15 +11,19 @@ import javax.validation.constraints.*;
 @Builder
 public class FolderCreateRequestDto {
 
-    @NotBlank
+    @Null
+    private Long folderSeq;
+
+    @NotNull
     @Positive
     private Long userId;
 
-    @NotBlank
+    @NotNull
     @PositiveOrZero
     private Long folderParentSeq;
 
-    @Size(min = 0, max = 50)
+    @Pattern(regexp = "[A-Za-z0-9_ ]{1,50}")
+    @Size(min = 1, max = 50)
     private String folderName;
 
     private String folderCaption;
