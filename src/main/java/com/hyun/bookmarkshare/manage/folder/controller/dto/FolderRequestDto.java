@@ -21,6 +21,7 @@ public class FolderRequestDto {
     @Positive
     private Long userId;
 
+    @NotBlank
     @Pattern(regexp = "[A-Za-z0-9_ ]{1,50}")
     @Size(min = 1, max = 50)
     private String folderName;
