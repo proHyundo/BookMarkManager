@@ -1,16 +1,14 @@
 package com.hyun.bookmarkshare.manage.folder.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
+@Builder
+@ToString
 @Getter
 @Setter
 @AllArgsConstructor
-@ToString
 public class FolderRequestDto {
 
     @NotNull
