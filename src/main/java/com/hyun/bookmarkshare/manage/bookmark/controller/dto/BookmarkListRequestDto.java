@@ -3,7 +3,7 @@ package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Positive;
 
 @ToString
 @Builder
@@ -13,9 +13,10 @@ import javax.validation.constraints.PositiveOrZero;
 public class BookmarkListRequestDto {
 
     @NotNull
+    @Positive
     private Long userId;
 
     @NotNull
-    @PositiveOrZero
+    @Positive
     private Long folderParentSeq;
 }
