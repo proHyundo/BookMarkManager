@@ -15,7 +15,7 @@
         SELECT *
         FROM TFOLDER
         WHERE USER_SEQ = #{userId} AND FOLDER_DEL_FLAG = 'n'
-        ORDER BY FOLDER_LEVEL, FOLDER_ORDER;
+        ORDER BY FOLDER_ORDER;
     </select>
 
     <select id="findByFolderSeq" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">

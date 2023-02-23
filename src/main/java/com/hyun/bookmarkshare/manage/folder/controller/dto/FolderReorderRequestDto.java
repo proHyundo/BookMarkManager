@@ -5,11 +5,12 @@ import lombok.*;
 import javax.validation.constraints.*;
 import java.util.List;
 
+@ToString
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class FolderReorderRequestDto {
 
     @NotNull
