@@ -6,7 +6,6 @@ import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.lang.annotation.Documented;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +25,9 @@ public interface FolderRepository {
 
     // INSERT
     int saveNewFolder(FolderCreateRequestDto requestDto);
-    int deleteByFolderSeq(Long folderSeq);
 
     // UPDATE
+    int deleteByFolderSeq(Long folderSeq);
     int updateByFolderRequestDto(FolderRequestDto requestDto);
     int updateOrderByFolderRequestDto(FolderReorderRequestDto folderReorderRequestDto);
 }
