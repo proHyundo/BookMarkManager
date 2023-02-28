@@ -1,9 +1,12 @@
 package com.hyun.bookmarkshare.user.service;
 
 import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
+import org.springframework.stereotype.Service;
 
-public interface LoginService {
+@Service
+public interface UserService {
 
     /**
      * @implSpec Login Request Input data Validation & call DB Sql to find User with Id and Pwd.
@@ -12,5 +15,7 @@ public interface LoginService {
      * */
     User loginProcess(LoginRequestDto loginRequestDto);
 
+    User signUp(SignUpRequestDto signUpRequestDto);
 
+    void logoutProcess(String token, String refreshToken);
 }
