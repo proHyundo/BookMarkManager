@@ -35,7 +35,7 @@ class FolderListRequestDtoTest {
         log.info("ValidatorFactory 자원 반납");
     }
 
-    @DisplayName("FolderCreateRequestDto validation - 성공 케이스")
+    @DisplayName("FolderListRequestDto validation - 성공 케이스")
     @MethodSource("paramsForFolderListRequestDto_success")
     @ParameterizedTest
     void folderListRequestDto_success(Long userId, Long folderParentSeq){
@@ -56,7 +56,7 @@ class FolderListRequestDtoTest {
     }
 
 
-    @DisplayName("FolderCreateRequestDto validation - 실패 케이스")
+    @DisplayName("FolderListRequestDto validation - 실패 케이스")
     @MethodSource("paramsForFolderListRequestDto_fail")
     @ParameterizedTest
     void folderListRequestDto_fail(Long userId, Long folderParentSeq){
