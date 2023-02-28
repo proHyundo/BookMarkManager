@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyun.bookmarkshare.manage.folder.dao.FolderRepository">
+
+    <select id="findAllByUserIdAndFolderParentSeq"
+            parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkListRequestDto"
+            resultType="com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark">
+        SELECT *
+        FROM TBOOKMARK
+        WHERE USER_SEQ = {userId} AND FOLDER_SEQ = {folderParentSeq} AND BOOK_DEL_FLAG= 'n'
+        ORDER BY BOOK_ORDER;
+    </select>
+
+</mapper>
