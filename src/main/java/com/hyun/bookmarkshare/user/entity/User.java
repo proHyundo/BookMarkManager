@@ -10,10 +10,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+
+    Long USER_SEQ;
     String USER_EMAIL;
     String USER_NAME;
     String USER_STATE;
     String USER_GRADE;
     String USER_ROLE;
-
+    String USER_ACCESS_TOKEN;
+    String USER_FRESH_TOKEN;
 }
