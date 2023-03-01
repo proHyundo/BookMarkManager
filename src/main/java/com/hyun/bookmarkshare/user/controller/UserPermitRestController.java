@@ -17,27 +17,21 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserPermitRestController {
 
+    //signup", "/login", "/users/refresh
     private final UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseEntity> loginRequest(@RequestBody @Valid LoginRequestDto loginRequestDto){
-        User user = userService.loginProcess(loginRequestDto);
-        return LoginResponseEntity.toResponseEntity(user);
+        return LoginResponseEntity.toResponseEntity(userService.loginProcess(loginRequestDto));
     }
 
-    @DeleteMapping("/logout")
-    public ResponseEntity logoutRequest(@RequestHeader("Authorization") String token, @RequestBody String refreshToken) {
-        // token repository 에서 refresh Token 에 해당하는 값을 삭제한다.
-        userService.logoutProcess(token, refreshToken);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponseEntity> signUpRequest(@RequestBody @Valid SignUpRequestDto signUpRequestDto){
         return SignUpResponseEntity.toResponseEntity(userService.signUp(signUpRequestDto));
     }
 
-    @PostMapping("/refresh/token")
+    @PostMapping("/extension/login")
     public ResponseEntity refreshTokenRequest(){
         return null;
     }
