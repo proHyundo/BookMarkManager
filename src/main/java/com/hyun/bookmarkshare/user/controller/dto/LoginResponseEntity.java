@@ -34,7 +34,7 @@ public class LoginResponseEntity {
                         .userEmail(paramUser.getUSER_EMAIL())
                         .userRole(paramUser.getUSER_ROLE())
                         .userAccessToken(paramUser.getUSER_ACCESS_TOKEN())
-                        .userRefreshToken(paramUser.getUSER_FRESH_TOKEN())
+                        .userRefreshToken(paramUser.getUSER_REFRESH_TOKEN())
                         .build());
     }
 

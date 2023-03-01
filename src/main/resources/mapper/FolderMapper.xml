@@ -28,12 +28,14 @@
     <!--  INSERT  -->
 
     <!--    1) 정상 동작 확인 완료 -->
-    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto" useGeneratedKeys="true" keyProperty="folderSeq">
+    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto"
+                                useGeneratedKeys="true" keyProperty="folderSeq">
         INSERT
         INTO TFOLDER(USER_SEQ, FOLDER_ORDER, FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT)
-        VALUES (#{userId}, (
-            SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq}),
-                #{folderName}, #{folderCaption}, #{folderScope}, #{folderParentSeq});
+        VALUES (#{userId},
+                (SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq}),
+                #{folderName}, #{folderCaption}, #{folderScope}, #{folderParentSeq}
+                );
     </insert>
 
 <!--    2) 정상 동작 확인 완료 -->

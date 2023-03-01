@@ -15,7 +15,9 @@ public enum LoginExceptionErrorCode {
 
     /* 404 NOTFOUND */
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "Wrong Id or Pwd"),
-    ;
+
+    /* 409 CONFLICT*/
+    INSERT_TOKEN_ERROR(HttpStatus.CONFLICT, "Bad Token");
 
     private final HttpStatus httpStatus;
     private final String message;

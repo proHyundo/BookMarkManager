@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyun.bookmarkshare.user.dao.UserRepository">
+
+    <!--  SELECT  -->
+
+    <select id="findByLoginRequestDto" resultType="com.hyun.bookmarkshare.user.entity.User"
+                                    parameterType="com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto">
+        SELECT * FROM TUSERACCOUNT WHERE USER_EMAIL = #{email} AND USER_PWD = #{pwd} ;
+    </select>
+
+    <select id="findByUserId" resultType="com.hyun.bookmarkshare.user.entity.User">
+        SELECT * FROM TUSERACCOUNT WHERE USER_SEQ = #{userId} AND USER_STATE = 'n' ;
+    </select>
+
+    <!--  INSERT  -->
+    <select id="findByRefreshToken" resultType="long">
+        SELECT USER_SEQ FROM TREFRESHTOKEN WHERE REFRESH_TOKEN = #{refreshToken}
+    </select>
+
+    <insert id="saveUserRefreshToken" parameterType="com.hyun.bookmarkshare.user.entity.User">
+        INSERT
+        INTO TREFRESHTOKEN(USER_SEQ, REFRESH_TOKEN)
+        VALUES(#{userSeq}, #{refreshToken});
+    </insert>
+
+    <delete id="deleteRefreshTokenByUserSeq" parameterType="long">
+        DELETE FROM TREFRESHTOKEN WHERE USER_SEQ = #{userSeq}
+    </delete>
+
+
+
+
+</mapper>
