@@ -17,5 +17,7 @@ public interface UserService {
 
     User signUp(SignUpRequestDto signUpRequestDto);
 
-    void logoutProcess(String token, String refreshToken);
+    void logoutProcess(String refreshToken);
+
+    void findRefreshToken(String refreshToken);
 }

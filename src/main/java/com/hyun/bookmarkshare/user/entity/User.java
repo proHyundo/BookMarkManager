@@ -18,5 +18,5 @@ public class User {
     String USER_GRADE;
     String USER_ROLE;
     String USER_ACCESS_TOKEN;
-    String USER_FRESH_TOKEN;
+    String USER_REFRESH_TOKEN;
 }
