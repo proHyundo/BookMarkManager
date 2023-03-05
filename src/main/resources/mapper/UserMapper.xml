@@ -14,10 +14,14 @@
         SELECT * FROM TUSERACCOUNT WHERE USER_SEQ = #{userId} AND USER_STATE = 'n' ;
     </select>
 
-    <!--  INSERT  -->
-    <select id="findByRefreshToken" resultType="long">
-        SELECT USER_SEQ FROM TREFRESHTOKEN WHERE REFRESH_TOKEN = #{refreshToken}
+    <select id="findByRefreshToken" parameterType="string"
+                                        resultType="com.hyun.bookmarkshare.user.entity.UserRefreshToken">
+        SELECT *
+        FROM TREFRESHTOKEN
+        WHERE REFRESH_TOKEN = #{refreshToken}
     </select>
+
+    <!--  INSERT  -->
 
     <insert id="saveUserRefreshToken" parameterType="com.hyun.bookmarkshare.user.entity.User">
         INSERT
