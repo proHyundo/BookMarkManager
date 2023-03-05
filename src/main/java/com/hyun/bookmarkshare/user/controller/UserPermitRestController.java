@@ -1,9 +1,6 @@
 package com.hyun.bookmarkshare.user.controller;
 
-import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
-import com.hyun.bookmarkshare.user.controller.dto.LoginResponseEntity;
-import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
-import com.hyun.bookmarkshare.user.controller.dto.SignUpResponseEntity;
+import com.hyun.bookmarkshare.user.controller.dto.*;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 
+//signup", "/login", "/refresh/login-state"
 @RestController
 @RequiredArgsConstructor
 public class UserPermitRestController {
 
-    //signup", "/login", "/users/refresh
     private final UserService userService;
 
     @PostMapping("/login")
@@ -25,15 +23,19 @@ public class UserPermitRestController {
         return LoginResponseEntity.toResponseEntity(userService.loginProcess(loginRequestDto));
     }
 
-
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponseEntity> signUpRequest(@RequestBody @Valid SignUpRequestDto signUpRequestDto){
         return SignUpResponseEntity.toResponseEntity(userService.signUp(signUpRequestDto));
     }
 
-    @PostMapping("/extension/login")
-    public ResponseEntity refreshTokenRequest(){
-        return null;
+    /*
+    1. 전달받은 유저의 아이디로 유저가 존재하는지 확인한다.
+    2. RefreshToken이 유효한지 체크한다.
+    3. AccessToken을 발급하여 기존 RefreshToken과 함께 응답한다.
+     */
+    @PostMapping("/refresh/login-state")
+    public ResponseEntity<RefreshResponseEntity> refreshRequest(@RequestBody HashMap<String, String> map) {
+        return RefreshResponseEntity.toResponseEntity(userService.extendLoginState(map.get("refreshToken")));
     }
 
 

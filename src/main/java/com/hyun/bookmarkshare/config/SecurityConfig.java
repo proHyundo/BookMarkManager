@@ -47,7 +47,7 @@ public class SecurityConfig {
             .httpBasic().disable()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .mvcMatchers("/signup", "/login", "/extension/login").permitAll()
+            .mvcMatchers("/signup", "/login", "/refresh/login-state").permitAll()
             .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(POST, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(DELETE, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
@@ -71,7 +71,7 @@ public class SecurityConfig {
 //                .httpBasic().disable() // Http basic Auth 기반으로 로그인 인증창이 뜸. disable 시에 인증창 뜨지 않음.
 //                .authorizeRequests() // HttpServletRequest를 사용하는 요청들에 대한 접근제한을 설정
 //                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // Preflight 요청은 허용한다. https://velog.io/@xonic789/CORS-preflight-요청에-대해-401-에러-해결Spring-security-config
-//                .mvcMatchers( "/signup", "/login", "/users/refresh").permitAll() // 해당 요청들은 인증 없이 접근 허용
+//                .mvcMatchers( "/signup", "/login", "/refresh/login-state").permitAll() // 해당 요청들은 인증 없이 접근 허용
 ////                .mvcMatchers(GET, "/**").permitAll()
 //                .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN") // 다수의 role 이름을 받아들여서 access 시킨다.
 //                .mvcMatchers(POST,"/**").hasAnyRole("USER", "MANAGER", "ADMIN") // 즉, 모든 URL 은 인증 후 해당 권한을 가진 사용자만 접근 허용
