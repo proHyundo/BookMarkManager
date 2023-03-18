@@ -19,7 +19,7 @@ public class JwtTokenizer {
     private final byte[] accessSecret;
     private final byte[] refreshSecret;
 
-    public final static Long ACCESS_TOKEN_EXPIRE_COUNT = 30 * 60 * 1000L; // 30 minutes
+    public final static Long ACCESS_TOKEN_EXPIRE_COUNT = 1 * 60 * 1000L; // 30 minutes
     public final static Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L; // 7 days
 
     // properties 에 선언한 값을 @Value 로 가져올 수 있다.

@@ -16,4 +16,51 @@
 </div>
 <script src="common/scripts/indexScript.js"></script>
 </body>
+<script>
+    const accessToken = window.localStorage.getItem("userData.accessToken");
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch('/folder/list', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            if (error.message === 'TokenExpiredError') {
+                const refreshedToken = await refreshAccessToken();
+                const response = await fetch('/folder/list', {
+                    headers: {
+                        'Authorization': `Bearer ${refreshedToken}`
+                    }
+                });
+                const data = await response.json();
+                console.log(data);
+            } else {
+                console.error(error);
+            }
+        }
+    };
+
+    const refreshAccessToken = async () => {
+        try {
+            const response = await fetch('/refresh', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            const data = await response.json();
+            return data.accessToken;
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const button = document.getElementById('button');
+    button.addEventListener('click', fetchData);
+
+</script>
 </html>

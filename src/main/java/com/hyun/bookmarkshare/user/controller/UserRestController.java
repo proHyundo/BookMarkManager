@@ -30,14 +30,7 @@ public class UserRestController {
         return LogoutResponseEntity.toResponseEntity(HttpStatus.OK);
     }
 
-    /*
-    1. 전달받은 유저의 아이디로 유저가 존재하는지 확인한다.
-    2. RefreshToken이 유효한지 체크한다.
-    3. AccessToken을 발급하여 기존 RefreshToken과 함께 응답한다.
-     */
-    @PostMapping("/extension/login")
-    public ResponseEntity<RefreshResponseEntity> requestRefresh(@RequestBody String refreshTokenDto) {
-        return null;
-    }
+
+
 
 }

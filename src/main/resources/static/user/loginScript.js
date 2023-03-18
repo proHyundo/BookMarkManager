@@ -27,7 +27,7 @@ window.onload = () => {
       }).then((data) => {
          if(data.statusCode == '200'){
             // 세션스토리지 저장
-            window.sessionStorage.setItem("userSessionData", data);
+            window.localStorage.setItem("userData", data);
             alert('로그인 성공');
             // 홈페이지로 이동
             location.href="/";
@@ -36,7 +36,6 @@ window.onload = () => {
          }else if(data.statusCode == '404'){
             alert('ID 또는 PWD 가 올바르지 않습니다.');
          }
-         // json 에서 값 꺼내서 session Storage 에 저장?
       })
    });
 
