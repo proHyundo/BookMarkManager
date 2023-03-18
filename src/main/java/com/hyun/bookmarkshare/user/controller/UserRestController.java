@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.HashMap;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,14 +20,15 @@ public class UserRestController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<LogoutResponseEntity> logoutRequest(@RequestHeader("Authorization") String token,
-                                                              @RequestBody @NotEmpty String refreshToken,
+                                                              @RequestBody @NotEmpty HashMap<String, String> map,
                                                               BindingResult bindingResult) {
+
         if(bindingResult.hasErrors()){
             return LogoutResponseEntity.toResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
         // token repository 에서 refresh Token 에 해당하는 값을 삭제한다.
-        userService.logoutProcess(refreshToken);
+        userService.logoutProcess(map.get("refreshToken"));
         return LogoutResponseEntity.toResponseEntity(HttpStatus.OK);
     }
 
