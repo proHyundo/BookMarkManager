@@ -2,6 +2,7 @@ package com.hyun.bookmarkshare.user.dao;
 
 import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
+import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
@@ -17,7 +18,7 @@ public interface UserRepository {
     /* TREFRESHTOKEN TABLE */
     int saveUserRefreshToken(Long userSeq, String refreshToken);
 
-    Optional<Long> findByRefreshToken(String refreshToken);
+    Optional<UserRefreshToken> findByRefreshToken(String refreshToken);
 
     int deleteRefreshTokenByUserSeq(Long userSeq);
 }

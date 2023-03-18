@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.user.service;
 
+import com.hyun.bookmarkshare.user.controller.dto.LoginRefreshResponseDto;
 import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
@@ -19,5 +20,5 @@ public interface UserService {
 
     void logoutProcess(String refreshToken);
 
-    void findRefreshToken(String refreshToken);
+    LoginRefreshResponseDto extendLoginState(String refreshToken);
 }
