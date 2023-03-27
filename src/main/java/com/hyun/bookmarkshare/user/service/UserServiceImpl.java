@@ -40,7 +40,10 @@ public class UserServiceImpl implements UserService{
          *  will depreciate as switch to security pwd encode
          *  */
         try {
+            System.out.println("1. loginRequestDto = " + loginRequestDto.getPwd());
             loginRequestDto.setPwd(pwdEncoder.encode(loginRequestDto.getPwd()));
+            System.out.println("2. loginRequestDto = " + loginRequestDto.getPwd());
+
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -61,7 +64,7 @@ public class UserServiceImpl implements UserService{
                 List.of(resultUser.getUSER_ROLE()))
         );
 
-        // 3. refresh token 저장
+        // 3. refresh token DB 화이트리스트 저장
         int insertedRows = userRepository.saveUserRefreshToken(resultUser.getUSER_SEQ(),
                                                                 resultUser.getUSER_REFRESH_TOKEN());
         if(insertedRows != 1){
