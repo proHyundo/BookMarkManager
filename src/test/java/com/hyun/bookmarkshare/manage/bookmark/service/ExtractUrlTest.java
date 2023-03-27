@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ExtractUrlTest {
 
-    @DisplayName("url 분리")
+    @DisplayName("url 구조에 따른 분리")
     @Test
     void extractUrlPattern(){
         // given
