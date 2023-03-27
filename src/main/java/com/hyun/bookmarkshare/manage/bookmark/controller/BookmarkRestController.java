@@ -1,13 +1,10 @@
 package com.hyun.bookmarkshare.manage.bookmark.controller;
 
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkListRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkListResponseEntity;
+import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -22,5 +19,24 @@ public class BookmarkRestController {
         return BookmarkListResponseEntity.toBookmarkListResponseEntity(bookmarkService.getBookList(bookmarkListRequestDto));
     }
 
+    @GetMapping("/manage/bookmark")
+    public ResponseEntity<BookmarkResponseEntity> getBookmarkRequest(@RequestBody @Valid BookmarkRequestDto bookmarkRequestDto){
+        return BookmarkResponseEntity.toBookmarkResponseEntity(bookmarkService.getBookmark(bookmarkRequestDto));
+    }
+
+    @PostMapping("/manage/bookmark")
+    public ResponseEntity<BookmarkResponseEntity> addBookmarkRequest(@RequestBody @Valid BookmarkAddRequestDto bookmarkAddRequestDto){
+        return BookmarkResponseEntity.toBookmarkResponseEntity(bookmarkService.createBookmark(bookmarkAddRequestDto));
+    }
+
+    @PatchMapping("/manage/bookmark")
+    public ResponseEntity<BookmarkResponseEntity> updateBookmarkRequest(@RequestBody @Valid BookmarkUpdateRequestDto bookmarkUpdateRequestDto){
+        return BookmarkResponseEntity.toBookmarkResponseEntity(bookmarkService.updateBookmark(bookmarkUpdateRequestDto));
+    }
+
+    @DeleteMapping("/manage/bookmark")
+    public ResponseEntity<BookmarkResponseEntity> deleteBookmarkRequest(@RequestBody @Valid BookmarkRequestDto bookmarkRequestDto){
+        return BookmarkResponseEntity.toBookmarkResponseEntity(bookmarkService.deleteBookmark(bookmarkRequestDto));
+    }
 
 }
