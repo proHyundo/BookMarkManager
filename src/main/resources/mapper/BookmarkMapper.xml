@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hyun.bookmarkshare.manage.folder.dao.FolderRepository">
+<mapper namespace="com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository">
 
     <select id="findAllByUserIdAndFolderParentSeq"
             parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkListRequestDto"
             resultType="com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark">
         SELECT *
         FROM TBOOKMARK
-        WHERE USER_SEQ = {userId} AND FOLDER_SEQ = {folderParentSeq} AND BOOK_DEL_FLAG= 'n'
+        WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderParentSeq} AND BOOK_DEL_FLAG = 'n'
         ORDER BY BOOK_ORDER;
     </select>
+
+    <select id="findByUserIdAndBookmarkSeq"
+            parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkRequestDto"
+            resultType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto">
+        SELECT BOOK_SEQ as bookmarkSeq, BOOK_CAPTION as bookmarkCaption, BOOK_URL as bookmarkUrl
+        FROM TBOOKMARK
+        WHERE USER_SEQ = #{userId} AND BOOK_SEQ = #{bookmarkSeq} AND BOOK_DEL_FLAG = 'n';
+    </select>
+
+    <insert id="saveBookmark" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkAddRequestDto">
+        INSERT INTO TBOOKMARK(USER_SEQ, FOLDER_SEQ, BOOK_URL, BOOK_CAPTION)
+        VALUES(#{userId}, #{folderSeq}, #{bookmarkUrl}, #{bookmarkCaption});
+    </insert>
+
+    <update id="updateByBookmarkUpdateRequestDto">
+        DELETE FROM TBOOKMARK
+        WHERE USER_SEQ = #{userId} AND BOOKMARK_SEQ = #{bookmarkSeq}
+    </update>
+
+    <delete id="deleteByUserIdAndBookmarkSeq">
+
+    </delete>
 
 </mapper>

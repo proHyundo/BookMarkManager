@@ -18,7 +18,9 @@ public class UserRestController {
 
     private final UserService userService;
 
-    @DeleteMapping("/logout")
+    // TODO localhost:9090/logout/ 으로 요청해야 받아지는 문제 발생.
+    // "/user/logout/" 으로 변경 시도.
+    @DeleteMapping("/user/logout")
     public ResponseEntity<LogoutResponseEntity> logoutRequest(@RequestHeader("Authorization") String token,
                                                               @RequestBody @NotEmpty HashMap<String, String> map,
                                                               BindingResult bindingResult) {
