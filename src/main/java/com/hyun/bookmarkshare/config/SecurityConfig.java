@@ -47,7 +47,8 @@ public class SecurityConfig {
             .httpBasic().disable()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .mvcMatchers("/signup", "/login", "/refresh/login-state").permitAll()
+            .mvcMatchers("/", "/signup", "/login", "/refresh/login-state",
+                    "/v3/api-docs", "/documentation/swagger*/**", "/documentation/swagger-ui/**").permitAll()
             .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(POST, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(DELETE, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
