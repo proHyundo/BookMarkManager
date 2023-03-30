@@ -25,13 +25,16 @@
         VALUES(#{userId}, #{folderSeq}, #{bookmarkUrl}, #{bookmarkCaption});
     </insert>
 
-    <update id="updateByBookmarkUpdateRequestDto">
-        DELETE FROM TBOOKMARK
-        WHERE USER_SEQ = #{userId} AND BOOKMARK_SEQ = #{bookmarkSeq}
+    <update id="updateByBookmarkUpdateRequestDto" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkUpdateRequestDto">
+        UPDATE TBOOKMARK
+        SET BOOK_CAPTION = #{bookmarkCaption}, BOOK_URL = #{bookmarkUrl}, BOOK_SCHEME = #{bookmarkScheme},
+            BOOK_HOST = #{bookmarkHost}, BOOK_DOMAIN = #{bookmarkDomain} ,BOOK_PATH = #{bookmarkPath}
+        WHERE USER_SEQ = #{userId} AND BOOK_SEQ = #{bookmarkSeq};
     </update>
 
     <delete id="deleteByUserIdAndBookmarkSeq">
-
+        UPDATE TBOOKMARK SET BOOK_DEL_FLAG = 'y'
+        WHERE USER_SEQ = #{userId} AND BOOKMARK_SEQ = #{bookmarkSeq}
     </delete>
 
 </mapper>
