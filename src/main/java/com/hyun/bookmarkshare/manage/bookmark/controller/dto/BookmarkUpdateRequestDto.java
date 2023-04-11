@@ -1,5 +1,10 @@
 package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
 public class BookmarkUpdateRequestDto {
 
     private Long bookmarkSeq;
@@ -7,6 +12,7 @@ public class BookmarkUpdateRequestDto {
     private String bookmarkCaption;
     private String bookmarkScheme;
     private String bookmarkHost;
+    private String bookmarkPort;
     private String bookmarkDomain;
     private String bookmarkPath;
     private String bookmarkUrl;
