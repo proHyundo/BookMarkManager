@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -39,7 +40,7 @@ class GetBookmarkListTest{
                 .build();
 
         Mockito.when(bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto))
-                .thenReturn(Optional.of(List.of(
+                .thenReturn(List.of(
                         Bookmark.builder()
                                 .bookmarkSeq(1L)
                                 .userId(1L)
@@ -64,7 +65,7 @@ class GetBookmarkListTest{
                                 .bookmarkUrl("https://test2.com/test2")
                                 .bookmarkDelFlag("N")
                                 .build()
-                )));
+                ));
 
         // when
         List<Bookmark> bookList = bookmarkService.getBookList(bookmarkListRequestDto);
@@ -85,7 +86,7 @@ class GetBookmarkListTest{
                 .build();
 
         Mockito.when(bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto))
-                .thenReturn(Optional.empty());
+                .thenReturn(Collections.emptyList());
 
         // when
         // then
@@ -104,7 +105,7 @@ class GetBookmarkListTest{
                 .build();
 
         Mockito.when(bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto))
-                .thenReturn(Optional.of(List.of(
+                .thenReturn(List.of(
                         Bookmark.builder()
                                 .bookmarkSeq(1L)
                                 .userId(1L)
@@ -129,7 +130,7 @@ class GetBookmarkListTest{
                                 .bookmarkUrl("https://test2.com/test2")
                                 .bookmarkDelFlag("N")
                                 .build()
-                )));
+                ));
 
         // when
         // then
