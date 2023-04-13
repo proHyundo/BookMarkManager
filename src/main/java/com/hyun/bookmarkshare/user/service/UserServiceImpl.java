@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService{
             throw new LogoutProcessException(LogoutExceptionErrorCode.NO_SUCH_REFRESH_TOKEN);
         });
 
-        int deletedRows = userRepository.deleteRefreshTokenByUserSeq(userRefreshToken.getUSER_SEQ());
+        int deletedRows = userRepository.deleteRefreshTokenByUserId(userRefreshToken.getUSER_SEQ());
         if(deletedRows != 1){
             throw new LogoutProcessException(LogoutExceptionErrorCode.DB_RESULT_WRONG);
         }

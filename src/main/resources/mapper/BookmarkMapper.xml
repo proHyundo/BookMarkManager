@@ -24,12 +24,11 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ SELECT ============================================ -->
 
-    <select id="findAllByUserIdAndFolderParentSeq"
-            parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkListRequestDto"
+    <select id="findAllByUserIdAndFolderSeq"
             resultMap="bookmarkEntityResultMap">
         SELECT *
         FROM TBOOKMARK
-        WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderParentSeq} AND BOOK_DEL_FLAG = 'n'
+        WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq} AND BOOK_DEL_FLAG = 'n'
         ORDER BY BOOK_ORDER;
     </select>
 
@@ -84,6 +83,14 @@
         WHERE USER_SEQ = #{userId} AND BOOK_SEQ = #{bookmarkSeq} ;
     </update>
 
+
+    <update id="updateOrderByBookmarkRequestDto" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkReorderRequestDto">
+        <foreach collection="bookmarkSeqOrder" item="sequence" index="i" separator=";">
+            UPDATE TBOOKMARK
+            SET BOOK_ORDER = (#{i}+1)
+            WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq} AND BOOK_SEQ = #{sequence}
+        </foreach>
+    </update>
 
     <!-- ================================================================================================ -->
     <!-- ============================================ DELETE ============================================ -->

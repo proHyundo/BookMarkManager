@@ -16,9 +16,9 @@ public interface UserRepository {
     Optional<User> findByUserId(Long userId);
 
     /* TREFRESHTOKEN TABLE */
-    int saveUserRefreshToken(Long userSeq, String refreshToken);
+    int saveUserRefreshToken(Long userId, String refreshToken);
 
     Optional<UserRefreshToken> findByRefreshToken(String refreshToken);
 
-    int deleteRefreshTokenByUserSeq(Long userSeq);
+    int deleteRefreshTokenByUserId(Long userId);
 }

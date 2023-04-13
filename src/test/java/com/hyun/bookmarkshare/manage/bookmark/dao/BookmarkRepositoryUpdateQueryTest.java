@@ -1,7 +1,9 @@
 package com.hyun.bookmarkshare.manage.bookmark.dao;
 
+import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkReorderRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkUpdateRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,5 +50,24 @@ public class BookmarkRepositoryUpdateQueryTest {
         // then
         assertThat(resultDto).get().isNotNull();
         assertThat(resultDto.get().getBookmarkUrl()).isEqualTo(targetDto.getBookmarkUrl());
+    }
+
+    @DisplayName("BookmarkRepository.updateOrderByBookmarkRequestDto > 북마크 순서 수정 > Success")
+    @Test
+    void updateOrderByBookmarkRequestDto(){
+        // given
+        Long userId = 1L;
+        Long folderSeq = 49L;
+        List<Long> bookmarkSeqOrder = Arrays.asList(3L, 2L, 12L);
+        BookmarkReorderRequestDto bookmarkReorderRequestDto = new BookmarkReorderRequestDto(userId, folderSeq, bookmarkSeqOrder);
+
+        // when
+        bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderRequestDto);
+
+        // then
+        List<Bookmark> resultDtoList = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkReorderRequestDto.getUserId(), bookmarkReorderRequestDto.getFolderSeq());
+        resultDtoList.forEach(bookmark -> System.out.println(bookmark.getBookmarkSeq() + " : " + bookmark.getBookmarkOrder()));
+
+
     }
 }

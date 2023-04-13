@@ -17,7 +17,7 @@ public class LoginResponseEntity {
     private final int statusCode;
     private final String statusDescription;
     private final String message;
-    private final Long userSeq;
+    private final Long userId;
 //    private final String userEmail;
     private final String userRole;
     private final String userAccessToken;
@@ -30,7 +30,7 @@ public class LoginResponseEntity {
                         .statusCode(HttpStatus.OK.value())
                         .statusDescription(HttpStatus.OK.name())
                         .message("로그인 성공")
-                        .userSeq(paramUser.getUSER_SEQ())
+                        .userId(paramUser.getUSER_SEQ())
 //                        .userEmail(paramUser.getUSER_EMAIL())
                         .userRole(paramUser.getUSER_ROLE())
                         .userAccessToken(paramUser.getUSER_ACCESS_TOKEN())
