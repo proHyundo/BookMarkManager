@@ -1,24 +1,24 @@
 package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
-@ToString
-@Builder
 @Getter
-@Setter
 @AllArgsConstructor
-public class BookmarkListRequestDto {
+public class BookmarkReorderRequestDto {
 
-    // valid : null, 0, 음수 불가
     @NotNull
     @Positive
     private Long userId;
 
-    // valid : null, 0, 음수 불가
     @NotNull
     @Positive
     private Long folderSeq;
+
+    @NotNull
+    private List<Long> bookmarkSeqOrder;
 }

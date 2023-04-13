@@ -26,11 +26,11 @@
     <insert id="saveUserRefreshToken" parameterType="com.hyun.bookmarkshare.user.entity.User">
         INSERT
         INTO TREFRESHTOKEN(USER_SEQ, REFRESH_TOKEN)
-        VALUES(#{userSeq}, #{refreshToken});
+        VALUES(#{userId}, #{refreshToken});
     </insert>
 
-    <delete id="deleteRefreshTokenByUserSeq" parameterType="long">
-        DELETE FROM TREFRESHTOKEN WHERE USER_SEQ = #{userSeq}
+    <delete id="deleteRefreshTokenByUserId" parameterType="long">
+        DELETE FROM TREFRESHTOKEN WHERE USER_SEQ = #{userId}
     </delete>
 
 

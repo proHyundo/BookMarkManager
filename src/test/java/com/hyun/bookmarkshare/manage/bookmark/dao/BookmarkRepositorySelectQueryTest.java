@@ -67,14 +67,14 @@ class BookmarkRepositorySelectQueryTest {
                 .isInstanceOf(NoSuchElementException.class);
     }
 
-    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderParentSeq - Success")
+    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderSeq - Success")
     @Test
-    void findAllByUserIdAndFolderParentSeq() {
+    void findAllByUserIdAndFolderSeq() {
         // given
         BookmarkListRequestDto bookmarkRequestDto = new BookmarkListRequestDto(1L, 49L);
 
         // when
-        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkRequestDto);
+        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkRequestDto.getUserId(), bookmarkRequestDto.getFolderSeq());
 
         // then
         assertThat(bookmarkListResult).isNotNull();
@@ -86,27 +86,27 @@ class BookmarkRepositorySelectQueryTest {
         });
     }
 
-    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderParentSeq - Fail : folderParentSeq is not exist")
+    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderSeq - Fail : folderParentSeq is not exist")
     @Test
-    void findAllByUserIdAndFolderParentSeqFail1(){
+    void findAllByUserIdAndFolderSeqFail1(){
         // given
         BookmarkListRequestDto bookmarkListRequestDto = new BookmarkListRequestDto(1L, 99L);
 
         // when
-        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto);
+        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq());
 
         // then
         assertThat(allByUserIdAndFolderParentSeq).isEmpty();
     }
 
-    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderParentSeq - Fail : userId is not exist")
+    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderSeq - Fail : userId is not exist")
     @Test
-    void findAllByUserIdAndFolderParentSeqFail2(){
+    void findAllByUserIdAndFolderSeqFail2(){
         // given
         BookmarkListRequestDto bookmarkListRequestDto = new BookmarkListRequestDto(999L, 49L);
 
         // when
-        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto);
+        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq());
 
         // then
         assertThat(allByUserIdAndFolderParentSeq).isEmpty();
