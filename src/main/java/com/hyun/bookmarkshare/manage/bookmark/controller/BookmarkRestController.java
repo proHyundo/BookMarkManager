@@ -31,7 +31,8 @@ public class BookmarkRestController {
     }
 
     /*
-     * BookmarkAddRequestDto 에서 userId, folderParentSeq, bookmarkUrl, bookmarkTitle, bookmarkMemo 를 받아서 해당 유저의 해당 폴더에 북마크를 추가
+     * 북마크 저장. 해당 유저의 해당 폴더에 북마크를 추가.
+     * BookmarkAddRequestDto(userId, folderParentSeq, bookmarkUrl, bookmarkTitle, bookmarkMemo)
      * */
     @PostMapping("/manage/bookmark")
     public ResponseEntity<BookmarkResponseEntity> addBookmarkRequest(@RequestBody @Valid BookmarkAddRequestDto bookmarkAddRequestDto){
