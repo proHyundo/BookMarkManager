@@ -3,7 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hyun.bookmarkshare.manage.folder.dao.FolderRepository">
 
-    <!--  SELECT  -->
+    <!-- ================================================================================================ -->
+    <!-- ============================================ SELECT ============================================ -->
+
     <select id="findAllByUserIdAndParentSeq" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">
         SELECT *
         FROM TFOLDER
@@ -25,7 +27,8 @@
         LIMIT 1;
     </select>
 
-    <!--  INSERT  -->
+    <!-- ================================================================================================ -->
+    <!-- ============================================ INSERT ============================================ -->
 
     <!--    1) 정상 동작 확인 완료 -->
     <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto"
@@ -70,14 +73,8 @@
 <!--        RETURNING *;-->
 <!--    </select>-->
 
-    <!--  UPDATE  -->
-
-    <update id="deleteByFolderSeq" parameterType="Long">
-        UPDATE TFOLDER
-        SET FOLDER_UPD_DATE = NOW(),
-            FOLDER_DEL_FLAG = 'y'
-            WHERE FOLDER_SEQ = #{folderSeq}
-    </update>
+    <!-- ================================================================================================ -->
+    <!-- ============================================ UPDATE ============================================ -->
 
     <update id="updateByFolderRequestDto" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto">
         UPDATE TFOLDER
@@ -94,6 +91,16 @@
         SET FOLDER_ORDER = (#{i}+1)
         WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq} AND FOLDER_SEQ = #{sequence}
         </foreach>
+    </update>
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ DELETE ============================================ -->
+
+    <update id="deleteByFolderSeq" parameterType="Long">
+        UPDATE TFOLDER
+        SET FOLDER_UPD_DATE = NOW(),
+            FOLDER_DEL_FLAG = 'y'
+        WHERE FOLDER_SEQ = #{folderSeq}
     </update>
 
 </mapper>
