@@ -15,6 +15,8 @@ public interface UserRepository {
 
     Optional<User> findByUserId(Long userId);
 
+    Integer countByUserEmail(String userEmail);
+
     /* TREFRESHTOKEN TABLE */
     int saveUserRefreshToken(Long userId, String refreshToken);
 

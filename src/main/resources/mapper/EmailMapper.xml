@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyun.bookmarkshare.smtp.dao.EmailRepository">
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ SELECT ============================================ -->
+
+    <select id="findByEmailAndValidationCode">
+        SELECT * FROM TEMAIL
+        WHERE EMAIL = #{email} AND CODE = #{validationCode}
+    </select>
+
+    <select id="countByUserEmail">
+        SELECT COUNT(*) FROM TEMAIL
+        WHERE EMAIL = #{userEmail}
+    </select>
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ INSERT ============================================ -->
+
+    <insert id="saveByEmailAndValidationCode">
+        INSERT INTO TEMAIL(EMAIL, CODE)
+        VALUES (#{email}, #{validationCode})
+    </insert>
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ DELETE ============================================ -->
+
+    <delete id="deleteByValidatedEmail">
+        DELETE FROM TEMAIL
+        WHERE EMAIL = #{email}
+    </delete>
+
+</mapper>

@@ -21,6 +21,10 @@
         WHERE REFRESH_TOKEN = #{refreshToken}
     </select>
 
+    <select id="countByUserEmail" resultType="integer">
+        SELECT COUNT(USER_SEQ) FROM TUSERACCOUNT WHERE USER_EMAIL = #{email} ;
+    </select>
+
     <!--  INSERT  -->
 
     <insert id="saveUserRefreshToken" parameterType="com.hyun.bookmarkshare.user.entity.User">
