@@ -1,6 +1,7 @@
 package com.hyun.bookmarkshare.user.service;
 
 import com.hyun.bookmarkshare.security.jwt.util.JwtTokenizer;
+import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
 import com.hyun.bookmarkshare.user.controller.dto.LoginRefreshResponseDto;
 import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
@@ -26,10 +27,29 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PwdEncoder pwdEncoder;
     private final JwtTokenizer jwtTokenizer;
+    private final EmailRepository emailRepository;
 
     @Override
     public User signUp(SignUpRequestDto signUpRequestDto) {
-        return null;
+        // 1. check if user already exist
+        if(userRepository.countByUserEmail(signUpRequestDto.getUserEmail()) < 1){
+            throw new LoginProcessException(LoginExceptionErrorCode.ALREADY_EXIST_USER);
+        }
+
+        // 2. check if email is not valid
+        if(emailRepository.countByUserEmail(signUpRequestDto.getUserEmail()) < 1){
+            throw new LoginProcessException(LoginExceptionErrorCode.INVALID_EMAIL);
+        }
+
+        // 3. encode pwd
+        try {
+            signUpRequestDto.setUserPwd(pwdEncoder.encode(signUpRequestDto.getUserPwd()));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        // 4. save user
+        return userRepository.save(signUpRequestDto);
     }
 
     @Transactional
@@ -122,6 +142,7 @@ public class UserServiceImpl implements UserService{
                 .userAccessToken(accessToken)
                 .build();
     }
+
 
 
 }

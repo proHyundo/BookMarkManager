@@ -49,6 +49,7 @@ public class SecurityConfig {
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .mvcMatchers("/", "/signup", "/login", "/refresh/login-state",
                     "/v3/api-docs", "/documentation/swagger*/**", "/documentation/swagger-ui/**").permitAll()
+            .mvcMatchers("/signup/email/verification", "/signup/email/verification").permitAll()
             .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(POST, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(DELETE, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
