@@ -22,13 +22,14 @@ public class EmailRestController {
      * @return ResponseEntity
      * */
     @PostMapping("/signup/email/verification")
-    public ResponseEntity sendEmailRequest(@RequestBody @Valid String email) {
+    public ResponseEntity sendEmailRequest(@RequestBody String email) {
+        System.out.println("EmailRestController.sendEmailRequest > email = " + email);
         emailService.sendEmailWithValidationCode(email);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/signup/email/verification")
-    public ResponseEntity checkEmailValidationCode(@RequestBody @Valid String emailValidationCode, String email) {
+    public ResponseEntity checkEmailValidationCode(@RequestBody String emailValidationCode, String email) {
         emailService.checkEmailValidationCode(emailValidationCode, email);
         return ResponseEntity.ok().build();
     }

@@ -15,4 +15,7 @@ public interface EmailRepository {
     Integer saveByEmailAndValidationCode(String email, String validationCode);
 
     int deleteByValidatedEmail(String email);
+
+    int updateByEmailAndValidationCode(String targetEmail, String validationCode);
+
 }

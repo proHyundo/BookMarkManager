@@ -30,7 +30,11 @@ public class EmailService {
      * */
     public void sendEmailWithValidationCode(String targetEmail){
         String validationCode = sendEmail(targetEmail, createEmailValidationCode());
-        emailRepository.saveByEmailAndValidationCode(targetEmail, validationCode);
+        if(emailRepository.countByUserEmail(targetEmail) > 0){
+            emailRepository.updateByEmailAndValidationCode(targetEmail, validationCode);
+        }else {
+            emailRepository.saveByEmailAndValidationCode(targetEmail, validationCode);
+        }
     }
 
     /**
@@ -42,6 +46,7 @@ public class EmailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+            mimeMessageHelper.setFrom("s555s555@naver.com");
             mimeMessageHelper.setTo(targetEmail);
             mimeMessageHelper.setSubject("[BookmarkShare] 회원가입 인증 메일입니다.");
             mimeMessageHelper.setText(createEmailContent(validationCode), true);
@@ -78,21 +83,28 @@ public class EmailService {
         StringBuffer msg = new StringBuffer();
         msg.append("<h1>회원가입 인증 메일입니다.</h1>");
         msg.append("<p>아래의 인증 코드를 입력해주세요.</p>");
-        msg.append("<p id=\"copyTxt\">인증 코드: " + validationCode + "</p>");
+        msg.append("<p id=\"textValue\">인증 코드: " + validationCode + "</p>");
         msg.append("<div>");
             msg.append("<input type=\"button\" value=\"인증 코드 복사하기\" onclick=\"copyT()\"/>");
         msg.append("</div>");
         msg.append("<script>");
-            msg.append("function copyT() {");
-                msg.append("var obj = document.getElementById(\"copyTxt\");");
-                msg.append("var range = document.createRange();");
-                msg.append("range.selectNode(obj.childNodes[0]);");
-                msg.append("var sel = window.getSelection();");
-                msg.append("sel.removeAllRanges();");
-                msg.append("sel.addRange(range);");
-                msg.append("document.execCommand(\"copy\");");
-                msg.append("alert(\"복사되었습니다.\");");
-            msg.append("}");
+        msg.append("function copyT() {    \n" +
+                "  let copyText = document.getElementById('textValue');\n" +
+                "  copyText.select();\n" +
+                "  copyText.setSelectionRange(0, 99999);\n" +
+                "  document.execCommand(\"Copy\");\n" +
+                "  alert('클립보드에 복사되었습니다, 감사합니다.');\n" +
+                "}\n");
+//            msg.append("function copyT() {");
+//                msg.append("var obj = document.getElementById(\"copyTxt\");");
+//                msg.append("var range = document.createRange();");
+//                msg.append("range.selectNode(obj.childNodes[0]);");
+//                msg.append("var sel = window.getSelection();");
+//                msg.append("sel.removeAllRanges();");
+//                msg.append("sel.addRange(range);");
+//                msg.append("document.execCommand(\"copy\");");
+//                msg.append("alert(\"복사되었습니다.\");");
+//            msg.append("}");
         msg.append("</script>");
         return msg.toString();
     }

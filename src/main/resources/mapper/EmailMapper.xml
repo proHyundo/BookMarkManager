@@ -8,10 +8,10 @@
 
     <select id="findByEmailAndValidationCode">
         SELECT * FROM TEMAIL
-        WHERE EMAIL = #{email} AND CODE = #{validationCode}
+        WHERE EMAIL = #{email} AND EMAIL_CODE = #{validationCode}
     </select>
 
-    <select id="countByUserEmail">
+    <select id="countByUserEmail" resultType="integer">
         SELECT COUNT(*) FROM TEMAIL
         WHERE EMAIL = #{userEmail}
     </select>
@@ -20,9 +20,18 @@
     <!-- ============================================ INSERT ============================================ -->
 
     <insert id="saveByEmailAndValidationCode">
-        INSERT INTO TEMAIL(EMAIL, CODE)
-        VALUES (#{email}, #{validationCode})
+        INSERT INTO TEMAIL(EMAIL, EMAIL_CODE, EMAIL_SEND_CNT, EMAIL_SEND_DATE)
+        VALUES (#{email}, #{validationCode}, 1, NOW())
     </insert>
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ UPDATE ============================================ -->
+
+    <update id="updateByEmailAndValidationCode">
+        UPDATE TEMAIL
+        SET EMAIL_CODE = #{validationCode}, EMAIL_SEND_CNT = EMAIL_SEND_CNT + 1
+        WHERE EMAIL = #{email}
+    </update>
 
     <!-- ================================================================================================ -->
     <!-- ============================================ DELETE ============================================ -->

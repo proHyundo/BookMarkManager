@@ -49,7 +49,15 @@ public class UserServiceImpl implements UserService{
         }
 
         // 4. save user
-        return userRepository.save(signUpRequestDto);
+        int resultRows = userRepository.saveBySignUpRequestDto(signUpRequestDto);
+        if(resultRows != 1){
+            throw new LoginProcessException(LoginExceptionErrorCode.INSERT_TOKEN_ERROR);
+        }
+
+        // return signedUp user
+        return userRepository.findByUserId(signUpRequestDto.getUserId()).orElseThrow(
+                () -> new LoginProcessException(LoginExceptionErrorCode.NOT_FOUND_USER)
+        );
     }
 
     @Transactional
