@@ -11,19 +11,35 @@ import java.util.Optional;
 @Mapper
 public interface UserRepository {
 
+    /* ================================================================================================ */
+    /* ============================================ SELECT ============================================ */
+
     /* TUSERACCOUNT TABLE */
     Optional<User> findByLoginRequestDto(LoginRequestDto loginRequestDto);
 
+    /* TUSERACCOUNT TABLE */
     Optional<User> findByUserId(Long userId);
 
+    /* TUSERACCOUNT TABLE */
     Integer countByUserEmail(String userEmail);
 
+    /* TREFRESHTOKEN TABLE */
+    Optional<UserRefreshToken> findByRefreshToken(String refreshToken);
+
+    /* ================================================================================================ */
+    /* ============================================ INSERT ============================================ */
+
+    /* TUSERACCOUNT TABLE */
     Integer saveBySignUpRequestDto(SignUpRequestDto signUpRequestDto);
 
     /* TREFRESHTOKEN TABLE */
     int saveUserRefreshToken(Long userId, String refreshToken);
 
-    Optional<UserRefreshToken> findByRefreshToken(String refreshToken);
+    /* ================================================================================================ */
+    /* ============================================ DELETE ============================================ */
 
+    /* TREFRESHTOKEN TABLE */
     int deleteRefreshTokenByUserId(Long userId);
+
+    int deleteByUserId(Long userId);
 }

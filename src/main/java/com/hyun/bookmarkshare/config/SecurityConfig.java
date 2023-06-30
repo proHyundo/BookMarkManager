@@ -1,20 +1,29 @@
 package com.hyun.bookmarkshare.config;
 
 import com.hyun.bookmarkshare.security.jwt.exception.CustomAuthenticationEntryPoint;
+import com.hyun.bookmarkshare.security.jwt.util.CustomLogoutHandler;
+import com.hyun.bookmarkshare.user.controller.dto.LogoutResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
@@ -26,6 +35,7 @@ public class SecurityConfig {
 
     private final AuthenticationManagerConfig authenticationManagerConfig;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomLogoutHandler customLogoutHandler;
 
     /**
      * 스프링시큐리티의 설정을 할 수 있다.
@@ -42,19 +52,25 @@ public class SecurityConfig {
             .csrf().disable()
             .cors()
         .and()
-            .apply(authenticationManagerConfig)
+                .logout()
+                .logoutUrl("/user/logout").permitAll()
+                .deleteCookies("userRefreshToken")
+                .addLogoutHandler(customLogoutHandler)
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
         .and()
             .httpBasic().disable()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .mvcMatchers("/", "/signup", "/login", "/refresh/login-state",
                     "/v3/api-docs", "/documentation/swagger*/**", "/documentation/swagger-ui/**").permitAll()
-            .mvcMatchers("/signup/email/verification", "/signup/email/verification").permitAll()
+            .mvcMatchers("/signup/email/verification", "/signup/email/verification/check").permitAll()
             .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(POST, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(DELETE, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(PATCH, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                 .anyRequest().hasAnyRole()
+        .and()
+            .apply(authenticationManagerConfig)
         .and()
             .exceptionHandling()
             .authenticationEntryPoint(customAuthenticationEntryPoint);

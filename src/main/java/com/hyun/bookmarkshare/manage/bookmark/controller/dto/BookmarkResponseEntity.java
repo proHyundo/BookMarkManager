@@ -1,6 +1,7 @@
 package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 
 @Slf4j
+@Getter
 @Builder
 public class BookmarkResponseEntity {
 

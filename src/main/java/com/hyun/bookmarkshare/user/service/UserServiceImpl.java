@@ -2,24 +2,28 @@ package com.hyun.bookmarkshare.user.service;
 
 import com.hyun.bookmarkshare.security.jwt.util.JwtTokenizer;
 import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
+import com.hyun.bookmarkshare.smtp.entity.EmailEntity;
+import com.hyun.bookmarkshare.smtp.exception.EmailExceptionErrorCode;
+import com.hyun.bookmarkshare.smtp.exception.EmailProcessException;
 import com.hyun.bookmarkshare.user.controller.dto.LoginRefreshResponseDto;
 import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.UserRequestDto;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
-import com.hyun.bookmarkshare.user.exceptions.LoginExceptionErrorCode;
-import com.hyun.bookmarkshare.user.exceptions.LoginProcessException;
-import com.hyun.bookmarkshare.user.exceptions.LogoutExceptionErrorCode;
-import com.hyun.bookmarkshare.user.exceptions.LogoutProcessException;
+import com.hyun.bookmarkshare.user.exceptions.*;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService{
@@ -29,49 +33,57 @@ public class UserServiceImpl implements UserService{
     private final JwtTokenizer jwtTokenizer;
     private final EmailRepository emailRepository;
 
+    @Transactional
     @Override
     public User signUp(SignUpRequestDto signUpRequestDto) {
-        // 1. check if user already exist
-        if(userRepository.countByUserEmail(signUpRequestDto.getUserEmail()) < 1){
-            throw new LoginProcessException(LoginExceptionErrorCode.ALREADY_EXIST_USER);
+
+        // 1. check if email is not valid
+        EmailEntity targetEmail = emailRepository.findByEmail(signUpRequestDto.getUserEmail())
+                .orElseThrow(() -> new EmailProcessException(EmailExceptionErrorCode.EMAIL_NOT_FOUND));
+        if(targetEmail.getEmailValidFlag() != 1){
+            throw new EmailProcessException(EmailExceptionErrorCode.EMAIL_NOT_VALID);
         }
 
-        // 2. check if email is not valid
-        if(emailRepository.countByUserEmail(signUpRequestDto.getUserEmail()) < 1){
-            throw new LoginProcessException(LoginExceptionErrorCode.INVALID_EMAIL);
-        }
-
-        // 3. encode pwd
+        // 2. encode pwd
         try {
-            signUpRequestDto.setUserPwd(pwdEncoder.encode(signUpRequestDto.getUserPwd()));
+            String encodedPwd = pwdEncoder.encode(signUpRequestDto.getUserPwd());
+            signUpRequestDto.setUserPwd(encodedPwd);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.warn("[오류][UserServiceImpl.signUp().encodePwd]"+e.getMessage());
+            throw new RuntimeException("Failed to encode password", e);
         }
 
-        // 4. save user
+        // 3. save user
         int resultRows = userRepository.saveBySignUpRequestDto(signUpRequestDto);
         if(resultRows != 1){
             throw new LoginProcessException(LoginExceptionErrorCode.INSERT_TOKEN_ERROR);
         }
 
-        // return signedUp user
-        return userRepository.findByUserId(signUpRequestDto.getUserId()).orElseThrow(
-                () -> new LoginProcessException(LoginExceptionErrorCode.NOT_FOUND_USER)
-        );
+        // 4. delete email validation
+        emailRepository.deleteByEmail(signUpRequestDto.getUserEmail());
+
+        // 5. return signUp success User Entity
+        return userRepository.findByUserId(signUpRequestDto.getUserId())
+                .orElseThrow(() -> new LoginProcessException(LoginExceptionErrorCode.NOT_FOUND_USER));
+    }
+
+    @Override
+    public boolean checkDuplicateEmail(String userEmail) {
+        // check if user already exist
+        if(userRepository.countByUserEmail(userEmail) > 0){
+            throw new LoginProcessException(LoginExceptionErrorCode.ALREADY_USER_EXIST);
+        }
+        return false;
     }
 
     @Transactional
     @Override
     public User loginProcess(LoginRequestDto loginRequestDto) {
 
-        /**
-         *  will depreciate as switch to security pwd encode
-         *  */
+        // 0. encode pwd & set encoded pwd to loginRequestDto
+        // -> will depreciate as switch to security pwd encode
         try {
-            System.out.println("1. loginRequestDto = " + loginRequestDto.getPwd());
             loginRequestDto.setPwd(pwdEncoder.encode(loginRequestDto.getPwd()));
-            System.out.println("2. loginRequestDto = " + loginRequestDto.getPwd());
-
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -80,24 +92,18 @@ public class UserServiceImpl implements UserService{
         User resultUser = userRepository.findByLoginRequestDto(loginRequestDto)
                 .orElseThrow(() -> new LoginProcessException(LoginExceptionErrorCode.NOT_FOUND_USER));
 
-        // 2. jwt 라이브러리를 사용하여 access, refresh token 생성
-        resultUser.setUSER_ACCESS_TOKEN(jwtTokenizer.createAccessToken(
-                resultUser.getUSER_SEQ(),
-                resultUser.getUSER_EMAIL(),
-                List.of(resultUser.getUSER_ROLE()))
-        );
-        resultUser.setUSER_REFRESH_TOKEN(jwtTokenizer.createRefreshToken(
-                resultUser.getUSER_SEQ(),
-                resultUser.getUSER_EMAIL(),
-                List.of(resultUser.getUSER_ROLE()))
-        );
+        // 2. Generate access and refresh tokens by JWT library
+        List<String> userRoles = List.of(resultUser.getUserRole());
+        String accessToken = jwtTokenizer.createAccessToken(resultUser.getUserId(), resultUser.getUserEmail(), userRoles);
+        String refreshToken = jwtTokenizer.createRefreshToken(resultUser.getUserId(), resultUser.getUserEmail(), userRoles);
 
-        // 3. refresh token DB 화이트리스트 저장
-        int insertedRows = userRepository.saveUserRefreshToken(resultUser.getUSER_SEQ(),
-                                                                resultUser.getUSER_REFRESH_TOKEN());
-        if(insertedRows != 1){
-            throw new LoginProcessException(LoginExceptionErrorCode.INSERT_TOKEN_ERROR);
-        }
+        // 3. Set tokens to User Entity
+        resultUser.setUserAccessToken(accessToken);
+        resultUser.setUserRefreshToken(refreshToken);
+
+        // 4. Save Refresh token to DB Whitelist
+        int resultRows = userRepository.saveUserRefreshToken(resultUser.getUserId(), resultUser.getUserRefreshToken());
+        if(resultRows != 1) throw new LoginProcessException(LoginExceptionErrorCode.INSERT_TOKEN_ERROR);
 
         return resultUser;
     }
@@ -105,52 +111,51 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public void logoutProcess(String refreshToken) {
-        // db에서 refreshToken 존재 여부 확인
-        UserRefreshToken userRefreshToken = userRepository.findByRefreshToken(refreshToken).orElseThrow(() -> {
-            throw new LogoutProcessException(LogoutExceptionErrorCode.NO_SUCH_REFRESH_TOKEN);
-        });
+        // DB 에서 RefreshToken 존재 확인
+        UserRefreshToken userRefreshToken = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> {throw new LogoutProcessException(LogoutExceptionErrorCode.NO_SUCH_REFRESH_TOKEN);});
 
-        int deletedRows = userRepository.deleteRefreshTokenByUserId(userRefreshToken.getUSER_SEQ());
-        if(deletedRows != 1){
-            throw new LogoutProcessException(LogoutExceptionErrorCode.DB_RESULT_WRONG);
-        }
+        int deletedRows = userRepository.deleteRefreshTokenByUserId(userRefreshToken.getUserId());
+        if(deletedRows != 1) throw new LogoutProcessException(LogoutExceptionErrorCode.DB_RESULT_WRONG);
     }
 
     @Override
-    public LoginRefreshResponseDto extendLoginState(String refreshToken) {
-        // db에 전달받은 refresh token 이 저장되어 있는지 확인. 존재하지 않다면 에러 + login page 로 리다이렉트
-        UserRefreshToken userRefreshToken = userRepository.findByRefreshToken(refreshToken).orElseThrow(
-                () -> new IllegalArgumentException("Refresh token not found in Database")
-        );
+    public String extendLoginState(String refreshToken) {
+        // 전달받은 RefreshToken 이 DB에 저장되어 있는지 확인. 존재하지 않다면 에러 & login page 로 리다이렉트
+        userRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
 
-        // 토큰이 존재한다면, refresh token 을 jwtTokenizer 에게 전달하여 토큰 검증 + claims 를 반환받음.
-        // 검증 실패 시 에러 + login page 로 리다이렉트.
-        Claims claims = jwtTokenizer.parseRefreshToken(userRefreshToken.getREFRESH_TOKEN());
-        System.out.println("리프래시 토큰 검증 성공");
-        // 검증에 성공하였다면, 반환받은 claims 에서 사용자 식별번호를 꺼냄. JwtTokenizer 에서 userId 라고 key 값을 정했음.
-        Long userId = Long.valueOf((Integer)claims.get("userId"));
+        // 토큰이 존재한다면, refresh token 을 jwtTokenizer 에게 전달하여 토큰 검증 + claims 를 반환받음. 검증 실패 시 에러 + login page 로 리다이렉트.
+        Claims claims = jwtTokenizer.parseRefreshToken(refreshToken);
 
-        // 꺼내받은 식별번호로 사용자가 존재하는지 조회.
-        User resultUser = userRepository.findByUserId(userId).orElseThrow(
-                () -> new IllegalArgumentException("Member not found")
-        );
-
-        // claims 에서 권한, 이메일을 꺼냄.
-        List roles = (List) claims.get("roles");
+        // 검증에 성공하였다면, 반환받은 claims 에서 사용자 식별번호, 권한리스트, 이메일을 꺼냄. JwtTokenizer 에서 userId 라고 key 값을 정했음.
+        Long userId = claims.get("userId", Long.class);
+        List roles = claims.get("roles", List.class);
         String email = claims.getSubject();
 
-        // 사용자 식별번호, 권한, 이메일로 새로운 액세스 토큰을 생성.
-        String accessToken = jwtTokenizer.createAccessToken(userId, email, roles);
+        // 꺼내받은 식별번호로 사용자가 존재하는지 조회.
+        userRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
+        // 사용자 식별번호, 권한, 이메일로 새로운 액세스 토큰을 생성.
         // 생성한 액세스 토큰을 사용자에게 응답.
-        return LoginRefreshResponseDto.builder()
-                .userId(userId)
-                .userRole(roles)
-                .userEmail(email)
-                .userAccessToken(accessToken)
-                .build();
+        return jwtTokenizer.createAccessToken(userId, email, roles);
     }
 
+    @Override
+    public User getUserInfo(String token) {
+        return userRepository.findByUserId(jwtTokenizer.getUserIdFromToken(token)).orElseThrow(
+                () -> new UserProcessException(UserExceptionErrorCode.NOT_FOUND_USER)
+        );
+    }
+
+    @Override
+    public User signOut(String token) {
+        Long userIdFromToken = jwtTokenizer.getUserIdFromToken(token);
+        int resultRows = userRepository.deleteByUserId(userIdFromToken);
+        if(resultRows != 1){
+            throw new UserProcessException(UserExceptionErrorCode.DELETE_USER_ERROR);
+        }
+        return User.builder().userId(userIdFromToken).userState("e").build();
+    }
 
 
 }

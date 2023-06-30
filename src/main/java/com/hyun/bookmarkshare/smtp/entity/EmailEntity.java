@@ -1,4 +1,4 @@
-package com.hyun.bookmarkshare.smtp;
+package com.hyun.bookmarkshare.smtp.entity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,8 @@ import java.util.Date;
 public class EmailEntity {
 
     private String email;
-    private String code;
-    private Integer sendCount;
+    private String emailCode;
+    private Integer sendCnt;
     private Date sendDate;
+    private int emailValidFlag;
 }

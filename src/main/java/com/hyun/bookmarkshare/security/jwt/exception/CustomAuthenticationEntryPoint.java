@@ -54,6 +54,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         HashMap<String, Object> errorInfo = new HashMap<>();
+        errorInfo.put("statusCode", HttpServletResponse.SC_UNAUTHORIZED);
         errorInfo.put("message", exceptionCode.getMessage());
         errorInfo.put("code", exceptionCode.getCode());
         Gson gson = new Gson();
