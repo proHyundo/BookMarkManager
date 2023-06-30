@@ -5,11 +5,10 @@ import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,7 +20,7 @@ public class BookmarkServiceImpl implements BookmarkService{
     @Override
     public List<Bookmark> getBookList(BookmarkListRequestDto bookmarkListRequestDto) {
         // https://stackoverflow.com/questions/11201420/which-exception-to-throw-if-list-is-empty-in-java
-        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto);
+        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq());
         if(allByUserIdAndFolderParentSeq.isEmpty()) throw new IllegalStateException();
 //        return allByUserIdAndFolderParentSeq.stream().map(Bookmark::toBookmarkResponseDto).collect(Collectors.toList());
         return allByUserIdAndFolderParentSeq;
@@ -38,15 +37,15 @@ public class BookmarkServiceImpl implements BookmarkService{
     public BookmarkResponseDto createBookmark(BookmarkAddRequestDto bookmarkAddRequestDto) {
         // bookmark url disunite & set units to bookmarkAddRequestDto
         urlParser.assignUrlFields(bookmarkAddRequestDto);
-        int resultRows = bookmarkRepository.saveBookmark(bookmarkAddRequestDto);
-        if(resultRows != 1) throw new IllegalStateException();
+        int updatedRows = bookmarkRepository.saveBookmark(bookmarkAddRequestDto);
+        validateSqlUpdatedRows(updatedRows);
         return bookmarkAddRequestDto.toBookmarkResponseDto(bookmarkAddRequestDto);
     }
 
     @Override
     public BookmarkResponseDto updateBookmark(BookmarkUpdateRequestDto bookmarkUpdateRequestDto) {
-        int resultRows = bookmarkRepository.updateByBookmarkUpdateRequestDto(bookmarkUpdateRequestDto);
-        if(resultRows != 1) throw new IllegalStateException();
+        int updatedRows = bookmarkRepository.updateByBookmarkUpdateRequestDto(bookmarkUpdateRequestDto);
+        validateSqlUpdatedRows(updatedRows);
         return bookmarkRepository.findByUserIdAndBookmarkSeq(bookmarkUpdateRequestDto.getUserId(), bookmarkUpdateRequestDto.getBookmarkSeq()).orElseThrow(
                 () -> new NoSuchElementException()
         );
@@ -55,10 +54,26 @@ public class BookmarkServiceImpl implements BookmarkService{
     @Override
     public BookmarkResponseDto deleteBookmark(BookmarkRequestDto bookmarkRequestDto) {
         BookmarkResponseDto resultDto = BookmarkResponseDto.builder().build();
-        int resultRows = bookmarkRepository.deleteByUserIdAndBookmarkSeq(bookmarkRequestDto);
-        if (resultRows != 1) throw new IllegalStateException();
+        int updatedRows = bookmarkRepository.deleteByUserIdAndBookmarkSeq(bookmarkRequestDto);
+        validateSqlUpdatedRows(updatedRows);
         return resultDto;
     }
 
+    @Override
+    public List<Long> updateBookmarkOrder(List<BookmarkReorderRequestDto> requestDtoList) {
+        for ( BookmarkReorderRequestDto bookmarkReorderRequestDto : requestDtoList) {
+            int updatedRows = bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderRequestDto);
+            validateSqlUpdatedRows(updatedRows);
+        }
+        List<List<Long>> resultList = new ArrayList<>();
+        requestDtoList.forEach(bookmarkReorderRequestDto ->
+                resultList.add(bookmarkReorderRequestDto.getBookmarkSeqOrder())
+        );
+        return null;
+    }
+
+    private void validateSqlUpdatedRows(int updatedRows) {
+        if(updatedRows != 1) throw new IllegalStateException();
+    }
 
 }

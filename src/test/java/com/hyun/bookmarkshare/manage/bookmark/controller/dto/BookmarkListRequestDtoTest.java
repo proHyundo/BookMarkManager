@@ -37,11 +37,11 @@ class BookmarkListRequestDtoTest {
     @DisplayName("BookmarkListRequestDto validation - 성공 케이스")
     @MethodSource("paramsForBookmarkListRequestDto_success")
     @ParameterizedTest
-    void bookmarkListRequestDto_success(Long userId, Long folderParentSeq){
+    void bookmarkListRequestDto_success(Long userId, Long folderSeq){
         // given
         BookmarkListRequestDto targetDto = BookmarkListRequestDto.builder()
                 .userId(userId)
-                .folderParentSeq(folderParentSeq)
+                .folderSeq(folderSeq)
                 .build();
         // when
         Set<ConstraintViolation<BookmarkListRequestDto>> constraintViolations = validator.validate(targetDto);
@@ -58,11 +58,11 @@ class BookmarkListRequestDtoTest {
     @DisplayName("BookmarkListRequestDto validation - 실패 케이스")
     @MethodSource("paramsForBookmarkListRequestDto_fail")
     @ParameterizedTest
-    void bookmarkListRequestDto_fail(Long userId, Long folderParentSeq){
+    void bookmarkListRequestDto_fail(Long userId, Long folderSeq){
         // given
         BookmarkListRequestDto targetDto = BookmarkListRequestDto.builder()
                 .userId(userId)
-                .folderParentSeq(folderParentSeq)
+                .folderSeq(folderSeq)
                 .build();
         // when
         Set<ConstraintViolation<BookmarkListRequestDto>> constraintViolations = validator.validate(targetDto);
