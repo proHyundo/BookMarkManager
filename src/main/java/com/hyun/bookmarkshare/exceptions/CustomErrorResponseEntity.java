@@ -18,7 +18,7 @@ public class CustomErrorResponseEntity {
     private final String statusDescription;
     private final String message;
 
-    public static ResponseEntity<CustomErrorResponseEntity> toResponseEntity(FolderExceptionErrorCode errorCode){
+    public static ResponseEntity<CustomErrorResponseEntity> toResponseEntity(CustomErrorCode errorCode){
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(CustomErrorResponseEntity.builder()

@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 public class UserRefreshToken {
 
-    Long USER_SEQ;
-    String REFRESH_TOKEN;
+    Long userId;
+    String refreshToken;
 }

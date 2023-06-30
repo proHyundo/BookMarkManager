@@ -36,10 +36,10 @@ class GetBookmarkListTest{
         // given - BookMarkListRequestDto
         BookmarkListRequestDto bookmarkListRequestDto = BookmarkListRequestDto.builder()
                 .userId(1L)
-                .folderParentSeq(1L)
+                .folderSeq(1L)
                 .build();
 
-        Mockito.when(bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto))
+        Mockito.when(bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq()))
                 .thenReturn(List.of(
                         Bookmark.builder()
                                 .bookmarkSeq(1L)
@@ -82,10 +82,10 @@ class GetBookmarkListTest{
         // given - BookMarkListRequestDto
         BookmarkListRequestDto bookmarkListRequestDto = BookmarkListRequestDto.builder()
                 .userId(1L)
-                .folderParentSeq(1L)
+                .folderSeq(1L)
                 .build();
 
-        Mockito.when(bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto))
+        Mockito.when(bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq()))
                 .thenReturn(Collections.emptyList());
 
         // when
@@ -101,10 +101,10 @@ class GetBookmarkListTest{
         // given - BookMarkListRequestDto
         BookmarkListRequestDto bookmarkListRequestDto = BookmarkListRequestDto.builder()
                 .userId(null)
-                .folderParentSeq(1L)
+                .folderSeq(1L)
                 .build();
 
-        Mockito.when(bookmarkRepository.findAllByUserIdAndFolderParentSeq(bookmarkListRequestDto))
+        Mockito.when(bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq()))
                 .thenReturn(List.of(
                         Bookmark.builder()
                                 .bookmarkSeq(1L)

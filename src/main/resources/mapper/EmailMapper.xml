@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyun.bookmarkshare.smtp.dao.EmailRepository">
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ SELECT ============================================ -->
+
+    <select id="findByEmailAndValidationCode" resultType="com.hyun.bookmarkshare.smtp.entity.EmailEntity">
+        SELECT * FROM TEMAIL
+        WHERE EMAIL = #{email} AND EMAIL_CODE = #{emailCode}
+    </select>
+
+    <select id="countByUserEmail" resultType="integer">
+        SELECT COUNT(*) FROM TEMAIL
+        WHERE EMAIL = #{email}
+    </select>
+
+    <select id="findByEmail" parameterType="String" resultType="com.hyun.bookmarkshare.smtp.entity.EmailEntity">
+        SELECT * FROM TEMAIL
+        WHERE EMAIL = #{userEmail}
+    </select>
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ INSERT ============================================ -->
+
+    <insert id="saveByEmailAndValidationCode">
+        INSERT INTO TEMAIL(EMAIL, EMAIL_CODE, EMAIL_SEND_CNT, EMAIL_SEND_DATE)
+        VALUES (#{email}, #{emailCode}, 1, NOW())
+    </insert>
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ UPDATE ============================================ -->
+
+    <update id="updateByEmailAndValidationCode">
+        UPDATE TEMAIL
+        SET EMAIL_CODE = #{emailCode}, EMAIL_SEND_CNT = EMAIL_SEND_CNT + 1
+        WHERE EMAIL = #{email}
+    </update>
+
+    <update id="updateEmailValidationFlag">
+        UPDATE TEMAIL
+        SET EMAIL_VALID_FLAG = 1
+        WHERE EMAIL = #{email} AND EMAIL_CODE = #{emailCode}
+    </update>
+
+
+    <!-- ================================================================================================ -->
+    <!-- ============================================ DELETE ============================================ -->
+
+    <delete id="deleteByEmail">
+        DELETE FROM TEMAIL
+        WHERE EMAIL = #{email}
+    </delete>
+
+</mapper>

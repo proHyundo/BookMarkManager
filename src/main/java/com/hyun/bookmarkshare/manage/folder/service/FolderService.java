@@ -1,6 +1,5 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
-import com.hyun.bookmarkshare.manage.common.controller.dto.UserRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderListRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
