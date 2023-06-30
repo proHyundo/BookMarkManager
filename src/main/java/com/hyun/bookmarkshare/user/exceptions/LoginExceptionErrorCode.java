@@ -1,12 +1,13 @@
 package com.hyun.bookmarkshare.user.exceptions;
 
+import com.hyun.bookmarkshare.exceptions.CustomErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 @Getter
-public enum LoginExceptionErrorCode {
+public enum LoginExceptionErrorCode implements CustomErrorCode {
 
     /* 401 UNAUTHORIZED Login Input */
     BAD_INPUT_LENGTH(HttpStatus.UNAUTHORIZED, "Bad Input Length"),
@@ -16,7 +17,7 @@ public enum LoginExceptionErrorCode {
 
     /* 404 NOTFOUND */
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "Wrong Id or Pwd"),
-    ALREADY_EXIST_USER(HttpStatus.UNAUTHORIZED, "Already Exist User"),
+    ALREADY_USER_EXIST(HttpStatus.UNAUTHORIZED, "Already User Exist"),
 
     /* 409 CONFLICT*/
     INSERT_TOKEN_ERROR(HttpStatus.CONFLICT, "Bad Token"),

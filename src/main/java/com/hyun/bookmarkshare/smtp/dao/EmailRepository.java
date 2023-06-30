@@ -1,6 +1,6 @@
 package com.hyun.bookmarkshare.smtp.dao;
 
-import com.hyun.bookmarkshare.smtp.EmailEntity;
+import com.hyun.bookmarkshare.smtp.entity.EmailEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
@@ -8,14 +8,27 @@ import java.util.Optional;
 @Mapper
 public interface EmailRepository {
 
-    Optional<EmailEntity> findByEmailAndValidationCode(String email, String emailValidationCode);
+    /* ================================================================================================ */
+    /* ============================================ SELECT ============================================ */
 
-    Integer countByUserEmail(String userEmail);
+    Optional<EmailEntity> findByEmailAndValidationCode(String email, String emailCode);
+    Optional<EmailEntity> findByEmail(String email);
 
-    Integer saveByEmailAndValidationCode(String email, String validationCode);
+    int countByUserEmail(String email);
 
-    int deleteByValidatedEmail(String email);
+    /* ================================================================================================ */
+    /* ============================================ INSERT ============================================ */
 
-    int updateByEmailAndValidationCode(String targetEmail, String validationCode);
+    Integer saveByEmailAndValidationCode(String email, String emailCode);
 
+    /* ================================================================================================ */
+    /* ============================================ UPDATE ============================================ */
+
+    int updateByEmailAndValidationCode(String email, String emailCode);
+    int updateEmailValidationFlag(String email, String emailCode);
+
+    /* ================================================================================================ */
+    /* ============================================ DELETE ============================================ */
+
+    int deleteByEmail(String email);
 }

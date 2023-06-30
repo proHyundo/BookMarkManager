@@ -1,7 +1,10 @@
 package com.hyun.bookmarkshare.smtp.service;
 
-import com.hyun.bookmarkshare.smtp.EmailEntity;
+import com.hyun.bookmarkshare.smtp.entity.EmailEntity;
 import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
+import com.hyun.bookmarkshare.smtp.exception.EmailExceptionErrorCode;
+import com.hyun.bookmarkshare.smtp.exception.EmailProcessException;
+import com.hyun.bookmarkshare.user.dao.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -19,21 +24,36 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
     private final EmailRepository emailRepository;
+    private final UserRepository userRepository;
 
     /**
      * 이메일 인증 코드 발송 로직.
-     * 1. 이메일 인증 코드 생성
-     * 2. 이메일 발송을 위한 설정
-     * 3. 이메일 발송.
-     * 4. 이메일 발송 정보 저장.
+     * 1. 이메일 발송 횟수 제한 검증
+     * 2. 이메일 인증 코드 생성
+     * 3. 이메일 발송을 위한 설정
+     * 4. 이메일 발송.
+     * 5. 이메일 발송 정보 저장.
      * @param targetEmail 이메일 발송 대상 이메일
      * */
     public void sendEmailWithValidationCode(String targetEmail){
+        // 이미 회원가입된 이메일인지 확인
+        if(userRepository.countByUserEmail(targetEmail) > 0){
+            throw new EmailProcessException(EmailExceptionErrorCode.ALREADY_USER_EXIST);
+        }
+
+        // 이메일 발송 횟수 체크
+        if(checkEmailSendCntLimit(targetEmail)){
+            throw new IllegalArgumentException("이메일 발송 횟수가 초과되었습니다.");
+        };
+
+        // 이메일 발송
         String validationCode = sendEmail(targetEmail, createEmailValidationCode());
-        if(emailRepository.countByUserEmail(targetEmail) > 0){
-            emailRepository.updateByEmailAndValidationCode(targetEmail, validationCode);
-        }else {
+
+        // 이메일 발송 정보 저장 :
+        if(emailRepository.findByEmail(targetEmail).isEmpty()){
             emailRepository.saveByEmailAndValidationCode(targetEmail, validationCode);
+        }else{
+            emailRepository.updateByEmailAndValidationCode(targetEmail, validationCode);
         }
     }
 
@@ -80,33 +100,56 @@ public class EmailService {
     }
 
     private String createEmailContent(String validationCode){
+//        String htmlFilePath = "src/main/resources/static/email/signupTemplate.html";
+//        String htmlContent = new String(Files.readAllBytes(Paths.get(htmlFilePath)), StandardCharsets.UTF_8);
+
         StringBuffer msg = new StringBuffer();
-        msg.append("<h1>회원가입 인증 메일입니다.</h1>");
+        msg.append("<h1 style=\"color: dodgerblue\">회원가입 인증 메일입니다.</h1>");
         msg.append("<p>아래의 인증 코드를 입력해주세요.</p>");
-        msg.append("<p id=\"textValue\">인증 코드: " + validationCode + "</p>");
+        msg.append("<p id=\"copyTxt\">" + validationCode + "</p>");
         msg.append("<div>");
-            msg.append("<input type=\"button\" value=\"인증 코드 복사하기\" onclick=\"copyT()\"/>");
+            msg.append("<input type=\"button\" value=\"인증 코드 복사하기\" onclick=\"alert('!')\" />");
         msg.append("</div>");
         msg.append("<script>");
-        msg.append("function copyT() {    \n" +
-                "  let copyText = document.getElementById('textValue');\n" +
-                "  copyText.select();\n" +
-                "  copyText.setSelectionRange(0, 99999);\n" +
-                "  document.execCommand(\"Copy\");\n" +
-                "  alert('클립보드에 복사되었습니다, 감사합니다.');\n" +
-                "}\n");
-//            msg.append("function copyT() {");
-//                msg.append("var obj = document.getElementById(\"copyTxt\");");
-//                msg.append("var range = document.createRange();");
-//                msg.append("range.selectNode(obj.childNodes[0]);");
-//                msg.append("var sel = window.getSelection();");
-//                msg.append("sel.removeAllRanges();");
-//                msg.append("sel.addRange(range);");
-//                msg.append("document.execCommand(\"copy\");");
-//                msg.append("alert(\"복사되었습니다.\");");
-//            msg.append("}");
+            msg.append("<script>\n" +
+                    "    function copyT() {\n" +
+                    "        let obj = document.getElementById(\"copyTxt\");\n" +
+                    "        let range = document.createRange();\n" +
+                    "        range.selectNode(obj.childNodes[0]);\n" +
+                    "        let sel = window.getSelection();\n" +
+                    "        sel.removeAllRanges();\n" +
+                    "        sel.addRange(range);\n" +
+                    "        document.execCommand(\"copy\");\n" +
+                    "        alert(\"복사되었습니다.\");\n" +
+                    "    };\n" +
+                    "</script>");
         msg.append("</script>");
         return msg.toString();
+    }
+
+    private boolean checkEmailSendCntLimit(String targetEmail) {
+        Optional<EmailEntity> emailEntity = emailRepository.findByEmail(targetEmail);
+        if(emailEntity.isEmpty()){
+            return false;
+        }
+        int timeLimit = 10;
+        Date now = new Date();
+        Date sendDate = emailEntity.get().getSendDate();
+        Date after10Min = new Date(sendDate.getTime() + timeLimit * 60 * 1000);
+
+        if (emailEntity.isEmpty()) { // 최초 발송
+            return false;
+        } else if (emailEntity.get().getSendCnt() >= 5 && after10Min.after(now)) { // 5회 발송 && 10분 안지남
+            log.info("5회 발송 && 10분 안지남");
+            return true;
+        } else if (emailEntity.get().getSendCnt() >= 5 && after10Min.before(now)) { // 5회 발송 && 10분 지남
+            log.info("5회 발송 && 10분 지남 >> 초기화 진행");
+            // 발송시간 및 발송 횟수 초기화, False 반환
+            emailRepository.deleteByEmail(targetEmail);
+            return false;
+        } else {
+            return false;
+        }
     }
 
     public void checkEmailValidationCode(String emailValidationCode, String email) {
@@ -114,7 +157,7 @@ public class EmailService {
             return new IllegalArgumentException("이메일 인증 코드가 유효하지 않습니다.");
         });
 
-        int resultRows = emailRepository.deleteByValidatedEmail(emailEntity.getEmail());
+        int resultRows = emailRepository.updateEmailValidationFlag(emailEntity.getEmail(), emailEntity.getEmailCode());
         if (resultRows == 0) {
             throw new IllegalArgumentException("이메일 인증에 실패했습니다.");
         }

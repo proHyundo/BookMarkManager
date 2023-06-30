@@ -16,15 +16,15 @@ public class RefreshResponseEntity {
     private final int statusCode;
     private final String statusDescription;
     private final String message;
-    private final LoginRefreshResponseDto loginResponseDto;
+    private final String userAccessToken;
 
-    static public ResponseEntity<RefreshResponseEntity> toResponseEntity(LoginRefreshResponseDto paramLoginRefreshResponseDto){
+    static public ResponseEntity<RefreshResponseEntity> toResponseEntity(String accessTokenParam){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(RefreshResponseEntity.builder()
                         .statusCode(HttpStatus.OK.value())
                         .statusDescription(HttpStatus.OK.name())
                         .message("로그인 연장 성공")
-                        .loginResponseDto(paramLoginRefreshResponseDto)
+                        .userAccessToken(accessTokenParam)
                         .build());
     }
 }

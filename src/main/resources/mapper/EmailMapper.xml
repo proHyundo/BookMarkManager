@@ -6,13 +6,18 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ SELECT ============================================ -->
 
-    <select id="findByEmailAndValidationCode">
+    <select id="findByEmailAndValidationCode" resultType="com.hyun.bookmarkshare.smtp.entity.EmailEntity">
         SELECT * FROM TEMAIL
-        WHERE EMAIL = #{email} AND EMAIL_CODE = #{validationCode}
+        WHERE EMAIL = #{email} AND EMAIL_CODE = #{emailCode}
     </select>
 
     <select id="countByUserEmail" resultType="integer">
         SELECT COUNT(*) FROM TEMAIL
+        WHERE EMAIL = #{email}
+    </select>
+
+    <select id="findByEmail" parameterType="String" resultType="com.hyun.bookmarkshare.smtp.entity.EmailEntity">
+        SELECT * FROM TEMAIL
         WHERE EMAIL = #{userEmail}
     </select>
 
@@ -21,7 +26,7 @@
 
     <insert id="saveByEmailAndValidationCode">
         INSERT INTO TEMAIL(EMAIL, EMAIL_CODE, EMAIL_SEND_CNT, EMAIL_SEND_DATE)
-        VALUES (#{email}, #{validationCode}, 1, NOW())
+        VALUES (#{email}, #{emailCode}, 1, NOW())
     </insert>
 
     <!-- ================================================================================================ -->
@@ -29,14 +34,21 @@
 
     <update id="updateByEmailAndValidationCode">
         UPDATE TEMAIL
-        SET EMAIL_CODE = #{validationCode}, EMAIL_SEND_CNT = EMAIL_SEND_CNT + 1
+        SET EMAIL_CODE = #{emailCode}, EMAIL_SEND_CNT = EMAIL_SEND_CNT + 1
         WHERE EMAIL = #{email}
     </update>
+
+    <update id="updateEmailValidationFlag">
+        UPDATE TEMAIL
+        SET EMAIL_VALID_FLAG = 1
+        WHERE EMAIL = #{email} AND EMAIL_CODE = #{emailCode}
+    </update>
+
 
     <!-- ================================================================================================ -->
     <!-- ============================================ DELETE ============================================ -->
 
-    <delete id="deleteByValidatedEmail">
+    <delete id="deleteByEmail">
         DELETE FROM TEMAIL
         WHERE EMAIL = #{email}
     </delete>

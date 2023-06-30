@@ -1,22 +1,26 @@
 package com.hyun.bookmarkshare.user.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.ibatis.type.Alias;
+
+import java.util.Date;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
-    Long USER_SEQ;
-    String USER_EMAIL;
-    String USER_NAME;
-    String USER_STATE;
-    String USER_GRADE;
-    String USER_ROLE;
-    String USER_ACCESS_TOKEN;
-    String USER_REFRESH_TOKEN;
+    Long userId;
+    String userEmail;
+    String userName;
+    String userState;
+    String userGrade;
+    String userRole;
+    Date userRegDate;
+    Date userModDate;
+    String userAccessToken;
+    String userRefreshToken;
+
 }
