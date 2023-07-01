@@ -12,11 +12,13 @@ import javax.validation.constraints.Positive;
 @AllArgsConstructor
 public class BookmarkListRequestDto {
 
+    // valid : null, 0, 음수 불가
     @NotNull
     @Positive
     private Long userId;
 
+    // valid : null, 0, 음수 불가
     @NotNull
     @Positive
-    private Long folderParentSeq;
+    private Long folderSeq;
 }

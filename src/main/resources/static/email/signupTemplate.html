@@ -1,0 +1,18 @@
+<h1 style="color: dodgerblue">회원가입 인증 메일입니다.</h1>
+<p>아래의 인증 코드를 입력해주세요.</p>
+<p id="copyTxt">validationCode</p>
+<div style="">
+    <input type="button" value="인증 코드 복사하기" onclick="copyT()">
+</div>
+<script>
+    function copyT() {
+        let obj = document.getElementById("copyTxt");
+        let range = document.createRange();
+        range.selectNode(obj.childNodes[0]);
+        let sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand("copy");
+        alert("복사되었습니다.");
+    };
+</script>

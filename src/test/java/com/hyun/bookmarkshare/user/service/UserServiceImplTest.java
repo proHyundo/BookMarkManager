@@ -29,8 +29,8 @@ class UserServiceImplTest {
         User resultUser = userService.loginProcess(targetDto);
 
         // then
-        assertThat(resultUser.getUSER_EMAIL()).isEqualTo(targetDto.getEmail());
-        assertThat(resultUser.getUSER_ACCESS_TOKEN()).isNotNull();
+        assertThat(resultUser.getUserEmail()).isEqualTo(targetDto.getEmail());
+        assertThat(resultUser.getUserAccessToken()).isNotNull();
     }
 
 }

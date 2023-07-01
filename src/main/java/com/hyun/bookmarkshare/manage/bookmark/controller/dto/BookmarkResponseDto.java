@@ -1,10 +1,8 @@
 package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,6 +10,7 @@ import lombok.Setter;
 public class BookmarkResponseDto {
 
     Long bookmarkSeq;
+    String bookmarkTitle;
     String bookmarkCaption;
     String bookmarkUrl;
 
