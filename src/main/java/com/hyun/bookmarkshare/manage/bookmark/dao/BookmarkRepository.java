@@ -2,7 +2,7 @@ package com.hyun.bookmarkshare.manage.bookmark.dao;
 
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
-import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,13 +10,17 @@ import java.util.Optional;
 @Mapper
 public interface BookmarkRepository {
 
-    Optional<List<Bookmark>> findAllByUserIdAndFolderParentSeq(BookmarkListRequestDto bookmarkListRequestDto);
+    List<Bookmark> findAllByUserIdAndFolderSeq(Long userId, Long folderSeq);
 
-    Optional<BookmarkResponseDto> findByUserIdAndBookmarkSeq(BookmarkRequestDto bookmarkRequestDto);
+    Optional<BookmarkResponseDto> findByUserIdAndBookmarkSeq(Long userId, Long bookmarkSeq);
 
-    Optional<BookmarkResponseDto> saveBookmark(BookmarkAddRequestDto bookmarkAddRequestDto);
+    Optional<Bookmark> findByBookmarkSeq(Long bookmarkSeq);
 
-    Optional<BookmarkResponseDto> updateByBookmarkUpdateRequestDto(BookmarkUpdateRequestDto bookmarkUpdateRequestDto);
+    int saveBookmark(BookmarkAddRequestDto bookmarkAddRequestDto);
 
-    Optional<BookmarkResponseDto> deleteByUserIdAndBookmarkSeq(BookmarkRequestDto bookmarkRequestDto);
+    int updateByBookmarkUpdateRequestDto(BookmarkUpdateRequestDto bookmarkUpdateRequestDto);
+
+    int deleteByUserIdAndBookmarkSeq(BookmarkRequestDto bookmarkRequestDto);
+
+    int updateOrderByBookmarkRequestDto(BookmarkReorderRequestDto bookmarkReorderRequestDto);
 }

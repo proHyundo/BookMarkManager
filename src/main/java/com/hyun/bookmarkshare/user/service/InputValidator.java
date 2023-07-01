@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
 @Component
 public class InputValidator {
 
+    /**
+     * Deprecated : @Valid 어노테이션을 통한 DTO 검증방식으로 변경.
+     * */
     public void emailMeter(String emailInput) {
 
         // 길이 조건 검증
@@ -18,7 +21,6 @@ public class InputValidator {
         }
 
         // 이메일 문자열 검증
-
         if( Pattern.matches("\\w+@\\w+\\.\\w+(\\.\\w+)?", emailInput) == false){
             throw new LoginInputValidateFailException(LoginExceptionErrorCode.BAD_INPUT_EMAIL, "Bad Input Email");
         }

@@ -1,8 +1,6 @@
 package com.hyun.bookmarkshare.manage.folder.controller;
 
-import com.hyun.bookmarkshare.manage.common.controller.dto.UserRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.*;
-import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import com.hyun.bookmarkshare.manage.folder.service.FolderService;
 import lombok.RequiredArgsConstructor;

@@ -22,13 +22,11 @@ public class AuthenticationManagerConfig extends AbstractHttpConfigurer<Authenti
     @Override
     public void configure(HttpSecurity builder) throws Exception {
         AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
-
         // UsernamePasswordAuthenticationFilter 필터 앞에 JwtAuthenticationFilter 필터를 생성.
         // 이때 JwtAuthenticationFilter 필터는 AuthenticationManager 를 사용하도록 설정.
         // AuthenticationManager JwtAuthenticationProvider 를 사용하도록 설정.
-        builder.addFilterBefore(
-                        new JwtAuthenticationFilter(authenticationManager),
-                        UsernamePasswordAuthenticationFilter.class)
+        builder.addFilterBefore(new JwtAuthenticationFilter(authenticationManager),
+                                UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(jwtAuthenticationProvider);
     }
 }
