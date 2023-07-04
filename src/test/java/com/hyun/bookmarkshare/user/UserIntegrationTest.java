@@ -49,6 +49,7 @@ public class UserIntegrationTest {
                 .userPhoneNum("01012341234")
                 .emailValidationCode("abcd1234")
                 .build();
+
         // when
         // jsonPath 문법 : https://github.com/json-path/JsonPath
         this.mockMvc.perform(post("/signup")

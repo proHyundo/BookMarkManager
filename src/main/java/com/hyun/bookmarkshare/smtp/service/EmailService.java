@@ -110,6 +110,7 @@ public class EmailService {
         msg.append("<p>아래의 인증 코드를 입력해주세요.</p>");
         msg.append("<p id=\"copyTxt\">" + validationCode + "</p>");
         msg.append("<div>");
+
         msg.append("<input type=\"button\" value=\"인증 코드 복사하기\" onclick=\"alert('!')\" />");
         msg.append("</div>");
         msg.append("<script>");
