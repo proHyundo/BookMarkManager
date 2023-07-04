@@ -23,4 +23,6 @@ public interface BookmarkRepository {
     int deleteByUserIdAndBookmarkSeq(BookmarkRequestDto bookmarkRequestDto);
 
     int updateOrderByBookmarkRequestDto(BookmarkReorderRequestDto bookmarkReorderRequestDto);
+
+    void save(Bookmark bookmark);
 }

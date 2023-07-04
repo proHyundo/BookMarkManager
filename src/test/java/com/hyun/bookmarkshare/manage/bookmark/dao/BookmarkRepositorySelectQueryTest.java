@@ -10,9 +10,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -23,36 +28,50 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @MybatisTest
-@Transactional
 class BookmarkRepositorySelectQueryTest {
 
     @Autowired
     BookmarkRepository bookmarkRepository;
 
-    @DisplayName("BookmarkRepository.findByUserIdAndBookmarkSeq - Success")
+    @DisplayName("사용자Id와 북마크Id로 북마크를 조회한다.")
     @Test
     void findByUserIdAndBookmarkSeq() {
         // given
-        BookmarkRequestDto bookmarkRequestDto = new BookmarkRequestDto(1L, 2L);
+        Bookmark bookmark1 = createBookmark(1L, 1L, "bookmarkTitle1");
+        Bookmark bookmark2 = createBookmark(2L, 1L, "bookmarkTitle2");
+        Bookmark bookmark3 = createBookmark(3L, 2L, "bookmarkTitle3");
+
+        bookmarkRepository.save(bookmark1);
+        bookmarkRepository.save(bookmark2);
+        bookmarkRepository.save(bookmark3);
 
         // when
-        BookmarkResponseDto bookmarkResponseDto = bookmarkRepository.findByUserIdAndBookmarkSeq(bookmarkRequestDto.getUserId(), bookmarkRequestDto.getBookmarkSeq()).get();
+        BookmarkResponseDto bookmarkResponseDto = bookmarkRepository
+                .findByUserIdAndBookmarkSeq(1L, 1L)
+                .get();
 
         // then
-        assertThat(bookmarkResponseDto.getBookmarkSeq()).isEqualTo(bookmarkRequestDto.getBookmarkSeq());
-        assertThat(bookmarkResponseDto.getBookmarkUrl()).isNotNull();
+        assertThat(bookmarkResponseDto.getBookmarkSeq()).isEqualTo(bookmark1.getBookmarkSeq());
+        assertThat(bookmarkResponseDto.getBookmarkTitle()).isEqualTo("bookmarkTitle1");
     }
 
-    @DisplayName("BookmarkRepository.findByUserIdAndBookmarkSeq - Fail : bookmarkSeq is not exist")
+    @DisplayName("사용자Id와 북마크Id로 북마크를 조회시, 일치하는 북마크Id가 없을 경우 비어있는 객체가 반환된다.")
     @Test
     void findByUserIdAndBookmarkSeqFail1() {
         // given
-        BookmarkRequestDto bookmarkRequestDto = new BookmarkRequestDto(1L, 100L);
+        // given
+        Bookmark bookmark1 = createBookmark(1L, 1L, "bookmarkTitle1");
+        Bookmark bookmark2 = createBookmark(2L, 1L, "bookmarkTitle2");
+        Bookmark bookmark3 = createBookmark(3L, 2L, "bookmarkTitle3");
+
+        bookmarkRepository.save(bookmark1);
+        bookmarkRepository.save(bookmark2);
+        bookmarkRepository.save(bookmark3);
 
         // when
+        Optional<BookmarkResponseDto> result = bookmarkRepository.findByUserIdAndBookmarkSeq(1L, 100L);
         // then
-        assertThatThrownBy(() -> bookmarkRepository.findByUserIdAndBookmarkSeq(bookmarkRequestDto.getUserId(), bookmarkRequestDto.getBookmarkSeq()).get())
-                .isInstanceOf(NoSuchElementException.class);
+        assertThat(result).isEmpty();
     }
 
     @DisplayName("BookmarkRepository.findByUserIdAndBookmarkSeq - Fail : userId is not exist")
@@ -112,5 +131,24 @@ class BookmarkRepositorySelectQueryTest {
         assertThat(allByUserIdAndFolderParentSeq).isEmpty();
     }
 
+    private Bookmark createBookmark(Long bookmarkSeq, Long userId, String bookmarkTitle){
+        return Bookmark.builder()
+                .bookmarkSeq(bookmarkSeq)
+                .userId(userId)
+                .folderSeq(1L)
+                .bookmarkTitle(bookmarkTitle)
+                .bookmarkCaption("caption sample")
+                .bookmarkScheme("http://")
+                .bookmarkHost("www.")
+                .bookmarkPort(null)
+                .bookmarkDomain("google.com")
+                .bookmarkPath("/")
+                .bookmarkUrl("http://www.google.com/")
+                .bookmarkOrder(1L)
+                .bookmarkRegDate(Date.valueOf(LocalDate.of(2023, 7, 3)))
+                .bookmarkModDate(Date.valueOf(LocalDate.of(2023, 7, 3)))
+                .bookmarkDelFlag("n")
+                .build();
+    }
 
 }

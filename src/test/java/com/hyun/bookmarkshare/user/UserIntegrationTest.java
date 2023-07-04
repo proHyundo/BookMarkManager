@@ -39,11 +39,11 @@ public class UserIntegrationTest {
     @Test
     void signUp() throws Exception {
         // given
-        emailRepository.saveByEmailAndValidationCode("08hyundo@gmail.com", "abcd1234");
-        emailRepository.updateEmailValidationFlag("08hyundo@gmail.com", "abcd1234");
+        emailRepository.saveByEmailAndValidationCode("******@gmail.com", "abcd1234");
+        emailRepository.updateEmailValidationFlag("******@gmail.com", "abcd1234");
         SignUpRequestDto signUpRequestDto = SignUpRequestDto.builder()
                                                             .userId(null)
-                                                            .userEmail("08hyundo@gmail.com")
+                                                            .userEmail("******@gmail.com")
                                                             .userPwd("test1234")
                                                             .userName("hyun")
                                                             .userGender("m")
@@ -58,7 +58,7 @@ public class UserIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..userEmail").exists())
-                .andExpect(jsonPath("$..userEmail").value("08hyundo@gmail.com"));
+                .andExpect(jsonPath("$..userEmail").value("******@gmail.com"));
     }
 
     @DisplayName("signUp > 회원가입 실패 > ALREADY_USER_EXIST 에러")
@@ -67,7 +67,7 @@ public class UserIntegrationTest {
         // given
         userRepository.saveBySignUpRequestDto(SignUpRequestDto.builder()
                 .userId(null)
-                .userEmail("08hyundo@gmail.com")
+                .userEmail("******@gmail.com")
                 .userPwd("test1234")
                 .userName("hyun")
                 .userGender("m")
@@ -75,11 +75,11 @@ public class UserIntegrationTest {
                 .emailValidationCode("abcd1234")
                 .build());
         
-        emailRepository.saveByEmailAndValidationCode("08hyundo@gmail.com", "abcd1234");
-        emailRepository.updateEmailValidationFlag("08hyundo@gmail.com", "abcd1234");
+        emailRepository.saveByEmailAndValidationCode("******@gmail.com", "abcd1234");
+        emailRepository.updateEmailValidationFlag("******@gmail.com", "abcd1234");
         SignUpRequestDto signUpRequestDto = SignUpRequestDto.builder()
                 .userId(null)
-                .userEmail("08hyundo@gmail.com")
+                .userEmail("******@gmail.com")
                 .userPwd("test1234")
                 .userName("hyun")
                 .userGender("m").build();
