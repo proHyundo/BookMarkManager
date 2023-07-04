@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Builder
 public class Bookmark {
 
     private Long bookmarkSeq;
@@ -27,6 +26,25 @@ public class Bookmark {
     private Date bookmarkRegDate;
     private Date bookmarkModDate;
     private String bookmarkDelFlag;
+
+    @Builder
+    public Bookmark(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkScheme, String bookmarkHost, String bookmarkPort, String bookmarkDomain, String bookmarkPath, String bookmarkUrl, Long bookmarkOrder, Date bookmarkRegDate, Date bookmarkModDate, String bookmarkDelFlag) {
+        this.bookmarkSeq = bookmarkSeq;
+        this.userId = userId;
+        this.folderSeq = folderSeq;
+        this.bookmarkTitle = bookmarkTitle;
+        this.bookmarkCaption = bookmarkCaption;
+        this.bookmarkScheme = bookmarkScheme;
+        this.bookmarkHost = bookmarkHost;
+        this.bookmarkPort = bookmarkPort;
+        this.bookmarkDomain = bookmarkDomain;
+        this.bookmarkPath = bookmarkPath;
+        this.bookmarkUrl = bookmarkUrl;
+        this.bookmarkOrder = bookmarkOrder;
+        this.bookmarkRegDate = bookmarkRegDate;
+        this.bookmarkModDate = bookmarkModDate;
+        this.bookmarkDelFlag = bookmarkDelFlag;
+    }
 
     public BookmarkResponseDto toBookmarkResponseDto() {
         return BookmarkResponseDto.builder()

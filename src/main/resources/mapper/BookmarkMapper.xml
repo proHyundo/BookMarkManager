@@ -62,6 +62,13 @@
                );
     </insert>
 
+    <insert id="save" parameterType="com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark">
+        INSERT INTO TBOOKMARK(USER_SEQ, FOLDER_SEQ, BOOK_TITLE, BOOK_CAPTION, BOOK_URL, BOOK_SCHEME,
+                              BOOK_HOST, BOOK_DOMAIN, BOOK_PORT, BOOK_PATH, BOOK_ORDER)
+      VALUES (#{userId}, #{folderSeq}, #{bookmarkTitle}, #{bookmarkCaption}, #{bookmarkUrl}, #{bookmarkScheme},
+              #{bookmarkHost}, #{bookmarkDomain}, #{bookmarkPort}, #{bookmarkPath}, #{bookmarkOrder});
+    </insert>
+
     <!-- ================================================================================================ -->
     <!-- ============================================ UPDATE ============================================ -->
 
