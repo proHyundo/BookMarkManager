@@ -110,21 +110,22 @@ public class EmailService {
         msg.append("<p>아래의 인증 코드를 입력해주세요.</p>");
         msg.append("<p id=\"copyTxt\">" + validationCode + "</p>");
         msg.append("<div>");
-            msg.append("<input type=\"button\" value=\"인증 코드 복사하기\" onclick=\"alert('!')\" />");
+
+        msg.append("<input type=\"button\" value=\"인증 코드 복사하기\" onclick=\"alert('!')\" />");
         msg.append("</div>");
         msg.append("<script>");
-            msg.append("<script>\n" +
-                    "    function copyT() {\n" +
-                    "        let obj = document.getElementById(\"copyTxt\");\n" +
-                    "        let range = document.createRange();\n" +
-                    "        range.selectNode(obj.childNodes[0]);\n" +
-                    "        let sel = window.getSelection();\n" +
-                    "        sel.removeAllRanges();\n" +
-                    "        sel.addRange(range);\n" +
-                    "        document.execCommand(\"copy\");\n" +
-                    "        alert(\"복사되었습니다.\");\n" +
-                    "    };\n" +
-                    "</script>");
+        msg.append("<script>\n" +
+                "    function copyT() {\n" +
+                "        let obj = document.getElementById(\"copyTxt\");\n" +
+                "        let range = document.createRange();\n" +
+                "        range.selectNode(obj.childNodes[0]);\n" +
+                "        let sel = window.getSelection();\n" +
+                "        sel.removeAllRanges();\n" +
+                "        sel.addRange(range);\n" +
+                "        document.execCommand(\"copy\");\n" +
+                "        alert(\"복사되었습니다.\");\n" +
+                "    };\n" +
+                "</script>");
         msg.append("</script>");
         return msg.toString();
     }

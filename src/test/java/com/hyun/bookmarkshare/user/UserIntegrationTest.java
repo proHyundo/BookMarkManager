@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,14 +41,15 @@ public class UserIntegrationTest {
         emailRepository.saveByEmailAndValidationCode("******@gmail.com", "abcd1234");
         emailRepository.updateEmailValidationFlag("******@gmail.com", "abcd1234");
         SignUpRequestDto signUpRequestDto = SignUpRequestDto.builder()
-                                                            .userId(null)
-                                                            .userEmail("******@gmail.com")
-                                                            .userPwd("test1234")
-                                                            .userName("hyun")
-                                                            .userGender("m")
-                                                            .userPhoneNum("01012341234")
-                                                            .emailValidationCode("abcd1234")
-                                                            .build();
+                .userId(null)
+                .userEmail("******@gmail.com")
+                .userPwd("test1234")
+                .userName("hyun")
+                .userGender("m")
+                .userPhoneNum("01012341234")
+                .emailValidationCode("abcd1234")
+                .build();
+
         // when
         // jsonPath 문법 : https://github.com/json-path/JsonPath
         this.mockMvc.perform(post("/signup")
@@ -74,7 +74,7 @@ public class UserIntegrationTest {
                 .userPhoneNum("01012341234")
                 .emailValidationCode("abcd1234")
                 .build());
-        
+
         emailRepository.saveByEmailAndValidationCode("******@gmail.com", "abcd1234");
         emailRepository.updateEmailValidationFlag("******@gmail.com", "abcd1234");
         SignUpRequestDto signUpRequestDto = SignUpRequestDto.builder()
