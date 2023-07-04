@@ -7,6 +7,7 @@ import com.hyun.bookmarkshare.smtp.exception.EmailProcessException;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final EmailRepository emailRepository;
     private final UserRepository userRepository;
+    private final @Value("${email.value.property}") String fromEmail;
 
     /**
      * 이메일 인증 코드 발송 로직.
@@ -66,7 +68,7 @@ public class EmailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            mimeMessageHelper.setFrom("s555s555@naver.com");
+            mimeMessageHelper.setFrom(fromEmail);
             mimeMessageHelper.setTo(targetEmail);
             mimeMessageHelper.setSubject("[BookmarkShare] 회원가입 인증 메일입니다.");
             mimeMessageHelper.setText(createEmailContent(validationCode), true);
