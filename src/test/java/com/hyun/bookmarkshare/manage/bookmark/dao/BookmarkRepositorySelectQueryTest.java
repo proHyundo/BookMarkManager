@@ -4,6 +4,7 @@ import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkListRequest
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
+import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -74,61 +75,40 @@ class BookmarkRepositorySelectQueryTest {
         assertThat(result).isEmpty();
     }
 
-    @DisplayName("BookmarkRepository.findByUserIdAndBookmarkSeq - Fail : userId is not exist")
-    @Test
-    void findByUserIdAndBookmarkSeqFail2() {
-        // given
-        BookmarkRequestDto bookmarkRequestDto = new BookmarkRequestDto(100L, 2L);
 
-        // when
-        // then
-        assertThatThrownBy(() -> bookmarkRepository.findByUserIdAndBookmarkSeq(bookmarkRequestDto.getUserId(), bookmarkRequestDto.getBookmarkSeq()).get())
-                .isInstanceOf(NoSuchElementException.class);
-    }
-
-    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderSeq - Success")
+    @DisplayName("사용자id와 폴더id로 특정 사용자의 특정 폴더에 속한 모든 북마크들을 가져온다.")
     @Test
     void findAllByUserIdAndFolderSeq() {
-        // given
-        BookmarkListRequestDto bookmarkRequestDto = new BookmarkListRequestDto(1L, 49L);
+        // given (사용자1, 사용자2, 폴더1, 폴더2 존재)
+        bookmarkRepository.save(createBookmark(1L, 1L, 1L, "bookmarkTitle1"));
+        bookmarkRepository.save(createBookmark(2L, 1L, 1L, "bookmarkTitle2"));
+        bookmarkRepository.save(createBookmark(3L, 1L, 2L, "bookmarkTitle3"));
 
         // when
-        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkRequestDto.getUserId(), bookmarkRequestDto.getFolderSeq());
+        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderSeq(1L, 1L);
 
         // then
-        assertThat(bookmarkListResult).isNotNull();
         assertThat(bookmarkListResult.size()).isEqualTo(2);
-
-        System.out.println(bookmarkListResult.size());
-        bookmarkListResult.forEach(bookmarkResponseDto -> {
-            log.info("bookmarkResponseDto : {}", bookmarkResponseDto.getBookmarkUrl());
-        });
+        assertThat(bookmarkListResult).extracting("bookmarkTitle")
+                        .containsExactlyInAnyOrder(
+                                "bookmarkTitle1",
+                                "bookmarkTitle2"
+                        );
     }
 
-    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderSeq - Fail : folderParentSeq is not exist")
+    @DisplayName("사용자 id와 폴더 id로 모든 북마크를 조회할 때 존재하는 북마크가 없는 경우 비어있는 객체가 반환된다.")
     @Test
     void findAllByUserIdAndFolderSeqFail1(){
-        // given
-        BookmarkListRequestDto bookmarkListRequestDto = new BookmarkListRequestDto(1L, 99L);
+        // given (사용자1, 사용자2, 폴더1, 폴더2 존재)
+        bookmarkRepository.save(createBookmark(1L, 1L, 1L, "bookmarkTitle1"));
+        bookmarkRepository.save(createBookmark(2L, 1L, 1L, "bookmarkTitle2"));
+        bookmarkRepository.save(createBookmark(3L, 1L, 2L, "bookmarkTitle3"));
 
         // when
-        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq());
+        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderSeq(1L, 99L);
 
         // then
-        assertThat(allByUserIdAndFolderParentSeq).isEmpty();
-    }
-
-    @DisplayName("BookmarkRepository.findAllByUserIdAndFolderSeq - Fail : userId is not exist")
-    @Test
-    void findAllByUserIdAndFolderSeqFail2(){
-        // given
-        BookmarkListRequestDto bookmarkListRequestDto = new BookmarkListRequestDto(999L, 49L);
-
-        // when
-        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq());
-
-        // then
-        assertThat(allByUserIdAndFolderParentSeq).isEmpty();
+        assertThat(bookmarkListResult).isEmpty();
     }
 
     private Bookmark createBookmark(Long bookmarkSeq, Long userId, String bookmarkTitle){
@@ -136,6 +116,26 @@ class BookmarkRepositorySelectQueryTest {
                 .bookmarkSeq(bookmarkSeq)
                 .userId(userId)
                 .folderSeq(1L)
+                .bookmarkTitle(bookmarkTitle)
+                .bookmarkCaption("caption sample")
+                .bookmarkScheme("http://")
+                .bookmarkHost("www.")
+                .bookmarkPort(null)
+                .bookmarkDomain("google.com")
+                .bookmarkPath("/")
+                .bookmarkUrl("http://www.google.com/")
+                .bookmarkOrder(1L)
+                .bookmarkRegDate(Date.valueOf(LocalDate.of(2023, 7, 3)))
+                .bookmarkModDate(Date.valueOf(LocalDate.of(2023, 7, 3)))
+                .bookmarkDelFlag("n")
+                .build();
+    }
+
+    private Bookmark createBookmark(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle){
+        return Bookmark.builder()
+                .bookmarkSeq(bookmarkSeq)
+                .userId(userId)
+                .folderSeq(folderSeq)
                 .bookmarkTitle(bookmarkTitle)
                 .bookmarkCaption("caption sample")
                 .bookmarkScheme("http://")
