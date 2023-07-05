@@ -3,6 +3,7 @@ package com.hyun.bookmarkshare.manage.bookmark.service;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +43,18 @@ public class BookmarkServiceImpl implements BookmarkService{
         return bookmarkAddRequestDto.toBookmarkResponseDto(bookmarkAddRequestDto);
     }
 
+    // TODO : 신규 북마크 저장 로직 변경
     @Override
     public BookmarkResponseDto updateBookmark(BookmarkUpdateRequestDto bookmarkUpdateRequestDto) {
+        // 요청받은 북마크 식별번호로 기존 북마크 객체를 꺼내온다.
+
+        // 존재하는 북마크라면, 기존 북마크 객체의 정보를 수정 요청받은 정보로 덮어 쓴다.
+
+        // 덮어쓴 북마크 객체를 저장한다.
+
+        // 저장한 북마크 객체를 응답하기 위해 반환객체로 변환한다.
+
+        // 반환객체를 반환한다.
         int updatedRows = bookmarkRepository.updateByBookmarkUpdateRequestDto(bookmarkUpdateRequestDto);
         validateSqlUpdatedRows(updatedRows);
         return bookmarkRepository.findByUserIdAndBookmarkSeq(bookmarkUpdateRequestDto.getUserId(), bookmarkUpdateRequestDto.getBookmarkSeq()).orElseThrow(
@@ -59,15 +70,16 @@ public class BookmarkServiceImpl implements BookmarkService{
         return resultDto;
     }
 
+    // TODO : 완성 안됨.
     @Override
-    public List<Long> updateBookmarkOrder(List<BookmarkReorderRequestDto> requestDtoList) {
-        for ( BookmarkReorderRequestDto bookmarkReorderRequestDto : requestDtoList) {
-            int updatedRows = bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderRequestDto);
+    public List<Long> updateBookmarkOrder(List<BookmarkReorderServiceRequestDto> serviceRequestDtos) {
+        for ( BookmarkReorderServiceRequestDto bookmarkReorderServiceRequestDto : serviceRequestDtos) {
+            int updatedRows = bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderServiceRequestDto);
             validateSqlUpdatedRows(updatedRows);
         }
         List<List<Long>> resultList = new ArrayList<>();
-        requestDtoList.forEach(bookmarkReorderRequestDto ->
-                resultList.add(bookmarkReorderRequestDto.getBookmarkSeqOrder())
+        serviceRequestDtos.forEach(serviceRequestDto ->
+                resultList.add(serviceRequestDto.getBookmarkSeqOrder())
         );
         return null;
     }

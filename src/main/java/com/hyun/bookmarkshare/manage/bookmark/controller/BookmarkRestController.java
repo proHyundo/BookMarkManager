@@ -2,12 +2,14 @@ package com.hyun.bookmarkshare.manage.bookmark.controller;
 
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.service.BookmarkService;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,8 +72,15 @@ public class BookmarkRestController {
      * @return 수정된 bookmarkSeq List 를 BookmarkResponseEntity 로 감싸서 반환.
      * */
     @PatchMapping("/manage/bookmark/reorder")
-    public ResponseEntity<BookmarkReorderResponseEntity> updateBookmarkOrderRequest(@RequestBody @Valid List<BookmarkReorderRequestDto> bookmarkReorderRequestDto){
-        return BookmarkReorderResponseEntity.toResponseEntity(bookmarkService.updateBookmarkOrder(bookmarkReorderRequestDto));
+    public ResponseEntity<BookmarkReorderResponseEntity> updateBookmarkOrderRequest(@RequestBody
+                                                                                    @Valid
+                                                                                    List<BookmarkReorderRequestDto> bookmarkReorderRequestDtos){
+        List<BookmarkReorderServiceRequestDto> bookmarkReorderServiceRequestDtos = bookmarkReorderRequestDtos.stream()
+                .map(requestDto -> requestDto.toServiceRequestDto())
+                .collect(Collectors.toList());
+        return BookmarkReorderResponseEntity.toResponseEntity(
+                bookmarkService.updateBookmarkOrder(bookmarkReorderServiceRequestDtos)
+        );
     }
 
 
