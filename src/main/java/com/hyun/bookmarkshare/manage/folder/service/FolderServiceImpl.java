@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
+import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderListRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
@@ -19,21 +20,22 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class FolderServiceImpl implements FolderService{
 
-    private final FolderRepository repository;
+    private final FolderRepository folderRepository;
     private final FolderRequestValidator validator;
+    private final BookmarkRepository bookmarkRepository;
 
     @Override
     public List<Folder> findFolderList(FolderListRequestDto requestDto) {
 //        validator.check(requestDto);
-        return repository.findAllByUserIdAndParentSeq(requestDto.getUserId(), requestDto.getFolderParentSeq());
+        return folderRepository.findAllByUserIdAndParentSeq(requestDto.getUserId(), requestDto.getFolderParentSeq());
     }
 
     @Override
     public Folder createFolder(FolderCreateRequestDto requestDto) {
         // 검증 ( 폴더명, 폴더레벨, 공유범위) - 미 충족 시 예외
-        int insertedRows = repository.saveNewFolder(requestDto);
+        int insertedRows = folderRepository.saveNewFolder(requestDto);
         validateSqlUpdatedRows(insertedRows);
-        return repository.findByFolderSeq(requestDto.getFolderSeq())
+        return folderRepository.findByFolderSeq(requestDto.getFolderSeq())
                 .orElseThrow(() -> new NoSuchElementException("Not Found Folder"));
     }
 
@@ -41,9 +43,11 @@ public class FolderServiceImpl implements FolderService{
     public Long deleteFolder(FolderRequestDto requestDto) {
         // 검증 ( 폴더식별번호가 혹시 0은 아닌지, 삭제할 대상이 있는지)
         validator.check(requestDto);
-
-        int deletedRows = repository.deleteByFolderSeq(requestDto.getFolderSeq());
+        // 폴더 삭제 처리
+        int deletedRows = folderRepository.deleteByFolderSeq(requestDto.getFolderSeq());
         validateSqlUpdatedRows(deletedRows);
+        // 폴더 내부의 북마크 삭제 처리
+//        int folderDeletedRows = bookmarkRepository.deleteByFolderSeq(requestDto.getFolderSeq());
         return requestDto.getFolderSeq();
     }
 
@@ -51,9 +55,9 @@ public class FolderServiceImpl implements FolderService{
     public Folder updateFolder(FolderRequestDto requestDto) {
         validator.check(requestDto);
 
-        int updatedRows = repository.updateByFolderRequestDto(requestDto);
+        int updatedRows = folderRepository.updateByFolderRequestDto(requestDto);
         validateSqlUpdatedRows(updatedRows);
-        return repository.findByFolderSeq(requestDto.getFolderSeq())
+        return folderRepository.findByFolderSeq(requestDto.getFolderSeq())
                 .orElseThrow(()->new NoSuchElementException("Not Found Folder"));
     }
 
@@ -61,7 +65,7 @@ public class FolderServiceImpl implements FolderService{
     public List<Long> updateFolderOrder(List<FolderReorderRequestDto> requestDtoList) {
         validator.check(requestDtoList);
         for ( FolderReorderRequestDto folderReorderRequestDto : requestDtoList) {
-            int updatedRows = repository.updateOrderByFolderRequestDto(folderReorderRequestDto);
+            int updatedRows = folderRepository.updateOrderByFolderRequestDto(folderReorderRequestDto);
             validateSqlUpdatedRows(updatedRows);
         }
         List<Long> result = new ArrayList<>();

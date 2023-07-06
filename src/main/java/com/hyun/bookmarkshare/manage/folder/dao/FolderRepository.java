@@ -28,10 +28,13 @@ public interface FolderRepository {
     int saveNewFolder(FolderCreateRequestDto requestDto);
 
     // UPDATE
-    int deleteByFolderSeq(Long folderSeq);
     int updateByFolderRequestDto(FolderRequestDto requestDto);
     int updateOrderByFolderRequestDto(FolderReorderRequestDto folderReorderRequestDto);
 
+    // DELETE
+    int deleteByFolderSeq(Long folderSeq);
+
     // ONLY FOR TEST
     int save(Folder folder);
+    Optional<Folder> findByFolderSeqEvenIfDeleted(Long folderSeq);
 }

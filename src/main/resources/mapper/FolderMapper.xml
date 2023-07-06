@@ -44,6 +44,12 @@
         LIMIT 1;
     </select>
 
+    <select id="findByFolderSeqEvenIfDeleted" resultType="Long" resultMap="folderEntityResultMap">
+        SELECT *
+        FROM TFOLDER
+        WHERE FOLDER_SEQ = #{folderSeq};
+    </select>
+
     <!-- ================================================================================================ -->
     <!-- ============================================ INSERT ============================================ -->
 
@@ -114,7 +120,7 @@
         SET FOLDER_NAME = #{folderName},
             FOLDER_CAPTION = #{folderCaption},
             FOLDER_SCOPE = #{folderScope},
-            FOLDER_UPD_DATE = NOW()
+            FOLDER_MOD_DATE = NOW()
             WHERE FOLDER_SEQ = #{folderSeq} AND USER_SEQ = #{userId}
     </update>
 
@@ -131,7 +137,7 @@
 
     <update id="deleteByFolderSeq" parameterType="Long">
         UPDATE TFOLDER
-        SET FOLDER_UPD_DATE = NOW(),
+        SET FOLDER_MOD_DATE = NOW(),
             FOLDER_DEL_FLAG = 'y'
         WHERE FOLDER_SEQ = #{folderSeq}
     </update>

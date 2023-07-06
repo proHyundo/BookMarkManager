@@ -76,7 +76,7 @@ class FolderRepositorySelectQueryTest {
         assertThat(result).isNotEmpty();
     }
 
-    @DisplayName("폴더 id로 삭제된 단일 폴더를 조회하면 비어있는 Optional 객체가 반환된다..")
+    @DisplayName("폴더 id로 삭제된 단일 폴더를 조회하면 비어있는 Optional 객체가 반환된다.")
     @Test
     void findByDeletedFolderSeq() {
         // given
@@ -86,6 +86,19 @@ class FolderRepositorySelectQueryTest {
         Optional<Folder> result = folderRepository.findByFolderSeq(3L);
         // then
         assertThat(result).isEmpty();
+    }
+
+    @DisplayName("폴더 id로 삭제여부와 관계없이 폴더를 조회한다.")
+    @Test
+    void findByFolderSeqEvenIfDeleted() {
+        // given
+        Folder folder1 = createFolderWithDeleteFlag(3L, 1L, 1L, "y");
+        folderRepository.save(folder1);
+
+        // when
+        Optional<Folder> result = folderRepository.findByFolderSeqEvenIfDeleted(3L);
+        // then
+        assertThat(result.get().getFolderSeq()).isEqualTo(folder1.getFolderSeq());
     }
 
     private Folder createFolder(Long folderSeq, Long userId, Long parentSeq, String folderName, Long folderOrder, String folderDeleteFlag) {
