@@ -1,8 +1,6 @@
 package com.hyun.bookmarkshare.manage.bookmark.dao;
 
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkReorderRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkUpdateRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -22,7 +19,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @MybatisTest
 public class BookmarkRepositoryUpdateQueryTest {

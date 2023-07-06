@@ -4,6 +4,7 @@ import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +64,12 @@ public class BookmarkServiceImpl implements BookmarkService{
     }
 
     @Override
-    public BookmarkResponseDto deleteBookmark(BookmarkRequestDto bookmarkRequestDto) {
-        BookmarkResponseDto resultDto = BookmarkResponseDto.builder().build();
-        int updatedRows = bookmarkRepository.deleteByUserIdAndBookmarkSeq(bookmarkRequestDto);
+    public BookmarkResponseDto deleteBookmark(BookmarkServiceRequestDto bookmarkServiceRequestDto) {
+        int updatedRows = bookmarkRepository.deleteByUserIdAndBookmarkSeq(bookmarkServiceRequestDto.getUserId(),
+                                                                          bookmarkServiceRequestDto.getBookmarkSeq());
         validateSqlUpdatedRows(updatedRows);
-        return resultDto;
+        return BookmarkResponseDto.builder()
+                .build();
     }
 
     // TODO : 완성 안됨.

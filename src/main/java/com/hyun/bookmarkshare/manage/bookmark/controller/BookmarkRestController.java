@@ -68,7 +68,7 @@ public class BookmarkRestController {
     /**
      * Bookmark 순서 변경 Patch Request 처리.
      *
-     * @param bookmarkReorderRequestDto 의 userId, folderSeq, bookmarkSeqOrder 를 받는다.
+     * @param bookmarkReorderRequestDtos 의 userId, folderSeq, bookmarkSeqOrder 를 받는다.
      * @return 수정된 bookmarkSeq List 를 BookmarkResponseEntity 로 감싸서 반환.
      * */
     @PatchMapping("/manage/bookmark/reorder")
@@ -91,8 +91,11 @@ public class BookmarkRestController {
      * @return 삭제된 Bookmark 정보를 BookmarkResponseEntity 로 감싸서 반환.
      * */
     @DeleteMapping("/manage/bookmark")
-    public ResponseEntity<BookmarkResponseEntity> deleteBookmarkRequest(@RequestBody @Valid BookmarkRequestDto bookmarkRequestDto){
-        return BookmarkResponseEntity.toBookmarkResponseEntity(bookmarkService.deleteBookmark(bookmarkRequestDto));
+    public ResponseEntity<BookmarkResponseEntity> deleteBookmarkRequest(@RequestBody
+                                                                        @Valid BookmarkRequestDto bookmarkRequestDto){
+        return BookmarkResponseEntity.toBookmarkResponseEntity(
+                bookmarkService.deleteBookmark(bookmarkRequestDto.toServiceRequestDto())
+        );
     }
 
 

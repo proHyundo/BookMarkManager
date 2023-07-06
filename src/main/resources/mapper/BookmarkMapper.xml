@@ -40,6 +40,13 @@
         WHERE USER_SEQ = #{userId} AND BOOK_SEQ = #{bookmarkSeq} AND BOOK_DEL_FLAG = 'n';
     </select>
 
+    <select id="findByBookmarkSeqForTest" parameterType="Long" resultMap="bookmarkEntityResultMap">
+        SELECT *
+        FROM TBOOKMARK
+        WHERE BOOK_SEQ = #{bookmarkSeq}
+        ORDER BY BOOK_ORDER;
+    </select>
+
     <!-- none used -->
     <select id="findByBookmarkSeqLockUpdate"
             parameterType="Long"
@@ -71,11 +78,11 @@
 
     <insert id="save" parameterType="com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark">
         INSERT INTO TBOOKMARK(BOOK_SEQ, USER_SEQ, FOLDER_SEQ, BOOK_TITLE, BOOK_CAPTION, BOOK_URL, BOOK_SCHEME,
-                              BOOK_HOST, BOOK_DOMAIN, BOOK_PORT, BOOK_PATH, BOOK_ORDER)
+                              BOOK_HOST, BOOK_DOMAIN, BOOK_PORT, BOOK_PATH, BOOK_ORDER, BOOK_DEL_FLAG)
         VALUES(#{bookmarkSeq}, #{userId}, #{folderSeq}, #{bookmarkTitle}, #{bookmarkCaption}, #{bookmarkUrl}, #{bookmarkScheme},
                #{bookmarkHost}, #{bookmarkDomain}, #{bookmarkPort}, #{bookmarkPath},
                (SELECT MAX(BOOK_ORDER)+1 FROM TBOOKMARK ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq})
-               );
+               , 'n');
     </insert>
 
     <!-- ================================================================================================ -->
@@ -119,7 +126,7 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ DELETE ============================================ -->
 
-    <update id="deleteByUserIdAndBookmarkSeq" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkRequestDto">
+    <update id="deleteByUserIdAndBookmarkSeq" parameterType="Long">
         UPDATE TBOOKMARK SET BOOK_DEL_FLAG = 'y', BOOK_MOD_DATE = NOW()
         WHERE USER_SEQ = #{userId} AND BOOK_SEQ = #{bookmarkSeq} AND BOOK_DEL_FLAG = 'n';
     </update>

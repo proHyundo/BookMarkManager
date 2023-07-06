@@ -3,6 +3,7 @@ package com.hyun.bookmarkshare.manage.bookmark.service;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public interface BookmarkService {
     /**
      * userId, bookmarkSeq 로 특정 bookmark 를 삭제한다.
      * */
-    BookmarkResponseDto deleteBookmark(BookmarkRequestDto bookmarkRequestDto);
+    BookmarkResponseDto deleteBookmark(BookmarkServiceRequestDto bookmarkServiceRequestDto);
 
     List<Long> updateBookmarkOrder(List<BookmarkReorderServiceRequestDto> bookmarkReorderServiceRequestDto);
 }
