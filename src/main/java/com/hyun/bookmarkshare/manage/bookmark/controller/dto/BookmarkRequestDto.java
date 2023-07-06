@@ -1,17 +1,13 @@
 package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class BookmarkRequestDto {
 
     @NotNull
@@ -21,5 +17,18 @@ public class BookmarkRequestDto {
     @NotNull
     @Positive
     Long bookmarkSeq;
+
+    @Builder
+    public BookmarkRequestDto(Long userId, Long bookmarkSeq) {
+        this.userId = userId;
+        this.bookmarkSeq = bookmarkSeq;
+    }
+
+    public BookmarkServiceRequestDto toServiceRequestDto() {
+        return BookmarkServiceRequestDto.builder()
+                .userId(this.userId)
+                .bookmarkSeq(this.bookmarkSeq)
+                .build();
+    }
 
 }

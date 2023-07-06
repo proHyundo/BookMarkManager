@@ -2,12 +2,14 @@ package com.hyun.bookmarkshare.manage.bookmark.controller;
 
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.service.BookmarkService;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,12 +68,19 @@ public class BookmarkRestController {
     /**
      * Bookmark 순서 변경 Patch Request 처리.
      *
-     * @param bookmarkReorderRequestDto 의 userId, folderSeq, bookmarkSeqOrder 를 받는다.
+     * @param bookmarkReorderRequestDtos 의 userId, folderSeq, bookmarkSeqOrder 를 받는다.
      * @return 수정된 bookmarkSeq List 를 BookmarkResponseEntity 로 감싸서 반환.
      * */
     @PatchMapping("/manage/bookmark/reorder")
-    public ResponseEntity<BookmarkReorderResponseEntity> updateBookmarkOrderRequest(@RequestBody @Valid List<BookmarkReorderRequestDto> bookmarkReorderRequestDto){
-        return BookmarkReorderResponseEntity.toResponseEntity(bookmarkService.updateBookmarkOrder(bookmarkReorderRequestDto));
+    public ResponseEntity<BookmarkReorderResponseEntity> updateBookmarkOrderRequest(@RequestBody
+                                                                                    @Valid
+                                                                                    List<BookmarkReorderRequestDto> bookmarkReorderRequestDtos){
+        List<BookmarkReorderServiceRequestDto> bookmarkReorderServiceRequestDtos = bookmarkReorderRequestDtos.stream()
+                .map(requestDto -> requestDto.toServiceRequestDto())
+                .collect(Collectors.toList());
+        return BookmarkReorderResponseEntity.toResponseEntity(
+                bookmarkService.updateBookmarkOrder(bookmarkReorderServiceRequestDtos)
+        );
     }
 
 
@@ -82,8 +91,11 @@ public class BookmarkRestController {
      * @return 삭제된 Bookmark 정보를 BookmarkResponseEntity 로 감싸서 반환.
      * */
     @DeleteMapping("/manage/bookmark")
-    public ResponseEntity<BookmarkResponseEntity> deleteBookmarkRequest(@RequestBody @Valid BookmarkRequestDto bookmarkRequestDto){
-        return BookmarkResponseEntity.toBookmarkResponseEntity(bookmarkService.deleteBookmark(bookmarkRequestDto));
+    public ResponseEntity<BookmarkResponseEntity> deleteBookmarkRequest(@RequestBody
+                                                                        @Valid BookmarkRequestDto bookmarkRequestDto){
+        return BookmarkResponseEntity.toBookmarkResponseEntity(
+                bookmarkService.deleteBookmark(bookmarkRequestDto.toServiceRequestDto())
+        );
     }
 
 

@@ -2,6 +2,7 @@ package com.hyun.bookmarkshare.manage.bookmark.dao;
 
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkAddRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
+import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.UrlParser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,27 +27,37 @@ public class BookmarkRepositoryInsertQueryTest {
     @Autowired
     BookmarkRepository bookmarkRepository;
 
-    @Rollback(false)
-    @DisplayName("BookmarkRepository.saveNewBookmark > 새 북마크 저장 > Success")
+    @DisplayName("새 북마크를 저장한다.")
     @Test
-    void saveNewBookmark() {
+    void save() {
         // given
-        BookmarkAddRequestDto bookmarkAddRequestDto = BookmarkAddRequestDto.builder()
-                .userId(1L)
-                .folderSeq(49L)
-                .bookmarkUrl("https://www.naver.com/test/2023-04-06/17:04")
-                .bookmarkTitle("네이버 test 2023-04-06")
-                .build();
-        UrlParser urlParser = new UrlParser();
-        BookmarkAddRequestDto targetDto = urlParser.assignUrlFields(bookmarkAddRequestDto);
+        Bookmark target = createBookmark(1L, 1L, "네이버", "https://www.naver.com");
 
         // when
-        int resultRows = bookmarkRepository.saveBookmark(targetDto);
+        int savedBookmarkSeq = bookmarkRepository.save(target);
 
         // then
-        assertThat(resultRows).isEqualTo(1);
-        assertThat(targetDto.getBookSeq()).isNotNull();
-        System.out.println(targetDto.getBookSeq());
+        assertThat(savedBookmarkSeq).isEqualTo(1);
+        Optional<Bookmark> resultBookmark = bookmarkRepository.findByBookmarkSeq(Integer.toUnsignedLong(savedBookmarkSeq));
+        assertThat(resultBookmark.get().getBookmarkTitle()).isEqualTo("네이버");
+
+        // https://frhyme.github.io/others/DB_NOT_NULL_vs_default/
+        // https://cocoon1787.tistory.com/843
+    }
+
+    private Bookmark createBookmark(Long userId, Long folderId, String bookmarkTitle, String bookmarkUrl){
+        return Bookmark.builder()
+                .userId(userId)
+                .folderSeq(folderId)
+                .bookmarkTitle(bookmarkTitle)
+                .bookmarkCaption("북마크 설명")
+                .bookmarkScheme("")
+                .bookmarkHost("")
+                .bookmarkDomain("")
+                .bookmarkUrl(bookmarkUrl)
+                .bookmarkRegDate(Date.valueOf(LocalDate.of(2023, 7, 5)))
+                .bookmarkModDate(Date.valueOf(LocalDate.of(2023, 7, 5)))
+                .build();
     }
 
 }

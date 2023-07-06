@@ -1,73 +1,88 @@
 package com.hyun.bookmarkshare.manage.bookmark.dao;
 
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkReorderRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkUpdateRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Transactional
 @MybatisTest
 public class BookmarkRepositoryUpdateQueryTest {
 
     @Autowired
     BookmarkRepository bookmarkRepository;
 
-    @DisplayName("BookmarkRepository.updateByBookmarkUpdateRequestDto > 북마크 수정 > Success")
+    @DisplayName("기존에 존재하는 북마크의 정보를 수정한다.")
     @Test
     void updateByBookmarkUpdateRequestDto(){
         // given
-        BookmarkUpdateRequestDto targetDto = BookmarkUpdateRequestDto.builder()
-                .bookmarkSeq(12L)
-                .userId(1L)
-                .bookmarkCaption("네이버 test 2023-04-11")
-                .bookmarkScheme("https")
-                .bookmarkHost("www.")
-                .bookmarkDomain("naver.com")
-                .bookmarkPort(":8080")
-                .bookmarkPath("/test/2023-04-11/14:09")
-                .bookmarkUrl("https://www.naver.com/test/2023-04-11/14:09")
-                .build();
+        Bookmark beforeUpdateBookmark = createBookmark(1L, 1L, "다음", "https://www.naver.com");
+        int savedBookmarkSeq = bookmarkRepository.save(beforeUpdateBookmark);
+
+        Optional<Bookmark> targetBookmark = bookmarkRepository.findByBookmarkSeq((long) savedBookmarkSeq);
+        targetBookmark.get().setBookmarkTitle("네이버");
 
         // when
-        bookmarkRepository.updateByBookmarkUpdateRequestDto(targetDto);
-        Optional<BookmarkResponseDto> resultDto = bookmarkRepository.findByUserIdAndBookmarkSeq(targetDto.getUserId(), targetDto.getBookmarkSeq());
+        int resultRows = bookmarkRepository.update(targetBookmark.get());
 
         // then
-        assertThat(resultDto).get().isNotNull();
-        assertThat(resultDto.get().getBookmarkUrl()).isEqualTo(targetDto.getBookmarkUrl());
+        assertThat(resultRows).isEqualTo(1);
+        Optional<Bookmark> updatedBookmark = bookmarkRepository.findByBookmarkSeq((long) savedBookmarkSeq);
+        assertThat(updatedBookmark).get().isNotNull();
+        assertThat(updatedBookmark.get().getBookmarkTitle()).isEqualTo(targetBookmark.get().getBookmarkTitle());
     }
 
-    @DisplayName("BookmarkRepository.updateOrderByBookmarkRequestDto > 북마크 순서 수정 > Success")
+    @DisplayName("특정 폴더 내의 북마크 순서들을 수정한다.")
     @Test
     void updateOrderByBookmarkRequestDto(){
         // given
-        Long userId = 1L;
-        Long folderSeq = 49L;
-        List<Long> bookmarkSeqOrder = Arrays.asList(3L, 2L, 12L);
-        BookmarkReorderRequestDto bookmarkReorderRequestDto = new BookmarkReorderRequestDto(userId, folderSeq, bookmarkSeqOrder);
+        Bookmark bookmark1 = createBookmark(1L, 1L, "네이버", "https://www.naver.com");
+        Bookmark bookmark2 = createBookmark(1L, 1L, "다음", "https://www.daum.net");
+        Bookmark bookmark3 = createBookmark(1L, 1L, "구글", "https://www.google.com");
+        bookmarkRepository.save(bookmark1);
+        bookmarkRepository.save(bookmark2);
+        bookmarkRepository.save(bookmark3);
 
-        // when
-        bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderRequestDto);
+        List<Long> bookmarkSeqOrder = Arrays.asList(2L, 3L, 1L);
+        BookmarkReorderRequestDto bookmarkReorderRequestDto = new BookmarkReorderRequestDto(1L, 1L, bookmarkSeqOrder);
+        BookmarkReorderServiceRequestDto bookmarkReorderServiceRequestDto = bookmarkReorderRequestDto.toServiceRequestDto();
+        int resultRows = bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderServiceRequestDto);
 
         // then
-        List<Bookmark> resultDtoList = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkReorderRequestDto.getUserId(), bookmarkReorderRequestDto.getFolderSeq());
-        resultDtoList.forEach(bookmark -> System.out.println(bookmark.getBookmarkSeq() + " : " + bookmark.getBookmarkOrder()));
+        assertThat(bookmarkRepository.findAllByUserIdAndFolderSeq(1L, 1L))
+                .extracting("bookmarkSeq", "bookmarkOrder")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple(2L, 1L),
+                        Tuple.tuple(3L, 2L),
+                        Tuple.tuple(1L, 3L));
+    }
 
-
+    private Bookmark createBookmark(Long userId, Long folderId, String bookmarkTitle, String bookmarkUrl){
+        return Bookmark.builder()
+                .userId(userId)
+                .folderSeq(folderId)
+                .bookmarkTitle(bookmarkTitle)
+                .bookmarkCaption("북마크 설명")
+                .bookmarkScheme("")
+                .bookmarkHost("")
+                .bookmarkDomain("")
+                .bookmarkUrl(bookmarkUrl)
+                .bookmarkRegDate(Date.valueOf(LocalDate.of(2023, 7, 5)))
+                .bookmarkModDate(Date.valueOf(LocalDate.of(2023, 7, 5)))
+                .build();
     }
 }
