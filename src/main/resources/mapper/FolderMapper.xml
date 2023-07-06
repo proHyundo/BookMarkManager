@@ -3,24 +3,41 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hyun.bookmarkshare.manage.folder.dao.FolderRepository">
 
+    <resultMap id="folderEntityResultMap" type="com.hyun.bookmarkshare.manage.folder.entity.Folder">
+        <id column="FOLDER_SEQ" property="folderSeq"/>
+        <result column="USER_SEQ" property="userId"/>
+        <result column="FOLDER_PARENT_SEQ" property="folderParentSeq"/>
+        <result column="FOLDER_ROOT_FLAG" property="folderRootFlag"/>
+        <result column="FOLDER_NAME" property="folderName"/>
+        <result column="FOLDER_CAPTION" property="folderCaption"/>
+        <result column="FOLDER_ORDER" property="folderOrder"/>
+        <result column="FOLDER_SCOPE" property="folderScope"/>
+        <result column="FOLDER_REG_DATE" property="folderRegDate"/>
+        <result column="FOLDER_MOD_DATE" property="folderModDate"/>
+        <result column="FOLDER_DEL_FLAG" property="folderDelFlag"/>
+    </resultMap>
+
     <!-- ================================================================================================ -->
     <!-- ============================================ SELECT ============================================ -->
 
-    <select id="findAllByUserIdAndParentSeq" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">
+    <select id="findAllByUserIdAndParentSeq" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
+                                             resultMap="folderEntityResultMap">
         SELECT *
         FROM TFOLDER
-        WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq} AND FOLDER_DEL_FLAG = 'n'
+        WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq} AND FOLDER_DEL_FLAG = 'n'
            ORDER BY FOLDER_ORDER ASC;
     </select>
 
-    <select id="findAllByUserId" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">
+    <select id="findAllByUserId" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
+                                 resultMap="folderEntityResultMap">
         SELECT *
         FROM TFOLDER
         WHERE USER_SEQ = #{userId} AND FOLDER_DEL_FLAG = 'n'
-        ORDER BY FOLDER_ORDER;
+        ORDER BY FOLDER_PARENT_SEQ ASC, FOLDER_ORDER ASC;
     </select>
 
-    <select id="findByFolderSeq" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">
+    <select id="findByFolderSeq" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
+                                 resultMap="folderEntityResultMap">
         SELECT *
         FROM TFOLDER
         WHERE FOLDER_SEQ = #{folderSeq} AND FOLDER_DEL_FLAG = 'n'
@@ -34,19 +51,35 @@
     <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto"
                                 useGeneratedKeys="true" keyProperty="folderSeq">
         INSERT
-        INTO TFOLDER(USER_SEQ, FOLDER_ORDER, FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT)
+        INTO TFOLDER(USER_SEQ, FOLDER_ORDER, FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT_SEQ)
         VALUES (#{userId},
-                (SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq}),
+                (SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq}),
                 #{folderName}, #{folderCaption}, #{folderScope}, #{folderParentSeq}
                 );
+    </insert>
+
+    <insert id="save" parameterType="com.hyun.bookmarkshare.manage.folder.entity.Folder">
+        INSERT
+        INTO TFOLDER(FOLDER_SEQ, USER_SEQ, FOLDER_PARENT_SEQ, FOLDER_ROOT_FLAG, FOLDER_NAME, FOLDER_CAPTION, FOLDER_ORDER, FOLDER_SCOPE, FOLDER_REG_DATE, FOLDER_MOD_DATE, FOLDER_DEL_FLAG)
+        VALUES (#{folderSeq}, #{userId}, #{folderParentSeq}, #{folderRootFlag}, #{folderName}, #{folderCaption},
+                <choose>
+                    <when test='folderOrder == null'>
+                        (SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq})
+                    </when>
+                    <otherwise>
+                        #{folderOrder}
+                    </otherwise>
+                </choose>
+                ,
+                #{folderScope}, #{folderRegDate}, #{folderModDate}, #{folderDelFlag});
     </insert>
 
 <!--    2) 정상 동작 확인 완료 -->
 <!--    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto">-->
 <!--        INSERT-->
-<!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT)-->
+<!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT_SEQ)-->
 <!--        VALUES (#{userId}, (-->
-<!--            SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq}),-->
+<!--            SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq}),-->
 <!--                #{folderName}, #{folderCaption}, #{folderScope}, #{folderParentSeq});-->
 <!--        <selectKey keyProperty="folderSeq" resultType="Long">-->
 <!--            SELECT LAST_INSERT_ID();-->
@@ -56,9 +89,9 @@
 <!--    3) 아예 동작하지 않았다. insert는 되는데 return이 안된다. FOLDER_SEQ는 정수타입인데 왜 불가한 것일까? -->
 <!--    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto">-->
 <!--        INSERT-->
-<!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT)-->
+<!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT_SEQ)-->
 <!--        VALUES (#{userId}, (-->
-<!--            SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq}),-->
+<!--            SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq}),-->
 <!--                #{folderName}, #{folderCaption}, #{folderScope}, #{folderParentSeq})-->
 <!--        RETURNING FOLDER_SEQ as folderSeq;-->
 <!--    </insert>-->
@@ -66,9 +99,9 @@
 <!--    4) 정상 동작은 하지만, 이렇게 해도 될까?-->
 <!--    <select id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">-->
 <!--        INSERT-->
-<!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT)-->
+<!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT_SEQ)-->
 <!--        VALUES (#{userId}, (-->
-<!--            SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq}),-->
+<!--            SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq}),-->
 <!--                #{folderName}, #{folderCaption}, #{folderScope}, #{folderParentSeq})-->
 <!--        RETURNING *;-->
 <!--    </select>-->
@@ -89,7 +122,7 @@
         <foreach collection="folderSeqOrder" item="sequence" index="i" separator=";">
         UPDATE TFOLDER
         SET FOLDER_ORDER = (#{i}+1)
-        WHERE USER_SEQ = #{userId} AND FOLDER_PARENT = #{folderParentSeq} AND FOLDER_SEQ = #{sequence}
+        WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq} AND FOLDER_SEQ = #{sequence}
         </foreach>
     </update>
 

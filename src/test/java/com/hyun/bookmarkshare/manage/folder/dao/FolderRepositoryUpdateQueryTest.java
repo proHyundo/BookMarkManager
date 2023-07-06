@@ -53,7 +53,7 @@ class FolderRepositoryUpdateQueryTest {
         // t
         assertThat(updatedRows).isEqualTo(1);
         Optional<Folder> resultFolder = folderRepository.findByFolderSeq(targetFolderRequestDto.getFolderSeq());
-        assertThat(resultFolder.get().getFOLDER_NAME()).isEqualTo(targetFolderRequestDto.getFolderName());
+        assertThat(resultFolder.get().getFolderName()).isEqualTo(targetFolderRequestDto.getFolderName());
 
     }
 
@@ -70,7 +70,7 @@ class FolderRepositoryUpdateQueryTest {
         // t
         List<Folder> resultAllByUserIdAndParentSeq = folderRepository.findAllByUserIdAndParentSeq(targetFolderRequestDto.getUserId(), targetFolderRequestDto.getFolderParentSeq());
         assertThat(resultAllByUserIdAndParentSeq).hasSize(4);
-        assertThat(resultAllByUserIdAndParentSeq).extracting(Folder::getFOLDER_SEQ).containsExactly(3L, 14L, 15L, 16L);
+        assertThat(resultAllByUserIdAndParentSeq).extracting(Folder::getFolderSeq).containsExactly(3L, 14L, 15L, 16L);
 
 
     }

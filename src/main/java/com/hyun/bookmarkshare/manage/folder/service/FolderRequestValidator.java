@@ -51,7 +51,7 @@ public class FolderRequestValidator {
     // 제어 가능한 폴더인지 (제어하려는 폴더식별번호가 루트(0)폴더가 아니며 & 존재하는/접근가능한 폴더여야 한다)
     private void availableUpdateFolderSeq(Long folderSeq){
         folderRepository.findByFolderSeq(folderSeq)
-                .filter(folder -> !folder.getFOLDER_SEQ().equals(0))
+                .filter(folder -> !folder.getFolderSeq().equals(0))
                 .orElseThrow(() -> {
                     throw new FolderRequestException(FolderExceptionErrorCode.NOT_FOUND_FOLDER, "존재 하지 않거나 제어 불가한 폴더 입니다");
                 });

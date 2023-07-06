@@ -23,6 +23,7 @@ public interface FolderRepository {
     List<Folder> findAllByUserId(Long userId);
     Optional<Folder> findByFolderSeq(Long folderSeq);
 
+
     // INSERT
     int saveNewFolder(FolderCreateRequestDto requestDto);
 
@@ -30,4 +31,7 @@ public interface FolderRepository {
     int deleteByFolderSeq(Long folderSeq);
     int updateByFolderRequestDto(FolderRequestDto requestDto);
     int updateOrderByFolderRequestDto(FolderReorderRequestDto folderReorderRequestDto);
+
+    // ONLY FOR TEST
+    int save(Folder folder);
 }

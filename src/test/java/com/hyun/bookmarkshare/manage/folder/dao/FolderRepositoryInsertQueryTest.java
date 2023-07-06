@@ -45,7 +45,7 @@ class FolderRepositoryInsertQueryTest {
         // then
         assertThat(insertedRows).isEqualTo(1);
         Optional<Folder> resultFolder = folderRepository.findByFolderSeq(targetRequestDto.getFolderSeq());
-        assertThat(targetRequestDto.getFolderName()).isEqualTo(resultFolder.get().getFOLDER_NAME());
+        assertThat(targetRequestDto.getFolderName()).isEqualTo(resultFolder.get().getFolderName());
 
     }
 }
