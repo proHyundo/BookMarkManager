@@ -1,34 +1,55 @@
 package com.hyun.bookmarkshare.manage.folder.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
+import java.time.LocalDateTime;
+
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Folder {
 
-    Long FOLDER_SEQ;
-    Long USER_SEQ;
-    Long FOLDER_PARENT;
-    Long FOLDER_ORDER;
-    String FOLDER_NAME;
-    String FOLDER_CAPTION;
-    String FOLDER_SCOPE;
+    Long folderSeq;
+    Long userId;
+    Long folderParentSeq;
+    String folderRootFlag;
+    String folderName;
+    String folderCaption;
+    Long folderOrder;
+    String folderScope;
+    LocalDateTime folderRegDate;
+    LocalDateTime folderModDate;
+    String folderDelFlag;
+
+    @Builder
+    public Folder(Long folderSeq, Long userId, Long folderParentSeq, String folderRootFlag, String folderName, String folderCaption, Long folderOrder, String folderScope, LocalDateTime folderRegDate, LocalDateTime folderModDate, String folderDelFlag) {
+        this.folderSeq = folderSeq;
+        this.userId = userId;
+        this.folderParentSeq = folderParentSeq;
+        this.folderRootFlag = folderRootFlag;
+        this.folderName = folderName;
+        this.folderCaption = folderCaption;
+        this.folderOrder = folderOrder;
+        this.folderScope = folderScope;
+        this.folderRegDate = folderRegDate;
+        this.folderModDate = folderModDate;
+        this.folderDelFlag = folderDelFlag;
+    }
+
 
     @Override
     public String toString() {
         return "Folder{" +
-                "FOLDER_SEQ='" + FOLDER_SEQ + '\'' +
-                ", FOLDER_PARENT='" + FOLDER_PARENT + '\'' +
-                ", FOLDER_ORDER='" + FOLDER_ORDER + '\'' +
-                ", FOLDER_NAME='" + FOLDER_NAME + '\'' +
-                ", FOLDER_CAPTION='" + FOLDER_CAPTION + '\'' +
-                ", FOLDER_SCOPE='" + FOLDER_SCOPE + '\'' +
-                ", USER_SEQ='" + USER_SEQ + '\'' +
+                "folderSeq=" + folderSeq +
+                ", userId=" + userId +
+                ", folderParent=" + folderParentSeq +
+                ", folderRootFlag='" + folderRootFlag + '\'' +
+                ", folderName='" + folderName + '\'' +
+                ", folderCaption='" + folderCaption + '\'' +
+                ", folderOrder=" + folderOrder +
+                ", folderScope='" + folderScope + '\'' +
+                ", folderRegDate=" + folderRegDate +
+                ", folderModDate=" + folderModDate +
+                ", folderDelFlag='" + folderDelFlag + '\'' +
                 '}';
     }
 }

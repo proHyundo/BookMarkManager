@@ -5,11 +5,16 @@ import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.groups.Tuple;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -19,12 +24,20 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @MybatisTest
 public class BookmarkRepositoryUpdateQueryTest {
 
     @Autowired
     BookmarkRepository bookmarkRepository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void initEach() {
+        jdbcTemplate.update("ALTER TABLE TBOOKMARK AUTO_INCREMENT = 0;");
+    }
 
     @DisplayName("기존에 존재하는 북마크의 정보를 수정한다.")
     @Test
@@ -60,6 +73,8 @@ public class BookmarkRepositoryUpdateQueryTest {
         List<Long> bookmarkSeqOrder = Arrays.asList(2L, 3L, 1L);
         BookmarkReorderRequestDto bookmarkReorderRequestDto = new BookmarkReorderRequestDto(1L, 1L, bookmarkSeqOrder);
         BookmarkReorderServiceRequestDto bookmarkReorderServiceRequestDto = bookmarkReorderRequestDto.toServiceRequestDto();
+
+        // when
         int resultRows = bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderServiceRequestDto);
 
         // then

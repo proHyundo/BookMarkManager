@@ -4,6 +4,7 @@ import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDt
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -23,11 +24,23 @@ public interface FolderRepository {
     List<Folder> findAllByUserId(Long userId);
     Optional<Folder> findByFolderSeq(Long folderSeq);
 
+
     // INSERT
-    int saveNewFolder(FolderCreateRequestDto requestDto);
+    int save(Folder folder);
+    // Long saveNewFolder(Folder folder);
 
     // UPDATE
-    int deleteByFolderSeq(Long folderSeq);
+
     int updateByFolderRequestDto(FolderRequestDto requestDto);
-    int updateOrderByFolderRequestDto(FolderReorderRequestDto folderReorderRequestDto);
+    int updateOrderByFolderServiceRequestDto(FolderReorderServiceRequestDto folderReorderServiceRequestDto);
+
+    // DELETE
+
+    int deleteByFolderSeq(Long folderSeq);
+
+    // ONLY FOR TEST
+
+    Optional<Folder> findByFolderSeqEvenIfDeleted(Long folderSeq);
+
+    int update(Folder folder);
 }

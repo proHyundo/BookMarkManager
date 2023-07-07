@@ -35,6 +35,7 @@ public class BookmarkServiceImpl implements BookmarkService{
         );
     }
 
+    // TODO : 신규 북마크 저장 로직 변경
     @Override
     public BookmarkResponseDto createBookmark(BookmarkAddRequestDto bookmarkAddRequestDto) {
         // bookmark url disunite & set units to bookmarkAddRequestDto
@@ -44,7 +45,6 @@ public class BookmarkServiceImpl implements BookmarkService{
         return bookmarkAddRequestDto.toBookmarkResponseDto(bookmarkAddRequestDto);
     }
 
-    // TODO : 신규 북마크 저장 로직 변경
     @Override
     public BookmarkResponseDto updateBookmark(BookmarkUpdateRequestDto bookmarkUpdateRequestDto) {
         // 요청받은 북마크 식별번호로 기존 북마크 객체를 꺼내온다.

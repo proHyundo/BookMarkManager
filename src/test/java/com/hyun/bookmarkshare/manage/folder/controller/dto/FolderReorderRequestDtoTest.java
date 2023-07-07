@@ -42,7 +42,7 @@ class FolderReorderRequestDtoTest {
     @ParameterizedTest
     @MethodSource("paramsForFolderReorderRequestDto_success")
     @DisplayName("FolderReorderRequestDto @Valid - arguments 성공 케이스")
-    void folderReorderRequestDto_success(Long userId, Long folderParentSeq, List<Integer> folderSeqOrder) throws Exception {
+    void folderReorderRequestDto_success(Long userId, Long folderParentSeq, List<Long> folderSeqOrder) throws Exception {
         // given
         FolderReorderRequestDto targetDto = new FolderReorderRequestDto(userId, folderParentSeq, folderSeqOrder);
         // when
@@ -65,7 +65,7 @@ class FolderReorderRequestDtoTest {
     @ParameterizedTest
     @MethodSource("paramsForFolderReorderRequestDto_fail")
     @DisplayName("FolderReorderRequestDto @Valid - arguments 실패 케이스")
-    void folderReorderRequestDto_fail(Long userId, Long folderParentSeq, List<Integer> folderSeqOrder) throws Exception {
+    void folderReorderRequestDto_fail(Long userId, Long folderParentSeq, List<Long> folderSeqOrder) throws Exception {
         // given
         FolderReorderRequestDto targetDto = new FolderReorderRequestDto(userId, folderParentSeq, folderSeqOrder);
         // when
@@ -79,8 +79,8 @@ class FolderReorderRequestDtoTest {
     }
 
     static Stream<Arguments> paramsForFolderReorderRequestDto_fail(){
-        List<Integer> seqOrders1 = Arrays.asList(3,14,15,16);
-        List<Integer> seqOrders2 = Arrays.asList(1);
+        List<Long> seqOrders1 = Arrays.asList(3L,14L,15L,16L);
+        List<Long> seqOrders2 = Arrays.asList(1L);
 
         return Stream.of(
                 Arguments.of(null, 0L, seqOrders1), // userId null
