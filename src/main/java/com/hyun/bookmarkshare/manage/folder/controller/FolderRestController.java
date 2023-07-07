@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class FolderRestController {
     // 특정 부모폴더 내부에 신규 폴더 생성
     @PostMapping("/manage/folder/addFolder")
     public ResponseEntity<FolderResponseEntity> addFolderRequest(@Valid @RequestBody FolderCreateRequestDto requestDto){
-        Folder resultFolder = folderService.createFolder(requestDto);
+        Folder resultFolder = folderService.createFolder(requestDto.toServiceRequestDto());
         return FolderResponseEntity.toResponseEntity(resultFolder);
     }
 
@@ -54,7 +55,13 @@ public class FolderRestController {
             ]
         *
         * */
-        return FolderReorderResponseEntity.toResponseEntity(folderService.updateFolderOrder(requestDtoList));
+        return FolderReorderResponseEntity.toResponseEntity(
+                folderService.updateFolderOrder(
+                        requestDtoList.stream()
+                                .map(dto -> dto.toServiceRequestDto())
+                                .collect(Collectors.toList())
+                )
+        );
     }
 
 }

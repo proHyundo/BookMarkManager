@@ -54,19 +54,24 @@
     <!-- ============================================ INSERT ============================================ -->
 
     <!--    1) 정상 동작 확인 완료 -->
-    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto"
+    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
                                 useGeneratedKeys="true" keyProperty="folderSeq">
         INSERT
-        INTO TFOLDER(USER_SEQ, FOLDER_ORDER, FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT_SEQ)
-        VALUES (#{userId},
+        INTO TFOLDER(FOLDER_SEQ, USER_SEQ, FOLDER_PARENT_SEQ, FOLDER_ROOT_FLAG, FOLDER_NAME, FOLDER_CAPTION,
+                     FOLDER_ORDER,
+                     FOLDER_SCOPE, FOLDER_REG_DATE, FOLDER_MOD_DATE, FOLDER_DEL_FLAG)
+        VALUES (#{folderSeq}, #{userId}, #{folderParentSeq}, #{folderRootFlag}, #{folderName}, #{folderCaption},
                 (SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq}),
-                #{folderName}, #{folderCaption}, #{folderScope}, #{folderParentSeq}
+                #{folderScope}, NOW(), NOW(), 'n'
                 );
     </insert>
 
-    <insert id="save" parameterType="com.hyun.bookmarkshare.manage.folder.entity.Folder">
+    <insert id="save" parameterType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
+            useGeneratedKeys="true" keyProperty="folderSeq">
         INSERT
-        INTO TFOLDER(FOLDER_SEQ, USER_SEQ, FOLDER_PARENT_SEQ, FOLDER_ROOT_FLAG, FOLDER_NAME, FOLDER_CAPTION, FOLDER_ORDER, FOLDER_SCOPE, FOLDER_REG_DATE, FOLDER_MOD_DATE, FOLDER_DEL_FLAG)
+        INTO TFOLDER(FOLDER_SEQ, USER_SEQ, FOLDER_PARENT_SEQ, FOLDER_ROOT_FLAG, FOLDER_NAME, FOLDER_CAPTION,
+                     FOLDER_ORDER,
+                     FOLDER_SCOPE, FOLDER_REG_DATE, FOLDER_MOD_DATE, FOLDER_DEL_FLAG)
         VALUES (#{folderSeq}, #{userId}, #{folderParentSeq}, #{folderRootFlag}, #{folderName}, #{folderCaption},
                 <choose>
                     <when test='folderOrder == null'>
@@ -77,7 +82,7 @@
                     </otherwise>
                 </choose>
                 ,
-                #{folderScope}, #{folderRegDate}, #{folderModDate}, #{folderDelFlag});
+                #{folderScope},  NOW(), NOW(), 'n');
     </insert>
 
 <!--    2) 정상 동작 확인 완료 -->
@@ -121,15 +126,24 @@
             FOLDER_CAPTION = #{folderCaption},
             FOLDER_SCOPE = #{folderScope},
             FOLDER_MOD_DATE = NOW()
-            WHERE FOLDER_SEQ = #{folderSeq} AND USER_SEQ = #{userId}
+        WHERE FOLDER_SEQ = #{folderSeq} AND USER_SEQ = #{userId}
     </update>
 
-    <update id="updateOrderByFolderRequestDto" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto">
+    <update id="updateOrderByFolderServiceRequestDto" parameterType="com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto">
         <foreach collection="folderSeqOrder" item="sequence" index="i" separator=";">
         UPDATE TFOLDER
         SET FOLDER_ORDER = (#{i}+1)
         WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq} AND FOLDER_SEQ = #{sequence}
         </foreach>
+    </update>
+
+    <update id="update" parameterType="com.hyun.bookmarkshare.manage.folder.entity.Folder">
+        UPDATE TFOLDER
+        SET FOLDER_NAME = #{folderName},
+            FOLDER_CAPTION = #{folderCaption},
+            FOLDER_SCOPE = #{folderScope},
+            FOLDER_MOD_DATE = NOW()
+        WHERE FOLDER_SEQ = #{folderSeq} AND USER_SEQ = #{userId}
     </update>
 
     <!-- ================================================================================================ -->

@@ -6,6 +6,7 @@ import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ public class FolderRequestValidator {
     }
 
     /** #Overload */
-    public void check(List<FolderReorderRequestDto> requestDtoList) {
+    public void check(List<FolderReorderServiceRequestDto> requestDtoList) {
 
     }
 

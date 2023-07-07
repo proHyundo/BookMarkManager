@@ -2,11 +2,13 @@ package com.hyun.bookmarkshare.manage.folder.dao;
 
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -21,6 +23,12 @@ class FolderRepositorySelectQueryTest {
 
     @Autowired
     private FolderRepository folderRepository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @BeforeEach
+    void initEach(){
+        jdbcTemplate.update("ALTER TABLE TFOLDER AUTO_INCREMENT = 2");
+    }
 
     @DisplayName("사용자 id와 부모폴더 id로 부모폴더 내부의 폴더 리스트를 조회한다.")
     @Test

@@ -41,4 +41,5 @@ public interface BookmarkRepository {
     // ONLY FOR TEST
 
     Optional<Bookmark> findByBookmarkSeqForTest(Long bookmarkSeq);
+    int resetAutoIncrementValue();
 }

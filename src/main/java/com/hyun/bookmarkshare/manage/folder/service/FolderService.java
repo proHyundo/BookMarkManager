@@ -5,6 +5,8 @@ import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderListRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderCreateServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,11 +25,11 @@ public interface FolderService {
      * @return repository sql result - success : 1
      * @implNote explain
      * */
-    Folder createFolder(FolderCreateRequestDto requestDto);
+    Folder createFolder(FolderCreateServiceRequestDto requestDto);
 
     Long deleteFolder(FolderRequestDto requestDto);
 
     Folder updateFolder(FolderRequestDto requestDto);
 
-    List<Long> updateFolderOrder(List<FolderReorderRequestDto> requestDtoList);
+    List<Long> updateFolderOrder(List<FolderReorderServiceRequestDto> requestDtoList);
 }

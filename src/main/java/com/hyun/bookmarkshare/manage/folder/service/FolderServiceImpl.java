@@ -9,6 +9,8 @@ import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderCreateServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,11 +33,11 @@ public class FolderServiceImpl implements FolderService{
     }
 
     @Override
-    public Folder createFolder(FolderCreateRequestDto requestDto) {
+    public Folder createFolder(FolderCreateServiceRequestDto serviceRequestDto) {
         // 검증 ( 폴더명, 폴더레벨, 공유범위) - 미 충족 시 예외
-        int insertedRows = folderRepository.saveNewFolder(requestDto);
-        validateSqlUpdatedRows(insertedRows);
-        return folderRepository.findByFolderSeq(requestDto.getFolderSeq())
+        Folder targetFolder = serviceRequestDto.toFolder();
+        int resultRows = folderRepository.save(targetFolder);
+        return folderRepository.findByFolderSeq(targetFolder.getFolderSeq())
                 .orElseThrow(() -> new NoSuchElementException("Not Found Folder"));
     }
 
@@ -62,15 +64,15 @@ public class FolderServiceImpl implements FolderService{
     }
 
     @Override
-    public List<Long> updateFolderOrder(List<FolderReorderRequestDto> requestDtoList) {
-        validator.check(requestDtoList);
-        for ( FolderReorderRequestDto folderReorderRequestDto : requestDtoList) {
-            int updatedRows = folderRepository.updateOrderByFolderRequestDto(folderReorderRequestDto);
+    public List<Long> updateFolderOrder(List<FolderReorderServiceRequestDto> serviceRequestDtoList) {
+        validator.check(serviceRequestDtoList);
+        for ( FolderReorderServiceRequestDto folderReorderServiceRequestDto : serviceRequestDtoList) {
+            int updatedRows = folderRepository.updateOrderByFolderServiceRequestDto(folderReorderServiceRequestDto);
             validateSqlUpdatedRows(updatedRows);
         }
         List<Long> result = new ArrayList<>();
 
-        requestDtoList.forEach(folderReorderRequestDto -> {
+        serviceRequestDtoList.forEach(folderReorderRequestDto -> {
             result.add(folderReorderRequestDto.getFolderParentSeq());
         });
         return result;
