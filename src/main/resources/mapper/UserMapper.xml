@@ -22,9 +22,13 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ SELECT ============================================ -->
 
-    <select id="findByLoginRequestDto" parameterType="com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto"
+    <select id="findByLoginServiceRequestDto" parameterType="com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto"
                                        resultMap="userEntityResultMap">
         SELECT * FROM TUSERACCOUNT WHERE USER_EMAIL = #{email} AND USER_PWD = #{pwd} AND USER_STATE = 'n';
+    </select>
+
+    <select id="findByUserIdAndState" resultMap="userEntityResultMap">
+        SELECT * FROM TUSERACCOUNT WHERE USER_SEQ = #{userId} AND USER_STATE = #{userState};
     </select>
 
     <select id="findByUserId" resultMap="userEntityResultMap">
@@ -53,8 +57,10 @@
     <insert id="saveBySignUpRequestDto" parameterType="com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto"
                                         useGeneratedKeys="true" keyProperty="userId">
         INSERT
-        INTO TUSERACCOUNT(USER_SEQ, USER_EMAIL, USER_PWD, USER_NAME, USER_PHONE, USER_REG_DATE, USER_MOD_DATE, USER_STATE, USER_GRADE, USER_ROLE, USER_SOCIAL)
-        VALUES(#{userId}, #{userEmail}, #{userPwd}, #{userName}, #{userPhoneNum}, NOW(), NOW(), 'n', 'g', 'ROLE_USER', 'n');
+        INTO TUSERACCOUNT(USER_SEQ, USER_EMAIL, USER_PWD, USER_NAME, USER_PHONE, USER_REG_DATE, USER_MOD_DATE,
+                          USER_STATE, USER_GRADE, USER_ROLE, USER_SOCIAL)
+        VALUES(#{userId}, #{userEmail}, #{userPwd}, #{userName}, #{userPhoneNum}, NOW(), NOW(),
+               'n', 'g', 'ROLE_USER', 'n');
     </insert>
 
     <!-- ================================================================================================ -->
@@ -65,10 +71,19 @@
     </delete>
 
     <delete id="deleteByUserId" parameterType="long">
-        UPDATE TUSERACCOUNT SET USERT_STATE = 'e' WHERE USER_SEQ = #{userId}
+        UPDATE TUSERACCOUNT SET USER_STATE = 'e' WHERE USER_SEQ = #{userId}
     </delete>
 
+    <!-- ================================================================================================ -->
+    <!-- ======================================== ONLY FOR TEST ========================================= -->
 
+    <insert id="save" parameterType="com.hyun.bookmarkshare.user.entity.User"
+                      useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO TUSERACCOUNT (USER_SEQ, USER_EMAIL, USER_PWD, USER_NAME, USER_PHONE, USER_REG_DATE, USER_MOD_DATE,
+                                  USER_STATE, USER_GRADE, USER_ROLE, USER_SOCIAL)
+        VALUES (#{userId}, #{userEmail}, #{userPwd}, #{userName}, #{userPhoneNum}, NOW(), NOW(),
+                'n', 'g', 'ROLE_USER', 'n');
+    </insert>
 
 
 </mapper>

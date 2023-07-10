@@ -27,7 +27,7 @@ public class UserPermitRestController {
      * */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseEntity> loginRequest(@RequestBody @Valid LoginRequestDto loginRequestDto){
-        return LoginResponseEntity.toResponseEntity(userService.loginProcess(loginRequestDto));
+        return LoginResponseEntity.toResponseEntity(userService.loginProcess(loginRequestDto.toServiceDto()));
     }
 
     /**

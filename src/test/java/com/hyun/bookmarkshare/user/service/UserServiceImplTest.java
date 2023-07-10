@@ -26,7 +26,7 @@ class UserServiceImplTest {
         LoginRequestDto targetDto = new LoginRequestDto("test@test.com", "1111");
 
         // when
-        User resultUser = userService.loginProcess(targetDto);
+        User resultUser = userService.loginProcess(targetDto.toServiceDto());
 
         // then
         assertThat(resultUser.getUserEmail()).isEqualTo(targetDto.getEmail());

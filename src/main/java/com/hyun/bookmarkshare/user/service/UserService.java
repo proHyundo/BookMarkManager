@@ -5,6 +5,7 @@ import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
 import com.hyun.bookmarkshare.user.controller.dto.UserRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
+import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +16,7 @@ public interface UserService {
      * @param loginRequestDto Login request Form data. Include Id, Pwd.
      * @return User Entity from DB SELECT Sql result.
      * */
-    User loginProcess(LoginRequestDto loginRequestDto);
+    User loginProcess(LoginServiceRequestDto loginRequestDto);
 
     User signUp(SignUpRequestDto signUpRequestDto);
 
