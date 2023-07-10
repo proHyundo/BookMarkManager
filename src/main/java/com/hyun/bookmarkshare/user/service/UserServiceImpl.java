@@ -5,14 +5,12 @@ import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
 import com.hyun.bookmarkshare.smtp.entity.EmailEntity;
 import com.hyun.bookmarkshare.smtp.exception.EmailExceptionErrorCode;
 import com.hyun.bookmarkshare.smtp.exception.EmailProcessException;
-import com.hyun.bookmarkshare.user.controller.dto.LoginRefreshResponseDto;
-import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
-import com.hyun.bookmarkshare.user.controller.dto.UserRequestDto;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
 import com.hyun.bookmarkshare.user.exceptions.*;
+import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -78,7 +75,7 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public User loginProcess(LoginRequestDto loginRequestDto) {
+    public User loginProcess(LoginServiceRequestDto loginRequestDto) {
 
         // 0. encode pwd & set encoded pwd to loginRequestDto
         // -> will depreciate as switch to security pwd encode
@@ -89,7 +86,7 @@ public class UserServiceImpl implements UserService{
         }
 
         // 1. DB select & return User Entity
-        User resultUser = userRepository.findByLoginRequestDto(loginRequestDto)
+        User resultUser = userRepository.findByLoginServiceRequestDto(loginRequestDto)
                 .orElseThrow(() -> new LoginProcessException(LoginExceptionErrorCode.NOT_FOUND_USER));
 
         // 2. Generate access and refresh tokens by JWT library

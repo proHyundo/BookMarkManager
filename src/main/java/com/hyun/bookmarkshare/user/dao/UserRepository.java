@@ -4,8 +4,12 @@ import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
+import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -15,10 +19,11 @@ public interface UserRepository {
     /* ============================================ SELECT ============================================ */
 
     /* TUSERACCOUNT TABLE */
-    Optional<User> findByLoginRequestDto(LoginRequestDto loginRequestDto);
+    Optional<User> findByLoginServiceRequestDto(LoginServiceRequestDto loginServiceRequestDto);
 
     /* TUSERACCOUNT TABLE */
     Optional<User> findByUserId(Long userId);
+    Optional<User> findByUserIdAndState(@Param("userId") Long userId, @Param("userState") String userState);
 
     /* TUSERACCOUNT TABLE */
     Integer countByUserEmail(String userEmail);
@@ -42,4 +47,8 @@ public interface UserRepository {
     int deleteRefreshTokenByUserId(Long userId);
 
     int deleteByUserId(Long userId);
+
+
+    // ONLY FOR TEST
+    int save(User user);
 }
