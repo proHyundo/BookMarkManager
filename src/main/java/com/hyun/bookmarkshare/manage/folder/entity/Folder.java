@@ -52,4 +52,12 @@ public class Folder {
                 ", folderDelFlag='" + folderDelFlag + '\'' +
                 '}';
     }
+
+    public Folder updateEntityBy(Folder requestFolder) {
+        this.folderName = requestFolder.getFolderName();
+        this.folderCaption = requestFolder.getFolderCaption();
+        this.folderScope = requestFolder.getFolderScope();
+        return this;
+    }
+
 }

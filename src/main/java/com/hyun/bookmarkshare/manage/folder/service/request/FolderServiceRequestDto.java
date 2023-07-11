@@ -5,34 +5,33 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class FolderCreateServiceRequestDto {
+public class FolderServiceRequestDto {
 
     private Long folderSeq;
     private Long userId;
-    private Long folderParentSeq;
     private String folderName;
     private String folderCaption;
     private String folderScope;
+    private Long folderParentSeq;
 
     @Builder
-    public FolderCreateServiceRequestDto(Long folderSeq, Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope) {
+    public FolderServiceRequestDto(Long folderSeq, Long userId, String folderName, String folderCaption, String folderScope, Long folderParentSeq) {
         this.folderSeq = folderSeq;
         this.userId = userId;
-        this.folderParentSeq = folderParentSeq;
         this.folderName = folderName;
         this.folderCaption = folderCaption;
         this.folderScope = folderScope;
+        this.folderParentSeq = folderParentSeq;
     }
 
-    public Folder toFolder() {
+    public Folder toEntity(){
         return Folder.builder()
                 .folderSeq(this.folderSeq)
                 .userId(this.userId)
-                .folderParentSeq(this.folderParentSeq)
-                .folderRootFlag("n")
                 .folderName(this.folderName)
                 .folderCaption(this.folderCaption)
                 .folderScope(this.folderScope)
+                .folderParentSeq(this.folderParentSeq)
                 .build();
     }
 }
