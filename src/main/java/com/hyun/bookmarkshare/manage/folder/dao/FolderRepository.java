@@ -23,15 +23,16 @@ public interface FolderRepository {
     List<Folder> findAllByUserIdAndParentSeq(Long userId, Long folderParentSeq);
     List<Folder> findAllByUserId(Long userId);
     Optional<Folder> findByFolderSeq(Long folderSeq);
-
+    Optional<Folder> findByFolderSeqExcludeDeleted(Long folderSeq);
+    List<Long> findAllFolderSeqWithSameAncestor(long ancestor, long userId);
 
     // INSERT
     int save(Folder folder);
-    // Long saveNewFolder(Folder folder);
+    int saveFolderAsCustom(Folder folder);
 
     // UPDATE
-
     int updateByFolderRequestDto(FolderRequestDto requestDto);
+
     int updateOrderByFolderServiceRequestDto(FolderReorderServiceRequestDto folderReorderServiceRequestDto);
 
     // DELETE
@@ -40,7 +41,6 @@ public interface FolderRepository {
 
     // ONLY FOR TEST
 
-    Optional<Folder> findByFolderSeqEvenIfDeleted(Long folderSeq);
 
     int update(Folder folder);
 }

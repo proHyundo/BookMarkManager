@@ -27,12 +27,12 @@
         SELECT * FROM TUSERACCOUNT WHERE USER_EMAIL = #{email} AND USER_PWD = #{pwd} AND USER_STATE = 'n';
     </select>
 
-    <select id="findByUserIdAndState" resultMap="userEntityResultMap">
+    <select id="findByUserIdAndUserState" resultMap="userEntityResultMap">
         SELECT * FROM TUSERACCOUNT WHERE USER_SEQ = #{userId} AND USER_STATE = #{userState};
     </select>
 
     <select id="findByUserId" resultMap="userEntityResultMap">
-        SELECT * FROM TUSERACCOUNT WHERE USER_SEQ = #{userId} AND USER_STATE = 'n' ;
+        SELECT * FROM TUSERACCOUNT WHERE USER_SEQ = #{userId};
     </select>
 
     <select id="findByRefreshToken" parameterType="string" resultMap="userTokenResultMap">

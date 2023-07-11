@@ -23,7 +23,7 @@ public interface UserRepository {
 
     /* TUSERACCOUNT TABLE */
     Optional<User> findByUserId(Long userId);
-    Optional<User> findByUserIdAndState(@Param("userId") Long userId, @Param("userState") String userState);
+    Optional<User> findByUserIdAndUserState(@Param("userId") Long userId, @Param("userState") String userState);
 
     /* TUSERACCOUNT TABLE */
     Integer countByUserEmail(String userEmail);

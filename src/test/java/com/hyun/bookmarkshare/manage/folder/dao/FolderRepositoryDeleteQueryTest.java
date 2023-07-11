@@ -34,6 +34,6 @@ public class FolderRepositoryDeleteQueryTest {
 
         // then
         assertThat(deletedRows).isEqualTo(1);
-        assertThat(folderRepository.findByFolderSeqEvenIfDeleted(2L).get().getFolderDelFlag()).isEqualTo("y");
+        assertThat(folderRepository.findByFolderSeq(2L).get().getFolderDelFlag()).isEqualTo("y");
     }
 }

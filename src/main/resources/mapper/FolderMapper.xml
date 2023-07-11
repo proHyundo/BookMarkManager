@@ -40,29 +40,51 @@
                                  resultMap="folderEntityResultMap">
         SELECT *
         FROM TFOLDER
+        WHERE FOLDER_SEQ = #{folderSeq}
+        LIMIT 1;
+    </select>
+
+    <select id="findByFolderSeqExcludeDeleted" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
+                                               resultMap="folderEntityResultMap">
+        SELECT *
+        FROM TFOLDER
         WHERE FOLDER_SEQ = #{folderSeq} AND FOLDER_DEL_FLAG = 'n'
         LIMIT 1;
     </select>
 
-    <select id="findByFolderSeqEvenIfDeleted" resultType="Long" resultMap="folderEntityResultMap">
-        SELECT *
-        FROM TFOLDER
-        WHERE FOLDER_SEQ = #{folderSeq};
+    <select id="findAllFolderSeqWithSameAncestor" resultType="Long">
+        WITH RECURSIVE CTE AS (
+            SELECT
+                FOLDER_SEQ,
+                FOLDER_PARENT_SEQ
+            FROM tfolder
+            WHERE FOLDER_PARENT_SEQ = #{ancestor} AND USER_SEQ = #{userId} AND FOLDER_DEL_FLAG = 'n'
+
+            UNION ALL
+
+            SELECT
+                a.FOLDER_SEQ,
+                a.FOLDER_PARENT_SEQ
+            FROM tfolder a
+
+            INNER JOIN CTE b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
+        )
+        SELECT FOLDER_SEQ, FOLDER_PARENT_SEQ FROM CTE;
     </select>
 
     <!-- ================================================================================================ -->
     <!-- ============================================ INSERT ============================================ -->
 
     <!--    1) 정상 동작 확인 완료 -->
-    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
+    <insert id="saveFolderAsCustom" parameterType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
                                 useGeneratedKeys="true" keyProperty="folderSeq">
         INSERT
         INTO TFOLDER(FOLDER_SEQ, USER_SEQ, FOLDER_PARENT_SEQ, FOLDER_ROOT_FLAG, FOLDER_NAME, FOLDER_CAPTION,
                      FOLDER_ORDER,
                      FOLDER_SCOPE, FOLDER_REG_DATE, FOLDER_MOD_DATE, FOLDER_DEL_FLAG)
         VALUES (#{folderSeq}, #{userId}, #{folderParentSeq}, #{folderRootFlag}, #{folderName}, #{folderCaption},
-                (SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq}),
-                #{folderScope}, NOW(), NOW(), 'n'
+                (SELECT IFNULL(MAX(FOLDER_ORDER)+1, 1) FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq}),
+                #{folderScope}, NOW(), NOW(), #{folderDelFlag}
                 );
     </insert>
 
@@ -72,10 +94,10 @@
         INTO TFOLDER(FOLDER_SEQ, USER_SEQ, FOLDER_PARENT_SEQ, FOLDER_ROOT_FLAG, FOLDER_NAME, FOLDER_CAPTION,
                      FOLDER_ORDER,
                      FOLDER_SCOPE, FOLDER_REG_DATE, FOLDER_MOD_DATE, FOLDER_DEL_FLAG)
-        VALUES (#{folderSeq}, #{userId}, #{folderParentSeq}, #{folderRootFlag}, #{folderName}, #{folderCaption},
+        VALUES (#{folderSeq}, #{userId}, #{folderParentSeq}, #{folderRootFlag}, #{folderName}, IFNULL(#{folderCaption}, ''),
                 <choose>
                     <when test='folderOrder == null'>
-                        (SELECT MAX(FOLDER_ORDER)+1 FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq})
+                        (SELECT IFNULL(MAX(FOLDER_ORDER)+1, 1) FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq})
                     </when>
                     <otherwise>
                         #{folderOrder}

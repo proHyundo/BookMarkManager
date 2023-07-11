@@ -103,7 +103,7 @@ public class UserRepositorySelectQueryTest {
         userRepository.save(user);
         userRepository.deleteByUserId(user.getUserId());
         // when
-        Optional<User> resultUser = userRepository.findByUserIdAndState(user.getUserId(), "e");
+        Optional<User> resultUser = userRepository.findByUserIdAndUserState(user.getUserId(), "e");
         // then
         assertThat(resultUser.get()).extracting("userId", "userEmail", "userState")
                 .containsExactly(3L, "test3@test.com", "e");

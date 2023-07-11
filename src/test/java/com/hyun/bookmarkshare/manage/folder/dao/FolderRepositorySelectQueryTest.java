@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -86,27 +87,47 @@ class FolderRepositorySelectQueryTest {
 
     @DisplayName("폴더 id로 삭제된 단일 폴더를 조회하면 비어있는 Optional 객체가 반환된다.")
     @Test
-    void findByDeletedFolderSeq() {
+    void findByFolderSeqExcludeDeleted() {
         // given
         Folder folder1 = createFolderWithDeleteFlag(3L, 1L, 1L, "y");
-        folderRepository.save(folder1);
+        folderRepository.saveFolderAsCustom(folder1);
         // when
-        Optional<Folder> result = folderRepository.findByFolderSeq(3L);
+        Optional<Folder> result = folderRepository.findByFolderSeqExcludeDeleted(3L);
         // then
         assertThat(result).isEmpty();
     }
 
     @DisplayName("폴더 id로 삭제여부와 관계없이 폴더를 조회한다.")
     @Test
-    void findByFolderSeqEvenIfDeleted() {
+    void findByFolderSeq() {
         // given
         Folder folder1 = createFolderWithDeleteFlag(3L, 1L, 1L, "y");
         folderRepository.save(folder1);
 
         // when
-        Optional<Folder> result = folderRepository.findByFolderSeqEvenIfDeleted(3L);
+        Optional<Folder> result = folderRepository.findByFolderSeq(3L);
         // then
         assertThat(result.get().getFolderSeq()).isEqualTo(folder1.getFolderSeq());
+    }
+
+    @DisplayName("특정 폴더 내부에 속한 모든 depth의 폴더 식별 번호를 가져온다.")
+    @Test
+    void findAllFolderSeqWithSameAncestorAndUserId() {
+        // given
+        Folder folder3 = createFolder(3L, 1L, 1L, "folder3");
+        Folder folder4 = createFolder(4L, 1L, 3L, "folder4");
+        Folder folder5 = createFolder(5L, 1L, 4L, "folder5");
+        Folder folder6 = createFolder(6L, 1L, 4L, "folder6");
+        folderRepository.save(folder3);
+        folderRepository.save(folder4);
+        folderRepository.save(folder5);
+        folderRepository.save(folder6);
+
+        // when
+        List<Long> result = folderRepository.findAllFolderSeqWithSameAncestor(1L, 1L);
+
+        // then
+        assertThat(result).isEqualTo(List.of(2L, 3L, 4L, 5L, 6L));
     }
 
     private Folder createFolder(Long folderSeq, Long userId, Long parentSeq, String folderName, Long folderOrder, String folderDeleteFlag) {
