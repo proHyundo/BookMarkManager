@@ -3,17 +3,18 @@ package com.hyun.bookmarkshare.manage.bookmark.service.request;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Setter;
 
 @Getter
-public class BookmarkUpdateServiceRequestDto {
+@Setter
+public class BookmarkCreateServiceRequestDto {
 
     private Long bookmarkSeq;
     private Long userId;
     private Long folderSeq;
+
     private String bookmarkTitle;
     private String bookmarkCaption;
-    private String bookmarkUrl;
 
     private String bookmarkScheme;
     private String bookmarkHost;
@@ -21,49 +22,36 @@ public class BookmarkUpdateServiceRequestDto {
     private String bookmarkPort;
     private String bookmarkPath;
 
+    private String bookmarkUrl;
+
     @Builder
-    public BookmarkUpdateServiceRequestDto(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkUrl) {
+    public BookmarkCreateServiceRequestDto(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkScheme, String bookmarkHost, String bookmarkDomain, String bookmarkPort, String bookmarkPath, String bookmarkUrl) {
         this.bookmarkSeq = bookmarkSeq;
         this.userId = userId;
         this.folderSeq = folderSeq;
         this.bookmarkTitle = bookmarkTitle;
         this.bookmarkCaption = bookmarkCaption;
+        this.bookmarkScheme = bookmarkScheme;
+        this.bookmarkHost = bookmarkHost;
+        this.bookmarkDomain = bookmarkDomain;
+        this.bookmarkPort = bookmarkPort;
+        this.bookmarkPath = bookmarkPath;
         this.bookmarkUrl = bookmarkUrl;
     }
 
-    public Bookmark toEntity(){
+    public Bookmark toBookmarkEntity(){
         return Bookmark.builder()
                 .bookmarkSeq(bookmarkSeq)
                 .userId(userId)
                 .folderSeq(folderSeq)
                 .bookmarkTitle(bookmarkTitle)
                 .bookmarkCaption(bookmarkCaption)
-                .bookmarkUrl(bookmarkUrl)
                 .bookmarkScheme(bookmarkScheme)
                 .bookmarkHost(bookmarkHost)
                 .bookmarkDomain(bookmarkDomain)
                 .bookmarkPort(bookmarkPort)
                 .bookmarkPath(bookmarkPath)
+                .bookmarkUrl(bookmarkUrl)
                 .build();
-    }
-
-    public void setBookmarkScheme(String bookmarkScheme) {
-        this.bookmarkScheme = bookmarkScheme;
-    }
-
-    public void setBookmarkHost(String bookmarkHost) {
-        this.bookmarkHost = bookmarkHost;
-    }
-
-    public void setBookmarkDomain(String bookmarkDomain) {
-        this.bookmarkDomain = bookmarkDomain;
-    }
-
-    public void setBookmarkPort(String bookmarkPort) {
-        this.bookmarkPort = bookmarkPort;
-    }
-
-    public void setBookmarkPath(String bookmarkPath) {
-        this.bookmarkPath = bookmarkPath;
     }
 }

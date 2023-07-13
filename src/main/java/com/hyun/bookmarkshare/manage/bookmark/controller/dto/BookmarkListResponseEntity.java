@@ -15,9 +15,9 @@ public class BookmarkListResponseEntity {
     private final int statusCode;
     private final String statusDescription;
     private final String message;
-    private final List<Bookmark> bookmarkList;
+    private final List<BookmarkResponseDto> bookmarkList;
 
-    public static ResponseEntity<BookmarkListResponseEntity> toBookmarkListResponseEntity(List<Bookmark> paramBookmarkList){
+    public static ResponseEntity<BookmarkListResponseEntity> toBookmarkListResponseEntity(List<BookmarkResponseDto> paramBookmarkList){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(BookmarkListResponseEntity.builder()

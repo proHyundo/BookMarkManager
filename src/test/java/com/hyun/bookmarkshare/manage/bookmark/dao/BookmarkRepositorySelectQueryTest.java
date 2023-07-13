@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -88,16 +89,16 @@ class BookmarkRepositorySelectQueryTest {
     }
 
 
-    @DisplayName("사용자id와 폴더id로 특정 사용자의 특정 폴더에 속한 모든 북마크들을 가져온다.")
+    @DisplayName("사용자id와 폴더id로 특정 사용자의 특정 폴더에 속한 삭제되지 않은 모든 북마크들을 가져온다.")
     @Test
-    void findAllByUserIdAndFolderSeq() {
+    void findAllByUserIdAndFolderSeqExcludeDeleted() {
         // given (사용자1, 사용자2, 폴더1, 폴더2 존재)
         bookmarkRepository.save(createBookmark(1L, 1L, 1L, "bookmarkTitle1"));
         bookmarkRepository.save(createBookmark(2L, 1L, 1L, "bookmarkTitle2"));
         bookmarkRepository.save(createBookmark(3L, 1L, 2L, "bookmarkTitle3"));
 
         // when
-        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderSeq(1L, 1L);
+        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderSeqExcludeDeleted(1L, 1L);
 
         // then
         assertThat(bookmarkListResult.size()).isEqualTo(2);
@@ -117,7 +118,7 @@ class BookmarkRepositorySelectQueryTest {
         bookmarkRepository.save(createBookmark(3L, 1L, 2L, "bookmarkTitle3"));
 
         // when
-        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderSeq(1L, 99L);
+        List<Bookmark> bookmarkListResult = bookmarkRepository.findAllByUserIdAndFolderSeqExcludeDeleted(1L, 99L);
 
         // then
         assertThat(bookmarkListResult).isEmpty();
@@ -137,8 +138,8 @@ class BookmarkRepositorySelectQueryTest {
                 .bookmarkPath("/")
                 .bookmarkUrl("http://www.google.com/")
                 .bookmarkOrder(1L)
-                .bookmarkRegDate(Date.valueOf(LocalDate.of(2023, 7, 3)))
-                .bookmarkModDate(Date.valueOf(LocalDate.of(2023, 7, 3)))
+                .bookmarkRegDate(LocalDateTime.of(2023, 7, 3, 0,0,0))
+                .bookmarkModDate(LocalDateTime.of(2023, 7, 3, 0, 0, 0))
                 .bookmarkDelFlag("n")
                 .build();
     }
@@ -157,8 +158,8 @@ class BookmarkRepositorySelectQueryTest {
                 .bookmarkPath("/")
                 .bookmarkUrl("http://www.google.com/")
                 .bookmarkOrder(1L)
-                .bookmarkRegDate(Date.valueOf(LocalDate.of(2023, 7, 3)))
-                .bookmarkModDate(Date.valueOf(LocalDate.of(2023, 7, 3)))
+                .bookmarkRegDate(LocalDateTime.of(2023, 7, 3, 0, 0, 0))
+                .bookmarkModDate(LocalDateTime.of(2023, 7, 3, 0, 0, 0))
                 .bookmarkDelFlag("n")
                 .build();
     }

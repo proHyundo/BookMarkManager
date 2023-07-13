@@ -1,12 +1,14 @@
 package com.hyun.bookmarkshare.manage.bookmark.service;
 
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkListRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -15,20 +17,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// MocktioAnnotations.openMocks(this) 대신 @ExtendWith(MockitoExtension.class)를 사용할 수 있다.
-// 둘다 @Mock, @InjectMocks 어노테이션을 사용하기 위함.
 @ExtendWith(MockitoExtension.class)
-class GetBookmarkListTest{
-
-    @InjectMocks
-    private BookmarkServiceImpl bookmarkService;
+class GetBookmarkListUnitTest {
 
     @Mock
     private BookmarkRepository bookmarkRepository;
+    @InjectMocks
+    private BookmarkServiceImpl bookmarkService;
 
     @DisplayName("북마크 리스트_조회_성공")
     @Test
@@ -38,7 +36,6 @@ class GetBookmarkListTest{
                 .userId(1L)
                 .folderSeq(1L)
                 .build();
-
         Mockito.when(bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq()))
                 .thenReturn(List.of(
                         Bookmark.builder()
@@ -66,9 +63,8 @@ class GetBookmarkListTest{
                                 .bookmarkDelFlag("N")
                                 .build()
                 ));
-
         // when
-        List<Bookmark> bookList = bookmarkService.getBookList(bookmarkListRequestDto);
+        List<BookmarkResponseDto> bookList = bookmarkService.getBookList(bookmarkListRequestDto.toServiceDto());
 
         // then
         assertThat(bookList.size()).isEqualTo(2);
@@ -91,7 +87,7 @@ class GetBookmarkListTest{
         // when
         // then
         Assertions.assertThatThrownBy(() -> {
-            List<Bookmark> bookList = bookmarkService.getBookList(bookmarkListRequestDto);
+            List<BookmarkResponseDto> bookList = bookmarkService.getBookList(bookmarkListRequestDto.toServiceDto());
         }).isInstanceOf(NoSuchElementException.class);
     }
 
@@ -135,7 +131,7 @@ class GetBookmarkListTest{
         // when
         // then
         Assertions.assertThatThrownBy(() -> {
-            List<Bookmark> bookList = bookmarkService.getBookList(bookmarkListRequestDto);
+            List<BookmarkResponseDto> bookList = bookmarkService.getBookList(bookmarkListRequestDto.toServiceDto());
         }).isInstanceOf(NoSuchElementException.class);
     }
 

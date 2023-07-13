@@ -3,7 +3,7 @@ package com.hyun.bookmarkshare.manage.bookmark.dao;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkUpdateServiceRequestDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -14,6 +14,8 @@ public interface BookmarkRepository {
 
     // SELECT
 
+    List<Bookmark> findAllByUserIdAndFolderSeqExcludeDeleted(Long userId, Long folderSeq);
+
     List<Bookmark> findAllByUserIdAndFolderSeq(Long userId, Long folderSeq);
 
     Optional<BookmarkResponseDto> findByUserIdAndBookmarkSeq(Long userId, Long bookmarkSeq);
@@ -22,13 +24,13 @@ public interface BookmarkRepository {
 
     // INSERT
 
-    int saveBookmark(BookmarkAddRequestDto bookmarkAddRequestDto);
+    int saveBookmark(BookmarkCreateRequestDto bookmarkCreateRequestDto);
 
     int save(Bookmark bookmark);
 
     // UPDATE
 
-    int updateByBookmarkUpdateRequestDto(BookmarkUpdateRequestDto bookmarkUpdateRequestDto);
+//    int updateByBookmarkUpdateRequestDto(BookmarkUpdateServiceRequestDto bookmarkUpdateServiceRequestDto);
 
     int updateOrderByBookmarkRequestDto(BookmarkReorderServiceRequestDto bookmarkReorderServiceRequestDto);
 
@@ -37,6 +39,7 @@ public interface BookmarkRepository {
     // DELETE
 
     int deleteByUserIdAndBookmarkSeq(Long userId, Long bookmarkSeq);
+    int deleteAllByUserIdAndFolderSeq(Long userId, Long folderSeq);
 
     // ONLY FOR TEST
 
