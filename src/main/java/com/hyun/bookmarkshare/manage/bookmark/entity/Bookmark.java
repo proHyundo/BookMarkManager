@@ -3,12 +3,15 @@ package com.hyun.bookmarkshare.manage.bookmark.entity;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Bookmark {
 
     private Long bookmarkSeq;
@@ -23,12 +26,12 @@ public class Bookmark {
     private String bookmarkPath;
     private String bookmarkUrl;
     private Long bookmarkOrder;
-    private Date bookmarkRegDate;
-    private Date bookmarkModDate;
+    private LocalDateTime bookmarkRegDate;
+    private LocalDateTime bookmarkModDate;
     private String bookmarkDelFlag;
 
     @Builder
-    public Bookmark(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkScheme, String bookmarkHost, String bookmarkPort, String bookmarkDomain, String bookmarkPath, String bookmarkUrl, Long bookmarkOrder, Date bookmarkRegDate, Date bookmarkModDate, String bookmarkDelFlag) {
+    public Bookmark(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkScheme, String bookmarkHost, String bookmarkPort, String bookmarkDomain, String bookmarkPath, String bookmarkUrl, Long bookmarkOrder, LocalDateTime bookmarkRegDate, LocalDateTime bookmarkModDate, String bookmarkDelFlag) {
         this.bookmarkSeq = bookmarkSeq;
         this.userId = userId;
         this.folderSeq = folderSeq;
@@ -49,10 +52,27 @@ public class Bookmark {
     public BookmarkResponseDto toBookmarkResponseDto() {
         return BookmarkResponseDto.builder()
                 .bookmarkSeq(this.bookmarkSeq)
+                .userId(this.userId)
+                .folderSeq(this.folderSeq)
                 .bookmarkTitle(this.bookmarkTitle)
                 .bookmarkCaption(this.bookmarkCaption)
                 .bookmarkUrl(this.bookmarkUrl)
+                .bookmarkOrder(this.bookmarkOrder)
+                .bookmarkRegDate(this.bookmarkRegDate)
+                .bookmarkModDate(this.bookmarkModDate)
                 .build();
+    }
+
+    public Bookmark updateEntityBy(Bookmark requestBookmark) {
+        this.bookmarkTitle = requestBookmark.getBookmarkTitle();
+        this.bookmarkCaption = requestBookmark.getBookmarkCaption();
+        this.bookmarkScheme = requestBookmark.getBookmarkScheme();
+        this.bookmarkHost = requestBookmark.getBookmarkHost();
+        this.bookmarkPort = requestBookmark.getBookmarkPort();
+        this.bookmarkDomain = requestBookmark.getBookmarkDomain();
+        this.bookmarkPath = requestBookmark.getBookmarkPath();
+        this.bookmarkUrl = requestBookmark.getBookmarkUrl();
+        return this;
     }
 
 

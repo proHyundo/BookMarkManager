@@ -18,6 +18,7 @@ import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +79,7 @@ public class BookmarkRepositoryUpdateQueryTest {
         int resultRows = bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderServiceRequestDto);
 
         // then
-        assertThat(bookmarkRepository.findAllByUserIdAndFolderSeq(1L, 1L))
+        assertThat(bookmarkRepository.findAllByUserIdAndFolderSeqExcludeDeleted(1L, 1L))
                 .extracting("bookmarkSeq", "bookmarkOrder")
                 .containsExactlyInAnyOrder(
                         Tuple.tuple(2L, 1L),
@@ -96,8 +97,8 @@ public class BookmarkRepositoryUpdateQueryTest {
                 .bookmarkHost("")
                 .bookmarkDomain("")
                 .bookmarkUrl(bookmarkUrl)
-                .bookmarkRegDate(Date.valueOf(LocalDate.of(2023, 7, 5)))
-                .bookmarkModDate(Date.valueOf(LocalDate.of(2023, 7, 5)))
+                .bookmarkRegDate(LocalDateTime.of(2023, 7, 5, 0, 0, 0))
+                .bookmarkModDate(LocalDateTime.of(2023, 7, 5, 0, 0, 0))
                 .build();
     }
 }

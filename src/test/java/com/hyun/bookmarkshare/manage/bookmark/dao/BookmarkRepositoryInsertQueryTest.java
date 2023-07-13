@@ -1,11 +1,7 @@
 package com.hyun.bookmarkshare.manage.bookmark.dao;
 
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkAddRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
-import com.hyun.bookmarkshare.manage.bookmark.service.UrlParser;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,12 +9,10 @@ import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,8 +63,8 @@ public class BookmarkRepositoryInsertQueryTest {
                 .bookmarkHost("host")
                 .bookmarkDomain("domain")
                 .bookmarkUrl(bookmarkUrl)
-                .bookmarkRegDate(Date.valueOf(LocalDate.of(2023, 7, 5)))
-                .bookmarkModDate(Date.valueOf(LocalDate.of(2023, 7, 5)))
+                .bookmarkRegDate(LocalDateTime.of(2023, 7, 5, 12, 30, 30))
+                .bookmarkModDate(LocalDateTime.of(2023, 7, 5, 12, 30, 30))
                 .build();
     }
 

@@ -24,11 +24,18 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ SELECT ============================================ -->
 
-    <select id="findAllByUserIdAndFolderSeq"
+    <select id="findAllByUserIdAndFolderSeqExcludeDeleted"
             resultMap="bookmarkEntityResultMap">
         SELECT *
         FROM TBOOKMARK
         WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq} AND BOOK_DEL_FLAG = 'n'
+        ORDER BY BOOK_ORDER;
+    </select>
+
+    <select id="findAllByUserIdAndFolderSeq" resultMap="bookmarkEntityResultMap">
+        SELECT *
+        FROM TBOOKMARK
+        WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq}
         ORDER BY BOOK_ORDER;
     </select>
 
@@ -66,13 +73,13 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ INSERT ============================================ -->
 
-    <insert id="saveBookmark" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkAddRequestDto"
+    <insert id="saveBookmark" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkCreateRequestDto"
             useGeneratedKeys="true" keyProperty="bookmarkSeq">
         INSERT INTO TBOOKMARK(USER_SEQ, FOLDER_SEQ, BOOK_TITLE, BOOK_CAPTION, BOOK_URL, BOOK_SCHEME,
                               BOOK_HOST, BOOK_DOMAIN, BOOK_PORT, BOOK_PATH, BOOK_ORDER)
         VALUES(#{userId}, #{folderSeq}, #{bookmarkTitle}, IFNULL(#{bookmarkCaption}, ''), #{bookmarkUrl}, #{bookmarkScheme},
                #{bookmarkHost}, #{bookmarkDomain}, #{bookmarkPort}, #{bookmarkPath},
-               (SELECT MAX(BOOK_ORDER)+1 FROM TBOOKMARK ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq})
+               (SELECT IFNULL(MAX(BOOK_ORDER)+1, 1) FROM TBOOKMARK ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq})
                );
     </insert>
 
@@ -82,21 +89,12 @@
                               BOOK_HOST, BOOK_DOMAIN, BOOK_PORT, BOOK_PATH, BOOK_ORDER, BOOK_DEL_FLAG)
         VALUES(#{bookmarkSeq}, #{userId}, #{folderSeq}, #{bookmarkTitle}, #{bookmarkCaption}, #{bookmarkUrl}, #{bookmarkScheme},
                #{bookmarkHost}, #{bookmarkDomain}, #{bookmarkPort}, #{bookmarkPath},
-               (SELECT MAX(BOOK_ORDER)+1 FROM TBOOKMARK ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq})
+               (SELECT IFNULL(MAX(BOOK_ORDER)+1, 1) FROM TBOOKMARK ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq})
                , 'n');
     </insert>
 
     <!-- ================================================================================================ -->
     <!-- ============================================ UPDATE ============================================ -->
-
-    <update id="updateByBookmarkUpdateRequestDto" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkUpdateRequestDto">
-        UPDATE TBOOKMARK
-        SET BOOK_CAPTION = #{bookmarkCaption}, BOOK_URL = #{bookmarkUrl}, BOOK_SCHEME = #{bookmarkScheme},
-            BOOK_HOST = #{bookmarkHost}, BOOK_DOMAIN = #{bookmarkDomain} ,BOOK_PATH = #{bookmarkPath},
-            BOOK_PORT = #{bookmarkPort}, BOOK_MOD_DATE = NOW()
-        WHERE USER_SEQ = #{userId} AND BOOK_SEQ = #{bookmarkSeq};
-    </update>
-
 
     <update id="updateByBookmarkUpdateRequestDtoAndReturnLockUpdate" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkUpdateRequestDto"
             flushCache="true">
@@ -132,8 +130,13 @@
         WHERE USER_SEQ = #{userId} AND BOOK_SEQ = #{bookmarkSeq} AND BOOK_DEL_FLAG = 'n';
     </update>
 
-    <update id="resetAutoIncrementValue">
-        ALTER TABLE TBOOKMARK AUTO_INCREMENT = 0;
+<!--    <update id="resetAutoIncrementValue">-->
+<!--        ALTER TABLE TBOOKMARK AUTO_INCREMENT = 0;-->
+<!--    </update>-->
+
+    <update id="deleteAllByUserIdAndFolderSeq" parameterType="Long">
+        UPDATE TBOOKMARK SET BOOK_DEL_FLAG = 'y', BOOK_MOD_DATE = NOW()
+        WHERE USER_SEQ = #{userId} AND FOLDER_SEQ = #{folderSeq} AND BOOK_DEL_FLAG = 'n';
     </update>
 
 </mapper>

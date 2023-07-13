@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BookmarkServiceRequestDto {
 
-    Long userId;
     Long bookmarkSeq;
+    Long userId;
+    Long folderSeq;
 
     @Builder
-    public BookmarkServiceRequestDto(Long userId, Long bookmarkSeq) {
-        this.userId = userId;
+    public BookmarkServiceRequestDto(Long bookmarkSeq, Long userId, Long folderSeq) {
         this.bookmarkSeq = bookmarkSeq;
+        this.userId = userId;
+        this.folderSeq = folderSeq;
     }
 }
