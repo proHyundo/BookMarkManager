@@ -2,7 +2,10 @@ package com.hyun.bookmarkshare.user.controller;
 
 import com.hyun.bookmarkshare.user.controller.dto.UserResponseEntity;
 import com.hyun.bookmarkshare.user.service.UserService;
+import com.hyun.bookmarkshare.user.service.response.UserResponse;
+import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,14 +31,14 @@ public class UserRestController {
 //        return LogoutResponseEntity.toResponseEntity(HttpStatus.OK);
 //    }
 
-    @GetMapping("/user/info")
-    public ResponseEntity<UserResponseEntity> getUserInfoRequest(@RequestHeader(value = "Authorization") String accessToken){
-        return UserResponseEntity.toResponseEntity(userService.getUserInfo(accessToken));
+    @GetMapping("/api/v1/user/info")
+    public ApiResponse<UserResponse> getUserInfoRequest(@RequestHeader(value = "Authorization") String accessToken){
+        return ApiResponse.of(HttpStatus.OK, userService.getUserInfo(accessToken));
     }
 
     @DeleteMapping("/user/sign-out")
-    public ResponseEntity<UserResponseEntity> signOutRequest(@RequestHeader("Authorization") String token){
-        return UserResponseEntity.toResponseEntity(userService.signOut(token));
+    public ResponseEntity<UserResponseEntity> signOutRequest(@RequestHeader("Authorization") String token, @RequestBody String userEmail){
+        return UserResponseEntity.toResponseEntity(userService.signOut(token, userEmail));
     }
 
 

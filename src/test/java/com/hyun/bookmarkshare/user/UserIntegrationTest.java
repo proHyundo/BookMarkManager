@@ -3,7 +3,7 @@ package com.hyun.bookmarkshare.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
 import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
-import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.UserSignUpRequestDto;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.exceptions.LoginProcessException;
 import org.assertj.core.api.Assertions;
@@ -40,7 +40,7 @@ public class UserIntegrationTest {
         // given
         emailRepository.saveByEmailAndValidationCode("******@gmail.com", "abcd1234");
         emailRepository.updateEmailValidationFlag("******@gmail.com", "abcd1234");
-        SignUpRequestDto signUpRequestDto = SignUpRequestDto.builder()
+        UserSignUpRequestDto userSignUpRequestDto = UserSignUpRequestDto.builder()
                 .userId(null)
                 .userEmail("******@gmail.com")
                 .userPwd("test1234")
@@ -54,7 +54,7 @@ public class UserIntegrationTest {
         // jsonPath 문법 : https://github.com/json-path/JsonPath
         this.mockMvc.perform(post("/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(signUpRequestDto)))
+                        .content(new ObjectMapper().writeValueAsString(userSignUpRequestDto)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..userEmail").exists())
@@ -65,7 +65,7 @@ public class UserIntegrationTest {
     @Test
     void signUpFail_AlreadyUserExist() throws Exception {
         // given
-        userRepository.saveBySignUpRequestDto(SignUpRequestDto.builder()
+        userRepository.saveBySignUpRequestDto(UserSignUpRequestDto.builder()
                 .userId(null)
                 .userEmail("******@gmail.com")
                 .userPwd("test1234")
@@ -77,7 +77,7 @@ public class UserIntegrationTest {
 
         emailRepository.saveByEmailAndValidationCode("******@gmail.com", "abcd1234");
         emailRepository.updateEmailValidationFlag("******@gmail.com", "abcd1234");
-        SignUpRequestDto signUpRequestDto = SignUpRequestDto.builder()
+        UserSignUpRequestDto userSignUpRequestDto = UserSignUpRequestDto.builder()
                 .userId(null)
                 .userEmail("******@gmail.com")
                 .userPwd("test1234")
@@ -87,7 +87,7 @@ public class UserIntegrationTest {
         // when
         this.mockMvc.perform(post("/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(signUpRequestDto)))
+                        .content(new ObjectMapper().writeValueAsString(userSignUpRequestDto)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$..message").exists())

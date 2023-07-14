@@ -3,7 +3,6 @@ package com.hyun.bookmarkshare.manage.bookmark.service.request;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 public class BookmarkUpdateServiceRequestDto {
