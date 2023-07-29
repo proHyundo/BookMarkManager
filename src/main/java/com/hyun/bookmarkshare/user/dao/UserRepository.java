@@ -1,10 +1,11 @@
 package com.hyun.bookmarkshare.user.dao;
 
-import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
-import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.UserSignUpRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
+import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Optional;
 
@@ -15,10 +16,10 @@ public interface UserRepository {
     /* ============================================ SELECT ============================================ */
 
     /* TUSERACCOUNT TABLE */
-    Optional<User> findByLoginRequestDto(LoginRequestDto loginRequestDto);
-
-    /* TUSERACCOUNT TABLE */
+    Optional<User> findByLoginServiceRequestDto(LoginServiceRequestDto loginServiceRequestDto);
+    Optional<User> findByUserEmail(String userEmail);
     Optional<User> findByUserId(Long userId);
+    Optional<User> findByUserIdAndUserState(@Param("userId") Long userId, @Param("userState") String userState);
 
     /* TUSERACCOUNT TABLE */
     Integer countByUserEmail(String userEmail);
@@ -30,7 +31,8 @@ public interface UserRepository {
     /* ============================================ INSERT ============================================ */
 
     /* TUSERACCOUNT TABLE */
-    Integer saveBySignUpRequestDto(SignUpRequestDto signUpRequestDto);
+    Integer saveBySignUpRequestDto(UserSignUpRequestDto userSignUpRequestDto);
+    int saveNew(User user);
 
     /* TREFRESHTOKEN TABLE */
     int saveUserRefreshToken(Long userId, String refreshToken);
@@ -42,4 +44,8 @@ public interface UserRepository {
     int deleteRefreshTokenByUserId(Long userId);
 
     int deleteByUserId(Long userId);
+
+
+    // ONLY FOR TEST
+    int save(User user);
 }

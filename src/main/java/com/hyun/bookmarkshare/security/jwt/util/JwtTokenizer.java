@@ -59,10 +59,10 @@ public class JwtTokenizer {
     /**
      * 토큰에서 유저 아이디 얻기
      */
-    public Long getUserIdFromToken(String token) {
-        String[] tokenArr = token.split(" ");
-        token = tokenArr[1];
-        Claims claims = parseToken(token, accessSecret);
+    public Long getUserIdFromToken(String refreshToken) {
+        String[] tokenArr = refreshToken.split(" ");
+        refreshToken = tokenArr[1];
+        Claims claims = parseToken(refreshToken, accessSecret);
         return Long.valueOf((Integer)claims.get("userId"));
     }
 

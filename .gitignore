@@ -27,6 +27,7 @@ out/
 !**/src/test/**/out/
 *.properties
 *.sql
+*.env.*
 
 ### NetBeans ###
 /nbproject/private/

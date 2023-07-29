@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
 
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -21,4 +22,12 @@ public class BookmarkListRequestDto {
     @NotNull
     @Positive
     private Long folderSeq;
+
+    public BookmarkServiceRequestDto toServiceDto(){
+        return BookmarkServiceRequestDto.builder()
+                .userId(this.userId)
+                .bookmarkSeq(null)
+                .folderSeq(this.folderSeq)
+                .build();
+    }
 }

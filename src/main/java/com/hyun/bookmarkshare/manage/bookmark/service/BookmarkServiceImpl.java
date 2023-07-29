@@ -3,13 +3,21 @@ package com.hyun.bookmarkshare.manage.bookmark.service;
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkUpdateServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkSeqResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BookmarkServiceImpl implements BookmarkService{
@@ -18,62 +26,92 @@ public class BookmarkServiceImpl implements BookmarkService{
     private final UrlParser urlParser;
 
     @Override
-    public List<Bookmark> getBookList(BookmarkListRequestDto bookmarkListRequestDto) {
-        // https://stackoverflow.com/questions/11201420/which-exception-to-throw-if-list-is-empty-in-java
-        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderSeq(bookmarkListRequestDto.getUserId(), bookmarkListRequestDto.getFolderSeq());
+    public BookmarkResponseDto getBookmark(BookmarkServiceRequestDto requestDto) {
+        return bookmarkRepository.findByUserIdAndBookmarkSeq(requestDto.getUserId(), requestDto.getBookmarkSeq())
+                .orElseThrow(() -> new NoSuchElementException());
+    }
+
+    @Override
+    public List<BookmarkResponseDto> getBookList(BookmarkServiceRequestDto serviceRequestDto) {
+        // TODO : 조회 결과 List 가 비어있을 경우, 어떤 예외를 던져야 할까?
+        // 참고링크) https://stackoverflow.com/questions/11201420/which-exception-to-throw-if-list-is-empty-in-java
+
+        List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderSeqExcludeDeleted(
+                serviceRequestDto.getUserId(),
+                serviceRequestDto.getFolderSeq());
+
         if(allByUserIdAndFolderParentSeq.isEmpty()) throw new IllegalStateException();
-//        return allByUserIdAndFolderParentSeq.stream().map(Bookmark::toBookmarkResponseDto).collect(Collectors.toList());
-        return allByUserIdAndFolderParentSeq;
+        return allByUserIdAndFolderParentSeq.stream().map(Bookmark::toBookmarkResponseDto).collect(Collectors.toList());
+//        return allByUserIdAndFolderParentSeq;
     }
 
     @Override
-    public BookmarkResponseDto getBookmark(BookmarkRequestDto bookmarkRequestDto) {
-        return bookmarkRepository.findByUserIdAndBookmarkSeq(bookmarkRequestDto.getUserId(), bookmarkRequestDto.getBookmarkSeq()).orElseThrow(
-                () -> new NoSuchElementException()
-        );
-    }
-
-    @Override
-    public BookmarkResponseDto createBookmark(BookmarkAddRequestDto bookmarkAddRequestDto) {
+    public BookmarkResponseDto createBookmark(BookmarkCreateServiceRequestDto serviceRequestDto) {
         // bookmark url disunite & set units to bookmarkAddRequestDto
-        urlParser.assignUrlFields(bookmarkAddRequestDto);
-        int updatedRows = bookmarkRepository.saveBookmark(bookmarkAddRequestDto);
-        validateSqlUpdatedRows(updatedRows);
-        return bookmarkAddRequestDto.toBookmarkResponseDto(bookmarkAddRequestDto);
+        BookmarkCreateServiceRequestDto afterSetUrlUnitsBookmarkServiceRequestDto = urlParser.assignUrlFields(serviceRequestDto);
+        Bookmark targetBookmark = afterSetUrlUnitsBookmarkServiceRequestDto.toBookmarkEntity();
+        bookmarkRepository.save(targetBookmark);
+//        validateSqlUpdatedRows(updatedRows);
+        return bookmarkRepository.findByBookmarkSeq(targetBookmark.getBookmarkSeq())
+                .get().toBookmarkResponseDto();
     }
 
     @Override
-    public BookmarkResponseDto updateBookmark(BookmarkUpdateRequestDto bookmarkUpdateRequestDto) {
-        int updatedRows = bookmarkRepository.updateByBookmarkUpdateRequestDto(bookmarkUpdateRequestDto);
+    public BookmarkResponseDto updateBookmark(BookmarkUpdateServiceRequestDto requestDto) {
+        Bookmark targetBookmark = bookmarkRepository.findByBookmarkSeq(requestDto.getBookmarkSeq())
+                                                    .orElseThrow(() -> new NoSuchElementException());
+        // 기존 북마크와 다른 url 이 요청되었을 경우, url 을 파싱 작업을 수행한다.
+        BookmarkUpdateServiceRequestDto assignedRequestDto = doUrlAssignWhenUrlIsDifferentBetween(requestDto, targetBookmark);
+        // dto to entity
+        Bookmark freshBookmark = targetBookmark.updateEntityBy(assignedRequestDto.toEntity());
+        // 덮어쓴 북마크 객체를 저장한다.
+        int updatedRows = bookmarkRepository.update(freshBookmark);
         validateSqlUpdatedRows(updatedRows);
-        return bookmarkRepository.findByUserIdAndBookmarkSeq(bookmarkUpdateRequestDto.getUserId(), bookmarkUpdateRequestDto.getBookmarkSeq()).orElseThrow(
-                () -> new NoSuchElementException()
-        );
+        // 저장한 북마크 객체를 응답하기 위해 반환객체로 변환한다.
+        return bookmarkRepository.findByBookmarkSeq(freshBookmark.getBookmarkSeq())
+                .orElseThrow(() -> new NoSuchElementException())
+                .toBookmarkResponseDto();
     }
 
-    @Override
-    public BookmarkResponseDto deleteBookmark(BookmarkRequestDto bookmarkRequestDto) {
-        BookmarkResponseDto resultDto = BookmarkResponseDto.builder().build();
-        int updatedRows = bookmarkRepository.deleteByUserIdAndBookmarkSeq(bookmarkRequestDto);
-        validateSqlUpdatedRows(updatedRows);
-        return resultDto;
-    }
-
-    @Override
-    public List<Long> updateBookmarkOrder(List<BookmarkReorderRequestDto> requestDtoList) {
-        for ( BookmarkReorderRequestDto bookmarkReorderRequestDto : requestDtoList) {
-            int updatedRows = bookmarkRepository.updateOrderByBookmarkRequestDto(bookmarkReorderRequestDto);
-            validateSqlUpdatedRows(updatedRows);
+    private BookmarkUpdateServiceRequestDto doUrlAssignWhenUrlIsDifferentBetween(BookmarkUpdateServiceRequestDto requestDto, Bookmark targetBookmark) {
+        BookmarkUpdateServiceRequestDto assignedRequestDto = null;
+        if(!requestDto.getBookmarkUrl().equals(targetBookmark.getBookmarkUrl())){
+            assignedRequestDto = urlParser.assignUrlFields(requestDto, requestDto.getBookmarkUrl());
+        }else {
+            assignedRequestDto = requestDto;
         }
-        List<List<Long>> resultList = new ArrayList<>();
-        requestDtoList.forEach(bookmarkReorderRequestDto ->
-                resultList.add(bookmarkReorderRequestDto.getBookmarkSeqOrder())
-        );
+        return assignedRequestDto;
+    }
+
+    @Override
+    public BookmarkSeqResponse deleteBookmark(BookmarkServiceRequestDto bookmarkServiceRequestDto) {
+        int updatedRows = bookmarkRepository.deleteByUserIdAndBookmarkSeq(bookmarkServiceRequestDto.getUserId(),
+                                                                          bookmarkServiceRequestDto.getBookmarkSeq());
+        validateSqlUpdatedRows(updatedRows);
+        return BookmarkSeqResponse.builder()
+                .userId(bookmarkServiceRequestDto.getUserId())
+                .bookmarkSeq(bookmarkServiceRequestDto.getBookmarkSeq())
+                .build();
+    }
+
+    @Override
+    public Boolean updateBookmarkOrder(List<BookmarkReorderServiceRequestDto> serviceRequestDtoList) {
+        for (BookmarkReorderServiceRequestDto serviceRequestDto : serviceRequestDtoList) {
+            bookmarkRepository.updateOrderByBookmarkRequestDto(serviceRequestDto);
+        }
+        return true;
+    }
+
+    @Override
+    public List<BookmarkSeqResponse> deleteAllBookmarksInFolderSeqAndUserId(List<Long> targetFolderSeqList, Long userId) {
+        for(Long targetFolderSeq : targetFolderSeqList){
+            bookmarkRepository.deleteAllByUserIdAndFolderSeq(userId, targetFolderSeq);
+        }
         return null;
     }
 
     private void validateSqlUpdatedRows(int updatedRows) {
-        if(updatedRows != 1) throw new IllegalStateException();
+        if(updatedRows != 1) throw new IllegalStateException("sql update error");
     }
 
 }

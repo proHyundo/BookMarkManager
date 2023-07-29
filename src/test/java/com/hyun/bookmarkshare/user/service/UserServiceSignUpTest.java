@@ -3,25 +3,22 @@ package com.hyun.bookmarkshare.user.service;
 import com.hyun.bookmarkshare.security.jwt.util.JwtTokenizer;
 import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
 import com.hyun.bookmarkshare.smtp.entity.EmailEntity;
-import com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.UserSignUpRequestDto;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.entity.User;
-import org.assertj.core.api.Assertions;
+import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
@@ -55,7 +52,7 @@ class UserServiceSignUpTest {
     @Test
     void signUp() throws NoSuchAlgorithmException, ParseException {
         // given
-        SignUpRequestDto signUpRequestDto = SignUpRequestDto.builder()
+        UserSignUpRequestDto userSignUpRequestDto = UserSignUpRequestDto.builder()
                 .userId(null)
                 .userEmail("test@example.com")
                 .userPwd("password1234")
@@ -72,8 +69,8 @@ class UserServiceSignUpTest {
         Date targetDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2023-04-17 13:12:33");
 
         // Mocking the behavior
-        when(userRepository.countByUserEmail(signUpRequestDto.getUserEmail())).thenReturn(0);
-        when(emailRepository.findByEmail(signUpRequestDto.getUserEmail())).thenReturn(
+        when(userRepository.countByUserEmail(userSignUpRequestDto.getUserEmail())).thenReturn(0);
+        when(emailRepository.findByEmail(userSignUpRequestDto.getUserEmail())).thenReturn(
                 Optional.of(EmailEntity.builder()
                             .email("test@example.com")
                             .emailCode("abc123")
@@ -84,24 +81,24 @@ class UserServiceSignUpTest {
                 );
 
 //        when(pwdEncoder.encode(signUpRequestDto.getUserPwd())).thenReturn("encoded_password");
-        when(userRepository.saveBySignUpRequestDto(signUpRequestDto)).thenReturn(1);
-        when(emailRepository.deleteByEmail(signUpRequestDto.getUserEmail())).thenReturn(1);
-        when(userRepository.findByUserId(signUpRequestDto.getUserId())).thenReturn(Optional.of(tempUser));
+        when(userRepository.saveBySignUpRequestDto(userSignUpRequestDto)).thenReturn(1);
+        when(emailRepository.deleteByEmail(userSignUpRequestDto.getUserEmail())).thenReturn(1);
+        when(userRepository.findByUserId(userSignUpRequestDto.getUserId())).thenReturn(Optional.of(tempUser));
 
         // when
-        User signUpResultUser = userService.signUp(signUpRequestDto);
+        UserResponse signUpResultUser = userService.signUp(userSignUpRequestDto.toServiceDto());
 
         // then
         assertThat(signUpResultUser).isNotNull();
-        assertEquals(signUpRequestDto.getUserEmail(), signUpResultUser.getUserEmail());
+        assertEquals(userSignUpRequestDto.getUserEmail(), signUpResultUser.getUserEmail());
 
         // Verify that the mocked methods were called with the expected arguments
-        verify(userRepository).countByUserEmail(signUpRequestDto.getUserEmail());
-        verify(emailRepository).findByEmail(signUpRequestDto.getUserEmail());
+        verify(userRepository).countByUserEmail(userSignUpRequestDto.getUserEmail());
+        verify(emailRepository).findByEmail(userSignUpRequestDto.getUserEmail());
 //        verify(pwdEncoder).encode(signUpRequestDto.getUserPwd());
-        verify(userRepository).saveBySignUpRequestDto(signUpRequestDto);
-        verify(emailRepository).deleteByEmail(signUpRequestDto.getUserEmail());
-        verify(userRepository).findByUserId(signUpRequestDto.getUserId());
+        verify(userRepository).saveBySignUpRequestDto(userSignUpRequestDto);
+        verify(emailRepository).deleteByEmail(userSignUpRequestDto.getUserEmail());
+        verify(userRepository).findByUserId(userSignUpRequestDto.getUserId());
     }
 
 }

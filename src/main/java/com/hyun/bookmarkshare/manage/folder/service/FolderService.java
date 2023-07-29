@@ -1,13 +1,14 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderListRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
-import com.hyun.bookmarkshare.manage.folder.entity.Folder;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderCreateServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderListServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.request.FolderServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,17 +18,17 @@ public interface FolderService {
      * @param requestDto FolderListRequestDto
      * @return list of folder
      * */
-    List<Folder> findFolderList(FolderListRequestDto requestDto);
+    List<FolderResponse> findFolderList(FolderListServiceRequestDto requestDto);
 
     /**@param requestDto
      * @return repository sql result - success : 1
      * @implNote explain
      * */
-    Folder createFolder(FolderCreateRequestDto requestDto);
+    FolderResponse createFolder(FolderCreateServiceRequestDto requestDto);
 
-    Long deleteFolder(FolderRequestDto requestDto);
+    FolderSeqResponse deleteFolder(FolderServiceRequestDto requestDto);
 
-    Folder updateFolder(FolderRequestDto requestDto);
+    FolderResponse updateFolder(FolderServiceRequestDto requestDto);
 
-    List<Long> updateFolderOrder(List<FolderReorderRequestDto> requestDtoList);
+    List<FolderReorderResponse> updateFolderOrder(List<FolderReorderServiceRequestDto> requestDtoList);
 }

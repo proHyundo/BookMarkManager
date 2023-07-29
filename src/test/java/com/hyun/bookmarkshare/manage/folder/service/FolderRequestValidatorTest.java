@@ -23,6 +23,35 @@ class FolderRequestValidatorTest {
             // Y : 통과
             // N : 예외 발생
 
+    /* 무엇을 검증해야 하는가.
+    * 1. Data types: Ensure that all fields in the DTO have the correct data type.
+    * For example, if a field is supposed to be an integer or a date, make sure you validate that
+    * it contains an appropriate value.
+    *
+    * 2. Required fields: Check that all mandatory fields have a value and that these values are not empty or null.
+    * This includes fields like IDs, names, or other critical information necessary for the service layer to process
+    * the request properly.
+    *
+    * 3. Value range and format: Verify that each field's value is within an acceptable range or follows a specific format.
+    * For instance, dates should be in a valid format (e.g., YYYY-MM-DD), email addresses should follow the correct pattern,
+    * and numerical values should be within an acceptable range.
+    *
+    * 4. Data consistency: Ensure that the relationships between different fields in the DTO are consistent.
+    * For example, if there is a start date and end date, the start date should be earlier than or equal to the end date.
+    *
+    * 5. Security and sanitization: Be cautious about security vulnerabilities and validate that your fields do not
+    * have any potential threats (like SQL injections or cross-site scripting attacks). Sanitize user input by eliminating
+    * or escaping any hazardous characters.
+    *
+    * 6. Business rules: In some cases, validation might involve checking business-specific rules.
+    * Ensure that the DTO adheres to any project-specific requirements that fall outside the previous validation categories.
+    * Having a comprehensive validation process in place will ensure that your service layer operates on safe and
+    * accurate data from the client, reducing the risk of errors, vulnerabilities, and unexpected behavior in your
+    * application. It's important to keep in mind that validation should be done not only in the service layer but also
+    * in the client-side and other layers when necessary. Having multiple layers of validation enhances the security and
+    * integrity of your application.
+    * */
+
     private final UserRepository userRepository;
 
     FolderRequestValidatorTest(UserRepository userRepository) {
