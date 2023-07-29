@@ -1,4 +1,5 @@
 FROM openjdk:11-jdk
+EXPOSE 9090
 ARG JAR_FILE=build/libs/*-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT [ \
