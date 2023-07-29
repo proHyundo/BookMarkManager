@@ -8,5 +8,6 @@ import lombok.Getter;
 public class LoginProcessException extends RuntimeException {
 
     private final LoginExceptionErrorCode loginExceptionErrorCode;
+    private final String message;
 
 }

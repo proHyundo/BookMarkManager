@@ -2,6 +2,8 @@ package com.hyun.bookmarkshare.user.controller;
 
 import com.hyun.bookmarkshare.user.controller.dto.*;
 import com.hyun.bookmarkshare.user.service.UserService;
+import com.hyun.bookmarkshare.user.service.response.UserResponse;
+import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,8 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
-//signup", "/login", "/refresh/login-state"
+//signup", "/api/v1/user/login", "/refresh/login-state"
 @RestController
 @RequiredArgsConstructor
 public class UserPermitRestController {
@@ -25,17 +26,22 @@ public class UserPermitRestController {
     /**
      * 로그인 요청을 처리한다.
      * */
-    @PostMapping("/login")
+    @PostMapping("/api/v1/user/login")
     public ResponseEntity<LoginResponseEntity> loginRequest(@RequestBody @Valid LoginRequestDto loginRequestDto){
         return LoginResponseEntity.toResponseEntity(userService.loginProcess(loginRequestDto.toServiceDto()));
     }
+
+//    @PostMapping("/api/v1/user/login2")
+//    public ApiResponse<LoginResponse> loginRequest2(@RequestBody @Valid LoginRequestDto loginRequestDto){
+//        return ApiResponse.of(HttpStatus.OK, "로그인 성공", userService.loginProcess(loginRequestDto.toServiceDto()));
+//    }
 
     /**
      * 회원가입 요청을 처리한다.
      * */
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponseEntity> signUpRequest(@RequestBody @Valid SignUpRequestDto signUpRequestDto){
-        return SignUpResponseEntity.toResponseEntity(userService.signUp(signUpRequestDto));
+    public ApiResponse<UserResponse> signUpRequest(@RequestBody @Valid UserSignUpRequestDto userSignUpRequestDto){
+        return ApiResponse.of(HttpStatus.OK, "회원가입 성공", userService.signUp(userSignUpRequestDto.toServiceDto()));
     }
 
 //    /**

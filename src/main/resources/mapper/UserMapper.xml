@@ -6,10 +6,13 @@
     <resultMap id="userEntityResultMap" type="com.hyun.bookmarkshare.user.entity.User">
         <id column="USER_SEQ" property="userId"/>
         <result column="USER_EMAIL" property="userEmail"/>
+        <result column="USER_PWD" property="userPwd"/>
         <result column="USER_NAME" property="userName"/>
+        <result column="USER_PHONE" property="userPhoneNum"/>
         <result column="USER_STATE" property="userState"/>
         <result column="USER_GRADE" property="userGrade"/>
         <result column="USER_ROLE" property="userRole"/>
+        <result column="USER_SOCIAL" property="userSocial"/>
         <result column="USER_REG_DATE" property="userRegDate"/>
         <result column="USER_MOD_DATE" property="userModDate"/>
     </resultMap>
@@ -35,6 +38,10 @@
         SELECT * FROM TUSERACCOUNT WHERE USER_SEQ = #{userId};
     </select>
 
+    <select id="findByUserEmail" resultMap="userEntityResultMap">
+        SELECT * FROM TUSERACCOUNT WHERE USER_EMAIL = #{email};
+    </select>
+
     <select id="findByRefreshToken" parameterType="string" resultMap="userTokenResultMap">
         SELECT *
         FROM TREFRESHTOKEN
@@ -54,7 +61,15 @@
         VALUES(#{userId}, #{refreshToken});
     </insert>
 
-    <insert id="saveBySignUpRequestDto" parameterType="com.hyun.bookmarkshare.user.controller.dto.SignUpRequestDto"
+    <insert id="saveNew" parameterType="com.hyun.bookmarkshare.user.entity.User"
+            useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO TUSERACCOUNT (USER_SEQ, USER_EMAIL, USER_PWD, USER_NAME, USER_PHONE, USER_REG_DATE, USER_MOD_DATE,
+                                  USER_STATE, USER_GRADE, USER_ROLE, USER_SOCIAL)
+        VALUES (#{userId}, #{userEmail}, #{userPwd}, #{userName}, #{userPhoneNum}, NOW(), NOW(),
+                'n', 'g', 'ROLE_USER', #{userSocial});
+    </insert>
+
+    <insert id="saveBySignUpRequestDto" parameterType="com.hyun.bookmarkshare.user.controller.dto.UserSignUpRequestDto"
                                         useGeneratedKeys="true" keyProperty="userId">
         INSERT
         INTO TUSERACCOUNT(USER_SEQ, USER_EMAIL, USER_PWD, USER_NAME, USER_PHONE, USER_REG_DATE, USER_MOD_DATE,

@@ -22,20 +22,20 @@ public class FolderRestController {
 
     private final FolderService folderService;
 
-    // 특정 부모폴더 내부에 속한 폴더 List 조회
-    @GetMapping("/manage/folder/list")
-    public ApiResponse<List<FolderResponse>> getFolderListRequest(@Valid @RequestBody FolderListRequestDto requestDto){
-        return ApiResponse.of(HttpStatus.OK,
-                "폴더 리스트 조회 완료",
-                folderService.findFolderList(requestDto.toServiceDto())
-        );
-    }
-
     // 특정 부모폴더 내부에 신규 폴더 생성
     @PostMapping("/api/v1/manage/folder/new")
     public ApiResponse<FolderResponse> addFolderRequest(@Valid @RequestBody FolderCreateRequestDto requestDto){
         FolderResponse resultFolderResponse = folderService.createFolder(requestDto.toServiceRequestDto());
         return ApiResponse.of(HttpStatus.OK, "신규 폴더 생성 완료", resultFolderResponse);
+    }
+
+    // 특정 부모폴더 내부에 속한 폴더 List 조회
+    @GetMapping("/api/v1/manage/folder/list")
+    public ApiResponse<List<FolderResponse>> getFolderListRequest(@Valid @RequestBody FolderListRequestDto requestDto){
+        return ApiResponse.of(HttpStatus.OK,
+                "폴더 리스트 조회 완료",
+                folderService.findFolderList(requestDto.toServiceDto())
+        );
     }
 
 

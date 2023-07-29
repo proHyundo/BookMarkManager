@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -45,8 +46,9 @@ public class UserRepositoryInsertQueryTest {
                 .userSocial("n")
                 .build();
         // when
-        userRepository.save(user);
+        userRepository.saveNew(user);
         // then
         assertThat(userRepository.findByUserId(3L).get()).extracting("userEmail").isEqualTo("test3@test.com");
     }
+   
 }

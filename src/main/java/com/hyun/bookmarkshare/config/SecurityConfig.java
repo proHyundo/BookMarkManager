@@ -53,7 +53,7 @@ public class SecurityConfig {
             .cors()
         .and()
                 .logout()
-                .logoutUrl("/user/logout").permitAll()
+                .logoutUrl("/api/v1/user/logout").permitAll()
                 .deleteCookies("userRefreshToken")
                 .addLogoutHandler(customLogoutHandler)
                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
@@ -61,7 +61,7 @@ public class SecurityConfig {
             .httpBasic().disable()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .mvcMatchers("/", "/signup", "/login", "/refresh/login-state",
+            .mvcMatchers("/", "/signup", "/api/v1/user/login", "/refresh/login-state",
                     "/v3/api-docs", "/documentation/swagger*/**", "/documentation/swagger-ui/**").permitAll()
             .mvcMatchers("/signup/email/verification", "/signup/email/verification/check").permitAll()
             .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN")

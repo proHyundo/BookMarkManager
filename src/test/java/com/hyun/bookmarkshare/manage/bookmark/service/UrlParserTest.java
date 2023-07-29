@@ -88,6 +88,15 @@ public class UrlParserTest {
         String url = urlParam;
 
         // when
+        /* 참고링크
+         * https://goodidea.tistory.com/86
+         * https://blog.naver.com/PostView.nhn?blogId=psj9102&logNo=221203659771&redirect=Dlog&widgetTypeCall=true&directAccess=false
+         * https://velog.io/@jhhwghg9911/%EC%A0%95%EA%B7%9C%ED%91%9C%ED%98%84%EC%8B%9D%EC%9C%BC%EB%A1%9C-URL-%EC%B6%94%EC%B6%9C%ED%95%98%EA%B8%B0
+         * https://regexr.com/
+         */
+
+        // This pattern need more validation
+        // Pattern urlPattern = Pattern.compile("^(https?://)(www\\.)?([^:\\/\\s]+)(:([^\\/]*))?([-a-zA-Z0-9@:%_\\+.~#()?&//=]*)?");
 
         /* group1 : ^(https?://)    >>  's' 문자는 생략가능, '^' 줄의 시작위치를 의미.
          * group2 : (www\.)?        >>  서브도메인. www 있을수도 없을수도.
@@ -96,6 +105,7 @@ public class UrlParserTest {
          * group5 :                 >>  ':' 제외하고 포트번호 추출.
          * group6 : ((\/[^\s/\/]+)*)? >> 슬래시(/)로 시작하고 공백이나 다른 슬래시(/)가 아닌 문자열을 찾습니다. 이 그룹은 URL 주소의 path를 나타냅니다.
          */
+
         Pattern urlPattern = Pattern.compile("^(https?://)(www\\.)?([^:\\/\\s]+)(:([^\\/]*))?((\\/[^\\s/\\/]+)*)?");
         Matcher matcher = urlPattern.matcher(url);
 
