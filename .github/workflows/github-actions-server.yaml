@@ -6,7 +6,6 @@ on:
     types:
         - closed
     paths:
-#      - 'src/**'
       - ${{secrets.ACTIONS_PATH_RESTRICT}}
 
 jobs:
@@ -30,7 +29,7 @@ jobs:
             java-version: 11
             distribution: 'temurin'
 
-      - name: Create application.properties
+      # Create application.properties
       - uses: actions/checkout@v3
       - run: touch ./src/main/resources/application.properties
       - run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.properties
