@@ -1,4 +1,4 @@
-name: SpringBoot CICD with Gradle version 1.0.7
+name: SpringBoot CICD with Gradle version 1.1.0
 
 on:
   push:
@@ -96,9 +96,8 @@ jobs:
             fi
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-server-image
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-nginx-image
-            sudo docker-compose -f /home/ubuntu/github/workspace/docker-compose.yaml up -d
+            sudo docker compose -f /home/ubuntu/github/workspace/docker-compose.yaml up -d
             docker image prune -f
-
 
       - name: Send Github Actions Result to Slack
         uses: 8398a7/action-slack@v3
