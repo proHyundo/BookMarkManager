@@ -76,7 +76,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image:latest
 
       - name: Copy docker-compose.yml to VM
-        uses: appleboy/scp-action@0.1.4
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.VM_HOST_IP }}
           username: ${{ secrets.VM_USERNAME }}
