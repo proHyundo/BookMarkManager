@@ -6,6 +6,9 @@ on:
     paths:
       - ${{secrets.ACTIONS_PATH_RESTRICT}}
 
+permissions:
+  contents: read
+
 jobs:
   springboot-build-and-deploy:
     if: github.event.pull_request.merged == true
