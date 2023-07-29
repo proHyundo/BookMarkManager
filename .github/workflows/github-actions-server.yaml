@@ -9,7 +9,6 @@ permissions:
 
 jobs:
   springboot-build-and-deploy:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
