@@ -1,0 +1,49 @@
+version: '3'
+services:
+  server:
+    container_name: bookmark-server-container
+    image: guseh08/bookmark-server-image
+    expose:
+      - 9090
+    ports:
+      - 9090:9090
+    restart: "always"
+
+  # server2:
+  #   container_name: bookmark-server2-container
+  #   image: guseh08/bookmark-server2-image
+  #   expose:
+  #     - 9091
+  #   ports:
+  #     - 9091:9090
+  #   restart: "always"
+
+#  web:
+#    container_name: bookmark-web-container
+#    image: guseh08/bookmark-web-image
+#    expose:
+#      - 5173
+
+  nginx:
+    container_name: bookmark-nginx-container
+    image: guseh08/bookmark-nginx-image
+    restart: unless-stopped
+    ports:
+      - 80:80
+#      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+#      - ./data/certbot/conf:/etc/letsencrypt
+#      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+      - "server"
+#      - "web"
+#    command : "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+#
+#  certbot:
+#    image: certbot/certbot
+#    restart: unless-stopped
+#    volumes:
+#      - ./data/certbot/conf:/etc/letsencrypt
+#      - ./data/certbot/www:/var/www/certbot
+#    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"

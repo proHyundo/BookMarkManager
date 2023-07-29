@@ -103,7 +103,7 @@ public class UserIntegrationTest {
         LoginRequestDto target = new LoginRequestDto("test@test.com", "1111");
 
         // when & then
-        this.mockMvc.perform(post("/login")
+        this.mockMvc.perform(post("/api/v1/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(target)))
                 .andDo(print())
@@ -120,7 +120,7 @@ public class UserIntegrationTest {
         LoginRequestDto target = new LoginRequestDto("test@test999.com", "1111");
 
         // when & then
-        this.mockMvc.perform(post("/login")
+        this.mockMvc.perform(post("/api/v1/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(target)))
                 .andDo(print())

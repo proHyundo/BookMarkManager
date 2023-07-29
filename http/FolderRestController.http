@@ -1,0 +1,13 @@
+### 새로운 폴더 추가
+POST localhost:9090/api/v1/manage/folder/new
+Authorization: Bearer {}
+Content-Type: application/json
+
+{
+    "folderSeq": null,
+    "userId": 1,
+    "folderParentSeq": 1,
+    "folderName": "folder1",
+    "folderCaption": "folder1",
+    "folderScope": "p"
+}

@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
-//signup", "/login", "/refresh/login-state"
+//signup", "/api/v1/user/login", "/refresh/login-state"
 @RestController
 @RequiredArgsConstructor
 public class UserPermitRestController {
@@ -26,10 +26,15 @@ public class UserPermitRestController {
     /**
      * 로그인 요청을 처리한다.
      * */
-    @PostMapping("/login")
+    @PostMapping("/api/v1/user/login")
     public ResponseEntity<LoginResponseEntity> loginRequest(@RequestBody @Valid LoginRequestDto loginRequestDto){
         return LoginResponseEntity.toResponseEntity(userService.loginProcess(loginRequestDto.toServiceDto()));
     }
+
+//    @PostMapping("/api/v1/user/login2")
+//    public ApiResponse<LoginResponse> loginRequest2(@RequestBody @Valid LoginRequestDto loginRequestDto){
+//        return ApiResponse.of(HttpStatus.OK, "로그인 성공", userService.loginProcess(loginRequestDto.toServiceDto()));
+//    }
 
     /**
      * 회원가입 요청을 처리한다.

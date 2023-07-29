@@ -23,8 +23,8 @@ public class FolderCreateRequestDto {
     @PositiveOrZero
     private Long folderParentSeq;
 
-    @Pattern(regexp = "[A-Za-z0-9_ ]{1,50}")
-    @Size(min = 1, max = 50)
+    @Pattern(regexp = "[A-Za-z0-9_ ]{1,20}")
+    @Size(min = 1, max = 20)
     private String folderName;
 
     private String folderCaption;

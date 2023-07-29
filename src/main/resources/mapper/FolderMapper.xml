@@ -96,7 +96,8 @@
         VALUES (#{folderSeq}, #{userId}, #{folderParentSeq}, #{folderRootFlag}, #{folderName}, IFNULL(#{folderCaption}, ''),
                 <choose>
                     <when test='folderOrder == null'>
-                        (SELECT IFNULL(MAX(FOLDER_ORDER)+1, 1) FROM TFOLDER ALIAS_FOR_SUBQUERY WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq})
+                        (SELECT IFNULL(MAX(FOLDER_ORDER)+1, 1) FROM TFOLDER ALIAS_FOR_SUBQUERY
+                         WHERE USER_SEQ = #{userId} AND FOLDER_PARENT_SEQ = #{folderParentSeq})
                     </when>
                     <otherwise>
                         #{folderOrder}
