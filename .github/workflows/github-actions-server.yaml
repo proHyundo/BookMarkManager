@@ -1,21 +1,12 @@
-name: SpringBoot CICD with Gradle version 1.0.0
+name: SpringBoot CICD with Gradle version 1.0.1
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
-    types:
-        - closed
     paths:
       - ${{secrets.ACTIONS_PATH_RESTRICT}}
 
 jobs:
-  if_not_merge_trigger:
-    if: github.event.pull_request.merged == false
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "This is not normal merged pull request. Do nothing. Bye."
-
   springboot-build-and-deploy:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
