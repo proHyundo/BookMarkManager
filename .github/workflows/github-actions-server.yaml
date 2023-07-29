@@ -70,7 +70,7 @@ jobs:
       - name : Build NginX Image And Push
         uses: docker/build-push-action@v4
         with:
-          context: ./nginx
+          context: Dockerfile-nginx
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image:latest
 
