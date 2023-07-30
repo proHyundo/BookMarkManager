@@ -56,6 +56,7 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image:latest
+          no-cache: true
 
       - name : Build NginX Image And Push
         uses: docker/build-push-action@v4
@@ -64,6 +65,7 @@ jobs:
           file: Dockerfile-nginx
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image:latest
+          no-cache: true
 
       - name: Copy docker-compose.yml to VM
         uses: appleboy/scp-action@v0.1.4
@@ -86,7 +88,7 @@ jobs:
             fi
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-server-image
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-nginx-image
-            sudo docker compose -f /home/ubuntu/github/workspace/docker-compose.yaml up -d
+            sudo docker compose -f /home/ubuntu/github/workspace/docker-compose.yaml up -d --no--cache
             docker image prune -f
 
       - name: Send Github Actions Result to Slack
