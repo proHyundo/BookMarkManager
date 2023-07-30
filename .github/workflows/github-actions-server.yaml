@@ -88,8 +88,8 @@ jobs:
             fi
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-server-image
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-nginx-image
-            sudo docker compose -f /home/ubuntu/github/workspace/docker-compose.yaml up -d --no--cache
-            docker image prune -f
+            sudo docker compose -f /home/ubuntu/github/workspace/docker-compose.yaml up -d
+            docker image prune -a
 
       - name: Send Github Actions Result to Slack
         uses: 8398a7/action-slack@v3
