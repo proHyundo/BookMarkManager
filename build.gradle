@@ -29,15 +29,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	/* Database */
-	implementation 'mysql:mysql-connector-java'
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jdbc
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc:2.7.7'
-
-//	implementation 'org.mariadb.jdbc:mariadb-java-client'
-//	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client'
+	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.6.2'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.0'
-	// testCompileOnly 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.0'
 
 	/* Log4JDBC */
 	testImplementation group: 'org.bgee.log4jdbc-log4j2', name:'log4jdbc-log4j2-jdbc4.1', version: '1.16'
