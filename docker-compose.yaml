@@ -12,6 +12,7 @@ services:
   nginx:
     container_name: bookmark-nginx-container
     image: guseh08/bookmark-nginx-image
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
