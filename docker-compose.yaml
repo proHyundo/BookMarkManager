@@ -13,6 +13,9 @@ services:
     container_name: bookmark-nginx-container
     image: guseh08/bookmark-nginx-image
     restart: unless-stopped
+    expose:
+      - 80
+      - 443
     ports:
       - 80:80
       - 443:443
@@ -27,6 +30,7 @@ services:
 
 
   certbot:
+    container_name: certbot_service
     image: certbot/certbot
 #    restart: unless-stopped
     volumes:
