@@ -70,14 +70,14 @@ jobs:
       ## 이미지 빌드 및 도커허브에 push
       - name: server docker build and push
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker build -f Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image .
+          sudo docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image
       - name: nginx docker build and push
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile-nginx -t ${{ secrets.DOCKER_REPO }}/bookmark-nginx-image .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker build -f Dockerfile-nginx -t ${{ secrets.DOCKER_REPO }}/bookmark-nginx-image .
+          sudo docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image
 
       - name: Copy docker-compose.yml to VM
         uses: appleboy/scp-action@v0.1.4
