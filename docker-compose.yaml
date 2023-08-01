@@ -20,9 +20,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./github/workspace/nginx/conf.d:/etc/nginx/conf.d
+      - ./github/workspace/data/conf/conf:/etc/letsencrypt
+      - ./github/workspace/data/certbot/www:/var/www/certbot
     depends_on:
       - "server"
 
@@ -31,5 +31,5 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./github/workspace/data/conf/conf:/etc/letsencrypt
+      - ./github/workspace/data/certbot/www:/var/www/certbot
