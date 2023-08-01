@@ -1,7 +1,7 @@
 version: '3'
 services:
   server:
-    container_name: bookmark-server-container
+    container_name: server
     image: guseh08/bookmark-server-image
     expose:
       - 9090
@@ -10,7 +10,7 @@ services:
     restart: "always"
 
   nginx:
-    container_name: bookmark-nginx-container
+    container_name: nginx
     image: guseh08/bookmark-nginx-image
     restart: unless-stopped
     expose:
@@ -28,7 +28,7 @@ services:
 
 
   certbot:
-    container_name: certbot_service
+    container_name: certbot
     image: certbot/certbot
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
