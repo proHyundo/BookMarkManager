@@ -67,18 +67,6 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image:latest
           no-cache: true
 
-      ## 이미지 빌드 및 도커허브에 push
-#      - name: server docker build and push
-#        run: |
-#          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-#          sudo docker build -f Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image .
-#          sudo docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image:latest
-#      - name: nginx docker build and push
-#        run: |
-#          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-#          sudo docker build -f Dockerfile-nginx -t ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image .
-#          sudo docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image:latest
-
       - name: Copy docker-compose.yml to VM
         uses: appleboy/scp-action@v0.1.4
         with:
