@@ -20,7 +20,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./github/workspace/nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/conf.d:/etc/nginx/conf.d
       - ./github/workspace/data/conf/conf:/etc/letsencrypt
       - ./github/workspace/data/certbot/www:/var/www/certbot
     depends_on:
