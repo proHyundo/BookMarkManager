@@ -21,7 +21,7 @@ services:
       - 443:443
     volumes:
       - ./nginx/conf.d/nginx.conf:/etc/nginx/conf.d/nginx.conf
-#      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./github/workspace/data/conf/conf/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf
       - ./github/workspace/data/conf/conf:/etc/letsencrypt
       - ./github/workspace/data/certbot/www:/var/www/certbot
     depends_on:
