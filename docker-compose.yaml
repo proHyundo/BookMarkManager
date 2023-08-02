@@ -21,16 +21,16 @@ services:
       - 443:443
     volumes:
       - type: volume
-        source: ./data/certbot/conf
+        source: /home/ubuntu/github/workspace/data/certbot/conf
         target: /etc/letsencrypt
       - type: volume
-        source: ./data/certbot/www
+        source: /home/ubuntu/github/workspace/data/certbot/www
         target: /var/www/certbot
       - type: volume
-        source: ./nginx/conf.d
+        source: /home/ubuntu/github/workspace/nginx/conf.d
         target: /etc/nginx/conf.d
       - type: bind
-        source: ./nginx/conf.d/app.conf
+        source: /home/ubuntu/github/workspace/nginx/conf.d/app.conf
         target: /etc/nginx/conf.d/app.conf
     depends_on:
       - "server"
