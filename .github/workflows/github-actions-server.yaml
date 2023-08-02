@@ -82,7 +82,7 @@ jobs:
             fi
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-server-image
             sudo docker compose -f /home/ubuntu/github/workspace/docker-compose.yaml up -d --force-recreate
-            docker image prune -a
+            docker image prune -a -f
 
       - name: Send Github Actions Result to Slack
         uses: 8398a7/action-slack@v3
