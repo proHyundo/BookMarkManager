@@ -24,9 +24,7 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
 #     - ./github/workspace/nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/conf.d:/etc/nginx/conf.d
-#     현재 위 경로를 설정했을 때, nginx.conf 파일이 없어서 에러가 발생한다.
-#      - ./nginx/conf.d/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./conf/:/etc/nginx/conf.d
     depends_on:
       - "server"
 
