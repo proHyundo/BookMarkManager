@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
   server:
     container_name: server
@@ -26,9 +26,9 @@ services:
       #     - ./github/workspace/nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/conf.d:/etc/nginx/conf.d
       - type: bind
-        source: ./nginx/conf.d/app.conf
+        source: /home/ubuntu/github/workspace/nginx/conf.d/app.conf
         target: /etc/nginx/conf.d/app.conf
-
+        read_only: false
     depends_on:
       - "server"
 
