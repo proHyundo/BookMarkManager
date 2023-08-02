@@ -11,7 +11,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: guseh08/bookmark-nginx-image
+    image: nginx:latest
     restart: unless-stopped
     expose:
       - 80
