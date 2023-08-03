@@ -1,3 +1,0 @@
-FROM nginx
-COPY ./nginx/conf.d/nginx.conf /etc/nginx/conf.d
-#https://forums.docker.com/t/docker-error-parsing-config-error-21-is-a-directory-config-config-yml/115534/5
