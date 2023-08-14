@@ -1,35 +1,21 @@
 package com.hyun.bookmarkshare.manage.bookmark.dao;
 
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkListRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
-import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)

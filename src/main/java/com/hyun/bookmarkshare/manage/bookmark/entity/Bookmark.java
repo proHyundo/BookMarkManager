@@ -1,13 +1,11 @@
 package com.hyun.bookmarkshare.manage.bookmark.entity;
 
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -49,19 +47,6 @@ public class Bookmark {
         this.bookmarkDelFlag = bookmarkDelFlag;
     }
 
-    public BookmarkResponseDto toBookmarkResponseDto() {
-        return BookmarkResponseDto.builder()
-                .bookmarkSeq(this.bookmarkSeq)
-                .userId(this.userId)
-                .folderSeq(this.folderSeq)
-                .bookmarkTitle(this.bookmarkTitle)
-                .bookmarkCaption(this.bookmarkCaption)
-                .bookmarkUrl(this.bookmarkUrl)
-                .bookmarkOrder(this.bookmarkOrder)
-                .bookmarkRegDate(this.bookmarkRegDate)
-                .bookmarkModDate(this.bookmarkModDate)
-                .build();
-    }
 
     public Bookmark updateEntityBy(Bookmark requestBookmark) {
         this.bookmarkTitle = requestBookmark.getBookmarkTitle();

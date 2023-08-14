@@ -61,9 +61,10 @@ public class SecurityConfig {
             .httpBasic().disable()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .mvcMatchers("/", "/signup", "/api/v1/user/login", "/refresh/login-state",
-                    "/v3/api-docs", "/documentation/swagger*/**", "/documentation/swagger-ui/**").permitAll()
-            .mvcMatchers("/signup/email/verification", "/signup/email/verification/check").permitAll()
+            .mvcMatchers("/", "/api/v1/user/signup", "/api/v1/user/login", "/api/v1/user/refresh",
+                    "/v3/api-docs/**", "/documentation/swagger*/**", "/documentation/swagger-ui/**").permitAll()
+            .mvcMatchers("/api/v1/user/email/check", "/api/v1/email/verification/check").permitAll()
+            .mvcMatchers("/docs/open-api-3.0.1.json", "/docs/swagger*/**", "/docs/swagger-ui/**").permitAll()
             .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(POST, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(DELETE, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")

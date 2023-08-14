@@ -3,6 +3,7 @@ package com.hyun.bookmarkshare.user.service;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
+import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public interface UserService {
      * @param loginRequestDto Login request Form data. Include Id, Pwd.
      * @return User Entity from DB SELECT Sql result.
      * */
-    User loginProcess(LoginServiceRequestDto loginRequestDto);
+    UserLoginResponse loginProcess(LoginServiceRequestDto loginRequestDto);
 
     UserResponse signUp(UserSignUpServiceRequestDto userSignUpServiceRequestDto);
 
@@ -24,7 +25,7 @@ public interface UserService {
 
     UserResponse getUserInfo(String token);
 
-    User signOut(String token, String userEmail);
+    UserResponse signOut(String token, String userEmail);
 
     boolean checkDuplicateEmail(String userEmail);
 }

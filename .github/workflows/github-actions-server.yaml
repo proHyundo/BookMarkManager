@@ -88,6 +88,7 @@ jobs:
               sudo docker rmi $(docker images -q)
             fi
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-server-image
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-web-image
             sudo docker compose -f /home/ubuntu/docker-compose.yaml up -d --force-recreate
             docker image prune -a -f
 

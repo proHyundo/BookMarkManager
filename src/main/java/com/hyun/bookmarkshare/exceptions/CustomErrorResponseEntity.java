@@ -1,8 +1,5 @@
 package com.hyun.bookmarkshare.exceptions;
 
-import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
-import com.hyun.bookmarkshare.user.controller.dto.LoginErrorResponseEntity;
-import com.hyun.bookmarkshare.user.exceptions.LoginExceptionErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;

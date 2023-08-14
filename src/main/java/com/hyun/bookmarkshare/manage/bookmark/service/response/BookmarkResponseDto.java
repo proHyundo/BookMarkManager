@@ -1,5 +1,6 @@
-package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
+package com.hyun.bookmarkshare.manage.bookmark.service.response;
 
+import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -31,5 +32,20 @@ public class BookmarkResponseDto {
         this.bookmarkRegDate = bookmarkRegDate;
         this.bookmarkModDate = bookmarkModDate;
         this.bookmarkDelFlag = bookmarkDelFlag;
+    }
+
+    public static BookmarkResponseDto of(Bookmark bookmark){
+        return BookmarkResponseDto.builder()
+                .bookmarkSeq(bookmark.getBookmarkSeq())
+                .userId(bookmark.getUserId())
+                .folderSeq(bookmark.getFolderSeq())
+                .bookmarkTitle(bookmark.getBookmarkTitle())
+                .bookmarkCaption(bookmark.getBookmarkCaption())
+                .bookmarkUrl(bookmark.getBookmarkUrl())
+                .bookmarkOrder(bookmark.getBookmarkOrder())
+                .bookmarkRegDate(bookmark.getBookmarkRegDate())
+                .bookmarkModDate(bookmark.getBookmarkModDate())
+                .bookmarkDelFlag(bookmark.getBookmarkDelFlag())
+                .build();
     }
 }

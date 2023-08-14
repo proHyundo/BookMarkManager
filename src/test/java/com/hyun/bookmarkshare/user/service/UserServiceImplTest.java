@@ -1,17 +1,16 @@
 package com.hyun.bookmarkshare.user.service;
 
 import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
-import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
-import com.hyun.bookmarkshare.user.controller.dto.UserSignUpRequestDto;
+import com.hyun.bookmarkshare.user.dao.TokenRepository;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.exceptions.LoginExceptionErrorCode;
 import com.hyun.bookmarkshare.user.exceptions.LoginProcessException;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
+import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +37,8 @@ class UserServiceImplTest {
     EmailRepository emailRepository;
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    TokenRepository tokenRepository;
 
     @BeforeEach
     void initEach(){
@@ -105,7 +106,7 @@ class UserServiceImplTest {
                 .pwd("3333")
                 .build();
         // when
-        User resultUser = userService.loginProcess(targetDto);
+        User resultUser = userRepository.findByUserEmail(targetDto.getEmail()).get();
 
         // then
         assertThat(resultUser.getUserPwd()).isNotEqualTo("3333");
@@ -127,13 +128,13 @@ class UserServiceImplTest {
                 .pwd("3333")
                 .build();
         // when
-        User resultUser = userService.loginProcess(targetDto);
+        UserLoginResponse userLoginResponse = userService.loginProcess(targetDto);
 
         // then
-        assertThat(resultUser.getUserAccessToken()).isNotNull();
-        assertThat(resultUser.getUserRefreshToken()).isNotNull();
-        log.info("resultUser.getUserAccessToken() = {}", resultUser.getUserAccessToken());
-        log.info("resultUser.getUserRefreshToken() = {}", resultUser.getUserRefreshToken());
+        assertThat(userLoginResponse.getUserAccessToken()).isNotNull();
+        assertThat(userLoginResponse.getUserRefreshToken()).isNotNull();
+        log.info("userLoginResponse.getUserAccessToken() = {}", userLoginResponse.getUserAccessToken());
+        log.info("userLoginResponse.getUserRefreshToken() = {}", userLoginResponse.getUserRefreshToken());
     }
 
     @DisplayName("로그인 처리 성공 시, 해당 사용자의 Jwt Refresh Token 은 DB에 저장된다.")
@@ -152,9 +153,9 @@ class UserServiceImplTest {
                 .pwd("3333")
                 .build();
         // when
-        User resultUser = userService.loginProcess(targetDto);
+        UserLoginResponse userLoginResponse = userService.loginProcess(targetDto);
         // then
-        assertThat(userRepository.findByRefreshToken(resultUser.getUserRefreshToken())).isNotEmpty();
+        assertThat(userRepository.findByRefreshToken(userLoginResponse.getUserRefreshToken())).isNotEmpty();
     }
 
     @DisplayName("로그아웃 성공 시, 해당 사용자의 Jwt Refresh Token 은 DB에서 삭제된다.")
@@ -168,7 +169,7 @@ class UserServiceImplTest {
                 .userName("")
                 .build();
         userRepository.save(user3);
-        User loggedInUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
+        UserLoginResponse loggedInUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
         String refreshToken = loggedInUser.getUserRefreshToken();
         // when
         userService.logoutProcess(refreshToken);
@@ -187,7 +188,7 @@ class UserServiceImplTest {
                 .userName("")
                 .build();
         userRepository.save(user3);
-        User loggedInUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
+        UserLoginResponse loggedInUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
         String refreshToken = loggedInUser.getUserRefreshToken();
 
         // when
@@ -207,10 +208,10 @@ class UserServiceImplTest {
                 .userName("")
                 .build();
         userRepository.save(user3);
-        User loginUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
+        UserLoginResponse loginUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
         String token = "Authorization "+loginUser.getUserAccessToken();
         // when
-        User exitedUser = userService.signOut(token, loginUser.getUserEmail());
+        UserResponse exitedUser = userService.signOut(token, loginUser.getUserEmail());
         // then
         assertThat(exitedUser.getUserState()).isEqualTo("e");
     }
@@ -226,7 +227,7 @@ class UserServiceImplTest {
                 .userName("")
                 .build();
         userRepository.save(user3);
-        User loggedInUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
+        UserLoginResponse loggedInUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
         String refreshToken = "Authorization " + loggedInUser.getUserRefreshToken();
         // when
         UserResponse userInfo = userService.getUserInfo(refreshToken);

@@ -1,7 +1,6 @@
 package com.hyun.bookmarkshare.user.controller.dto;
 
 import com.hyun.bookmarkshare.user.exceptions.LoginExceptionErrorCode;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;

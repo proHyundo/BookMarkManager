@@ -1,0 +1,153 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "restdocs-swagger API Documentation",
+    "description" : "Spring REST Docs with SwaggerUI.",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:9090"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/api/v1/user/login" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "operationId" : "user-login",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-user-login662697492"
+              },
+              "examples" : {
+                "user-login" : {
+                  "value" : "{\r\n  \"email\" : \"test@test.com\",\r\n  \"pwd\" : \"1111\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-user-login959674528"
+                },
+                "examples" : {
+                  "user-login" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-08-09T17:29:31.8455383\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"로그인 성공\",\r\n  \"data\" : {\r\n    \"userId\" : 1,\r\n    \"userEmail\" : \"test@test.com\",\r\n    \"userRole\" : \"ROLE_USER\",\r\n    \"userAccessToken\" : \"testAccessToken\",\r\n    \"userRefreshToken\" : \"testRefreshToken\"\r\n  },\r\n  \"cookie\" : {\r\n    \"name\" : \"userRefreshToken\",\r\n    \"value\" : \"testRefreshToken\",\r\n    \"maxAge\" : \"PT72H\",\r\n    \"domain\" : \"localhost\",\r\n    \"path\" : \"/\",\r\n    \"secure\" : true,\r\n    \"httpOnly\" : true,\r\n    \"sameSite\" : \"None\"\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "api-v1-user-login959674528" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "cookie" : {
+            "type" : "object",
+            "properties" : {
+              "path" : {
+                "type" : "string",
+                "description" : "쿠키 경로"
+              },
+              "maxAge" : {
+                "type" : "string",
+                "description" : "쿠키 만료 시간"
+              },
+              "sameSite" : {
+                "type" : "string",
+                "description" : "쿠키 SameSite 여부"
+              },
+              "domain" : {
+                "type" : "string",
+                "description" : "쿠키 도메인"
+              },
+              "name" : {
+                "type" : "string",
+                "description" : "쿠키 이름"
+              },
+              "httpOnly" : {
+                "type" : "boolean",
+                "description" : "쿠키 HTTP 여부"
+              },
+              "secure" : {
+                "type" : "boolean",
+                "description" : "쿠키 보안 여부"
+              },
+              "value" : {
+                "type" : "string",
+                "description" : "쿠키 값"
+              }
+            },
+            "description" : "쿠키"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "userAccessToken" : {
+                "type" : "string",
+                "description" : "사용자 접근 토큰"
+              },
+              "userRefreshToken" : {
+                "type" : "string",
+                "description" : "사용자 갱신 토큰"
+              },
+              "userEmail" : {
+                "type" : "string",
+                "description" : "사용자 이메일"
+              },
+              "userRole" : {
+                "type" : "string",
+                "description" : "사용자 권한"
+              },
+              "userId" : {
+                "type" : "number",
+                "description" : "사용자 ID"
+              }
+            },
+            "description" : "응답 데이터"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-user-login662697492" : {
+        "type" : "object",
+        "properties" : {
+          "pwd" : {
+            "type" : "string",
+            "description" : "사용자 비밀번호"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "사용자 이메일"
+          }
+        }
+      }
+    }
+  }
+}

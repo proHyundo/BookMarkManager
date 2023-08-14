@@ -1,6 +1,6 @@
 package com.hyun.bookmarkshare.manage.bookmark.service;
 
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto;

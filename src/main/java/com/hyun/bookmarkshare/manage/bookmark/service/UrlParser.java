@@ -4,13 +4,9 @@ import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServ
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Component
 public class UrlParser {
@@ -30,6 +26,9 @@ public class UrlParser {
         return requestDto;
     }
 
+    // TODO : 분석된 url fragment 를 requestDto 에 할당하는 로직이다. 두 가지 방법 사이에서 고민하고 있다.
+    //  1. 제네릭과, Reflection 을 사용하여 하나의 메서드로 bookmark create 요청과 update 요청을 모두 처리하는 방법 : 자원 소모가 증가.
+    //  2. bookmark create 요청과 update 요청을 각각 처리하는 메서드를 모두 만드는 방법 : 중복 코드가 발생.
     public <T> T assignUrlFields(T requestDto, String url){
         String[] urlFragmentsArray = disUnitUrl(url);
 
@@ -67,6 +66,7 @@ public class UrlParser {
         }
 
         /*
+        // switch 문을 사용하지 않고, Map 을 사용하여 처리하는 방법.
         * Map<String, Integer> targetFieldMap = Map.of(
             "bookmarkScheme", 1,
             "bookmarkHost", 2,

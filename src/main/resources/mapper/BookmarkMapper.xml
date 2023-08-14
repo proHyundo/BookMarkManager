@@ -40,8 +40,8 @@
     </select>
 
     <select id="findByUserIdAndBookmarkSeq"
-            parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkRequestDto"
-            resultType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkResponseDto">
+            parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkRequestDto"
+            resultType="com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto">
         SELECT BOOK_SEQ as bookmarkSeq, BOOK_TITLE as bookmarkTitle, BOOK_CAPTION as bookmarkCaption, BOOK_URL as bookmarkUrl
         FROM TBOOKMARK
         WHERE USER_SEQ = #{userId} AND BOOK_SEQ = #{bookmarkSeq} AND BOOK_DEL_FLAG = 'n';
@@ -73,7 +73,7 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ INSERT ============================================ -->
 
-    <insert id="saveBookmark" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkCreateRequestDto"
+    <insert id="saveBookmark" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkCreateRequestDto"
             useGeneratedKeys="true" keyProperty="bookmarkSeq">
         INSERT INTO TBOOKMARK(USER_SEQ, FOLDER_SEQ, BOOK_TITLE, BOOK_CAPTION, BOOK_URL, BOOK_SCHEME,
                               BOOK_HOST, BOOK_DOMAIN, BOOK_PORT, BOOK_PATH, BOOK_ORDER)
@@ -96,7 +96,7 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ UPDATE ============================================ -->
 
-    <update id="updateByBookmarkUpdateRequestDtoAndReturnLockUpdate" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.BookmarkUpdateRequestDto"
+    <update id="updateByBookmarkUpdateRequestDtoAndReturnLockUpdate" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkUpdateRequestDto"
             flushCache="true">
         UPDATE TBOOKMARK
         SET BOOK_CAPTION = #{bookmarkCaption}, BOOK_URL = #{bookmarkUrl}, BOOK_SCHEME = #{bookmarkScheme},

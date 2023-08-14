@@ -30,7 +30,7 @@ public class FolderRestController {
     }
 
     // 특정 부모폴더 내부에 속한 폴더 List 조회
-    @GetMapping("/api/v1/manage/folder/list")
+    @GetMapping("/api/v1/manage/folders")
     public ApiResponse<List<FolderResponse>> getFolderListRequest(@Valid @RequestBody FolderListRequestDto requestDto){
         return ApiResponse.of(HttpStatus.OK,
                 "폴더 리스트 조회 완료",
@@ -63,13 +63,6 @@ public class FolderRestController {
             ]
         *
         * */
-//        return FolderReorderResponseEntity.toResponseEntity(
-//                folderService.updateFolderOrder(
-//                        requestDtoList.stream()
-//                                .map(dto -> dto.toServiceRequestDto())
-//                                .collect(Collectors.toList())
-//                )
-//        );
         List<FolderReorderServiceRequestDto> serviceRequestDtoList = requestDtoList.stream()
                 .map(dto -> dto.toServiceRequestDto())
                 .collect(Collectors.toList());

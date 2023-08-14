@@ -5,12 +5,14 @@ import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
 import com.hyun.bookmarkshare.smtp.entity.EmailEntity;
 import com.hyun.bookmarkshare.smtp.exception.EmailExceptionErrorCode;
 import com.hyun.bookmarkshare.smtp.exception.EmailProcessException;
+import com.hyun.bookmarkshare.user.dao.TokenRepository;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
 import com.hyun.bookmarkshare.user.exceptions.*;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
+import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService{
     private final PwdEncoder pwdEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final EmailRepository emailRepository;
+    private final TokenRepository tokenRepository;
 
     @Transactional
     @Override
@@ -79,7 +82,7 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public User loginProcess(LoginServiceRequestDto loginRequestDto) {
+    public UserLoginResponse loginProcess(LoginServiceRequestDto loginRequestDto) {
 
         // 0. encode pwd & set encoded pwd to loginRequestDto
         // -> will depreciate as switch to security pwd encode
@@ -101,12 +104,23 @@ public class UserServiceImpl implements UserService{
         // 3. Set tokens to User Entity
         resultUser.setUserAccessToken(accessToken);
         resultUser.setUserRefreshToken(refreshToken);
-
+        log.info("user refresh token set : {}", resultUser.getUserRefreshToken());
         // 4. Save Refresh token to DB Whitelist
-        int resultRows = userRepository.saveUserRefreshToken(resultUser.getUserId(), resultUser.getUserRefreshToken());
-        if(resultRows != 1) throw new LoginProcessException(LoginExceptionErrorCode.INSERT_TOKEN_ERROR, LoginExceptionErrorCode.INSERT_TOKEN_ERROR.getMessage());
+        int resultRows = 0;
+        if (tokenRepository.findByUserId(resultUser.getUserId()) == 1) {
+            resultRows = tokenRepository.updateRefreshToken(resultUser.getUserId(), resultUser.getUserRefreshToken());
+        }else{
+            resultRows = tokenRepository.saveRefreshToken(resultUser.getUserId(), resultUser.getUserRefreshToken());
+        }
+        if(resultRows != 1) throw new LoginProcessException(LoginExceptionErrorCode.INSERT_TOKEN_ERROR,
+                                                            LoginExceptionErrorCode.INSERT_TOKEN_ERROR.getMessage());
 
-        return resultUser;
+        return UserLoginResponse.builder().userId(resultUser.getUserId())
+                .userEmail(resultUser.getUserEmail())
+                .userRole(resultUser.getUserRole())
+                .userAccessToken(resultUser.getUserAccessToken())
+                .userRefreshToken(resultUser.getUserRefreshToken())
+                .build();
     }
 
     @Transactional
@@ -122,8 +136,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public String extendLoginState(String refreshToken) {
-        // 전달받은 RefreshToken 이 DB에 저장되어 있는지 확인. 존재하지 않다면 에러 & login page 로 리다이렉트
-        userRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
+        // 전달받은 RefreshToken 이 DB에 저장되어 있는지 확인. 존재하지 않다면 에러
+        if(tokenRepository.countByRefreshToken(refreshToken) != 1) throw new IllegalArgumentException("Refresh token not found");
 
         // 토큰이 존재한다면, refresh token 을 jwtTokenizer 에게 전달하여 토큰 검증 + claims 를 반환받음. 검증 실패 시 에러 + login page 로 리다이렉트.
         Claims claims = jwtTokenizer.parseRefreshToken(refreshToken);
@@ -149,7 +163,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User signOut(String token, String userEmail) {
+    public UserResponse signOut(String token, String userEmail) {
         Long userIdFromToken = jwtTokenizer.getUserIdFromToken(token);
         // userEmail 로 User 조회
         User targetUser = userRepository.findByUserEmail(userEmail).orElseThrow(
@@ -159,12 +173,15 @@ public class UserServiceImpl implements UserService{
         if(!targetUser.getUserId().equals(userIdFromToken)){
             throw new UserProcessException(UserExceptionErrorCode.INVALID_USER);
         }
+        // TODO : 회원탈퇴 처리 전, 로그아웃 로직 추가.
+
         // 일치할 경우, User State 를 'e' 로 변경
         int resultRows = userRepository.deleteByUserId(userIdFromToken);
         if(resultRows != 1){
             throw new UserProcessException(UserExceptionErrorCode.DELETE_USER_ERROR);
         }
-        return User.builder().userId(userIdFromToken).userState("e").build();
+        targetUser.setUserState("e");
+        return UserResponse.of(targetUser);
     }
 
 

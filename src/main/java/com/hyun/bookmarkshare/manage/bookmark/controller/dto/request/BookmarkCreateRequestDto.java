@@ -1,32 +1,34 @@
-package com.hyun.bookmarkshare.manage.bookmark.controller.dto;
+package com.hyun.bookmarkshare.manage.bookmark.controller.dto.request;
 
-import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkUpdateServiceRequestDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor
-public class BookmarkUpdateRequestDto {
+public class BookmarkCreateRequestDto {
 
-    @NotNull
+    @Null
     private Long bookmarkSeq;
-    @NotNull
+
+    @Positive
     private Long userId;
-    @NotNull
+
+    @Positive
     private Long folderSeq;
-    @NotEmpty
+
     private String bookmarkTitle;
-    @NotEmpty
     private String bookmarkCaption;
+
     @NotEmpty
     private String bookmarkUrl;
 
     @Builder
-    public BookmarkUpdateRequestDto(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkUrl) {
+    public BookmarkCreateRequestDto(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkUrl) {
         this.bookmarkSeq = bookmarkSeq;
         this.userId = userId;
         this.folderSeq = folderSeq;
@@ -35,9 +37,8 @@ public class BookmarkUpdateRequestDto {
         this.bookmarkUrl = bookmarkUrl;
     }
 
-    public BookmarkUpdateServiceRequestDto toServiceRequestDto() {
-        return BookmarkUpdateServiceRequestDto.builder()
-                .bookmarkSeq(this.bookmarkSeq)
+    public BookmarkCreateServiceRequestDto toServiceDto(){
+        return BookmarkCreateServiceRequestDto.builder()
                 .userId(this.userId)
                 .folderSeq(this.folderSeq)
                 .bookmarkTitle(this.bookmarkTitle)

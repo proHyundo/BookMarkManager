@@ -9,6 +9,12 @@ services:
       - 9090:9090
     restart: "always"
 
+  web:
+    container_name: web
+    image: guseh08/bookmark-web-image
+    expose:
+      - 5173
+
   nginx:
     container_name: nginx
     image: nginx
@@ -26,7 +32,8 @@ services:
       - 443:443
     depends_on:
       - "server"
-
+      - "web"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
   certbot:
     image: certbot/certbot
@@ -34,3 +41,4 @@ services:
     volumes:
       - /home/ubuntu/data/certbot/conf:/etc/letsencrypt
       - /home/ubuntu/data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"

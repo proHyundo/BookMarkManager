@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyun.bookmarkshare.user.dao.TokenRepository">
+
+    <resultMap id="userTokenResultMap" type="com.hyun.bookmarkshare.user.entity.UserRefreshToken">
+        <id column="USER_SEQ" property="userId"/>
+        <result column="REFRESH_TOKEN" property="refreshToken"/>
+    </resultMap>
+
+    <select id="findByUserId" parameterType="long" resultType="integer">
+        SELECT COUNT(USER_SEQ)
+        FROM TREFRESHTOKEN
+        WHERE USER_SEQ = #{userId};
+    </select>
+
+    <select id="findByRefreshToken" parameterType="string" resultMap="userTokenResultMap">
+        SELECT *
+        FROM TREFRESHTOKEN
+        WHERE REFRESH_TOKEN = #{userRefreshToken}
+    </select>
+
+    <select id="countByRefreshToken" parameterType="string" resultType="integer">
+        SELECT COUNT(USER_SEQ)
+        FROM TREFRESHTOKEN
+        WHERE REFRESH_TOKEN = #{userRefreshToken};
+    </select>
+
+    <insert id="saveRefreshToken">
+        INSERT INTO TREFRESHTOKEN(USER_SEQ, REFRESH_TOKEN)
+        VALUES(#{userId}, #{userRefreshToken});
+    </insert>
+
+    <update id="updateRefreshToken">
+        UPDATE TREFRESHTOKEN
+        SET REFRESH_TOKEN = #{userRefreshToken}
+        WHERE USER_SEQ = #{userId};
+    </update>
+
+</mapper>
