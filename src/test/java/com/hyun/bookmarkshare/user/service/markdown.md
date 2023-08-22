@@ -1,7 +1,6 @@
 Sure, I can help you with that. Here's an example of how you can write unit tests for the UserServiceImpl class using JUnit 5 and Mockito in a Spring Boot project:
 
-java
-Copy code
+```
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -69,8 +68,8 @@ public class UserServiceImplTest {
         assertNotNull(result);
         assertEquals("token", result);
     }
-
 }
+```
 In this example, we use @Mock to create mock objects for UserRepository, PasswordEncoder, and JwtTokenizer, which are dependencies of the UserServiceImpl class. We also use @BeforeEach to initialize the UserServiceImpl object with the mock dependencies.
 
 In each test method, we use when to define the behavior of the mock objects, and then call the corresponding method in the UserServiceImpl class. Finally, we use assertions to verify that the expected results are returned by the method.

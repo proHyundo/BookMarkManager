@@ -1,7 +1,9 @@
 package com.hyun.bookmarkshare.utils;
 
 import lombok.Getter;
+import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 
 import java.time.LocalDateTime;
 

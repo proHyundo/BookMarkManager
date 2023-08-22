@@ -108,7 +108,7 @@
     </insert>
 
 <!--    2) 정상 동작 확인 완료 -->
-<!--    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto">-->
+<!--    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderRequestDto">-->
 <!--        INSERT-->
 <!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT_SEQ)-->
 <!--        VALUES (#{userId}, (-->
@@ -120,7 +120,7 @@
 <!--    </insert>-->
 
 <!--    3) 아예 동작하지 않았다. insert는 되는데 return이 안된다. FOLDER_SEQ는 정수타입인데 왜 불가한 것일까? -->
-<!--    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto">-->
+<!--    <insert id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderRequestDto">-->
 <!--        INSERT-->
 <!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT_SEQ)-->
 <!--        VALUES (#{userId}, (-->
@@ -130,7 +130,7 @@
 <!--    </insert>-->
 
 <!--    4) 정상 동작은 하지만, 이렇게 해도 될까?-->
-<!--    <select id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">-->
+<!--    <select id="saveNewFolder" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderRequestDto" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder">-->
 <!--        INSERT-->
 <!--        INTO TFOLDER(USER_SEQ, FOLDER_ORDER,FOLDER_NAME, FOLDER_CAPTION, FOLDER_SCOPE, FOLDER_PARENT_SEQ)-->
 <!--        VALUES (#{userId}, (-->
@@ -141,15 +141,6 @@
 
     <!-- ================================================================================================ -->
     <!-- ============================================ UPDATE ============================================ -->
-
-    <update id="updateByFolderRequestDto" parameterType="com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto">
-        UPDATE TFOLDER
-        SET FOLDER_NAME = #{folderName},
-            FOLDER_CAPTION = #{folderCaption},
-            FOLDER_SCOPE = #{folderScope},
-            FOLDER_MOD_DATE = NOW()
-        WHERE FOLDER_SEQ = #{folderSeq} AND USER_SEQ = #{userId}
-    </update>
 
     <update id="updateOrderByFolderServiceRequestDto" parameterType="com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto">
         <foreach collection="folderSeqOrder" item="sequence" index="i" separator=";">

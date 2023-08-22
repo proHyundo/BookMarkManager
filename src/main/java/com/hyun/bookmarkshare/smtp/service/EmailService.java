@@ -159,9 +159,8 @@ public class EmailService {
     }
 
     public void checkEmailValidationCode(String emailValidationCode, String email) {
-        EmailEntity emailEntity = emailRepository.findByEmailAndValidationCode(email, emailValidationCode).orElseThrow(()->{
-            return new IllegalArgumentException("이메일 인증 코드가 유효하지 않습니다.");
-        });
+        EmailEntity emailEntity = emailRepository.findByEmailAndValidationCode(email, emailValidationCode)
+                .orElseThrow(()-> new IllegalArgumentException("이메일 인증 코드가 유효하지 않습니다."));
 
         int resultRows = emailRepository.updateEmailValidationFlag(emailEntity.getEmail(), emailEntity.getEmailCode());
         if (resultRows == 0) {

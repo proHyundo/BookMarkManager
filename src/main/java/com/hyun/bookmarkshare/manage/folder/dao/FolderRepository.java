@@ -1,8 +1,6 @@
 package com.hyun.bookmarkshare.manage.folder.dao;
 
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderCreateRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
+import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -31,7 +29,7 @@ public interface FolderRepository {
     int saveFolderAsCustom(Folder folder);
 
     // UPDATE
-    int updateByFolderRequestDto(FolderRequestDto requestDto);
+    int update(Folder folder);
 
     int updateOrderByFolderServiceRequestDto(FolderReorderServiceRequestDto folderReorderServiceRequestDto);
 
@@ -41,6 +39,4 @@ public interface FolderRepository {
 
     // ONLY FOR TEST
 
-
-    int update(Folder folder);
 }

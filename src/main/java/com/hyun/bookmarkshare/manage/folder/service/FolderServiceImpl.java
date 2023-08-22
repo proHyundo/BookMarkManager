@@ -5,10 +5,7 @@ import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderCreateServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderListServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
@@ -47,7 +44,7 @@ public class FolderServiceImpl implements FolderService{
     }
 
     @Override
-    public FolderSeqResponse deleteFolder(FolderServiceRequestDto requestDto) {
+    public FolderSeqResponse deleteFolder(FolderDeleteServiceRequestDto requestDto) {
         // TODO : [검증] 1) requestDto 에 대한 도메인 정책 검증, 2) 각 쿼리 수행결과에 대한 검증
 
         // 1. 삭제 요청 받은 폴더의 식별번호로 하위 폴더 식별번호 리스트를 조회.

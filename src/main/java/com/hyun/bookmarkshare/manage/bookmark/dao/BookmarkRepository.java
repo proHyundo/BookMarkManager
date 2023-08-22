@@ -1,9 +1,10 @@
 package com.hyun.bookmarkshare.manage.bookmark.dao;
 
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
+import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkCreateRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
+import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkUpdateServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface BookmarkRepository {
 
     // INSERT
 
-    int saveBookmark(BookmarkCreateRequestDto bookmarkCreateRequestDto);
+    int saveBookmark(BookmarkCreateServiceRequestDto bookmarkCreateServiceRequestDto);
 
     int save(Bookmark bookmark);
 

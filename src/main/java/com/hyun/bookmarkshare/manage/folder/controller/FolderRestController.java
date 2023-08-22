@@ -1,6 +1,6 @@
 package com.hyun.bookmarkshare.manage.folder.controller;
 
-import com.hyun.bookmarkshare.manage.folder.controller.dto.*;
+import com.hyun.bookmarkshare.manage.folder.controller.dto.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.FolderService;
 import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
@@ -9,7 +9,6 @@ import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,7 +29,7 @@ public class FolderRestController {
     }
 
     // 특정 부모폴더 내부에 속한 폴더 List 조회
-    @GetMapping("/api/v1/manage/folder/list")
+    @GetMapping("/api/v1/manage/folders")
     public ApiResponse<List<FolderResponse>> getFolderListRequest(@Valid @RequestBody FolderListRequestDto requestDto){
         return ApiResponse.of(HttpStatus.OK,
                 "폴더 리스트 조회 완료",
@@ -38,21 +37,22 @@ public class FolderRestController {
         );
     }
 
-
-    // 특정 폴더 삭제
-    @DeleteMapping("/manage/folder/delete")
-    public ApiResponse<FolderSeqResponse> deleteFolderRequest(@Valid @RequestBody FolderRequestDto requestDto){
-        return ApiResponse.of(HttpStatus.OK, "폴더 삭제 완료", folderService.deleteFolder(requestDto.toServiceDto()));
-    }
-
     // 특정 폴더 정보 수정
-    @PatchMapping("/manage/folder/update")
+    @PatchMapping("/api/v1/manage/folder/update")
     public ApiResponse<FolderResponse> updateFolderRequest(@Valid @RequestBody FolderRequestDto requestDto){
         return ApiResponse.of(HttpStatus.OK, "폴더 수정 완료", folderService.updateFolder(requestDto.toServiceDto()));
     }
 
+    // 특정 폴더 삭제
+    @DeleteMapping("/api/v1/manage/folder/delete")
+    public ApiResponse<FolderSeqResponse> deleteFolderRequest(@Valid @RequestBody FolderDeleteRequestDto requestDto){
+        return ApiResponse.of(HttpStatus.OK, "폴더 삭제 완료", folderService.deleteFolder(requestDto.toServiceDto()));
+    }
+
+    // TODO : 폴더 순서 변경 로직 비교 필요.
+    //  1. 1024 Index 알고리즘  2. Linked-List 방식  3. 현재 방법(배열) 개선
     // 특정 부모폴더들 내부의 순서 수정
-    @PostMapping("/manage/folder/reorder")
+    @PatchMapping("/api/v1/manage/folder/reorder/multi")
     public ApiResponse<List<FolderReorderResponse>> reorderFolderRequest(@Valid @RequestBody List<FolderReorderRequestDto> requestDtoList){
         /*
         * JSON DATA REQUEST FORMAT EXAMPLE
@@ -63,13 +63,6 @@ public class FolderRestController {
             ]
         *
         * */
-//        return FolderReorderResponseEntity.toResponseEntity(
-//                folderService.updateFolderOrder(
-//                        requestDtoList.stream()
-//                                .map(dto -> dto.toServiceRequestDto())
-//                                .collect(Collectors.toList())
-//                )
-//        );
         List<FolderReorderServiceRequestDto> serviceRequestDtoList = requestDtoList.stream()
                 .map(dto -> dto.toServiceRequestDto())
                 .collect(Collectors.toList());

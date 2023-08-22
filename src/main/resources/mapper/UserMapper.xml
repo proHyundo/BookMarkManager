@@ -69,7 +69,7 @@
                 'n', 'g', 'ROLE_USER', #{userSocial});
     </insert>
 
-    <insert id="saveBySignUpRequestDto" parameterType="com.hyun.bookmarkshare.user.controller.dto.UserSignUpRequestDto"
+    <insert id="saveBySignUpRequestDto" parameterType="com.hyun.bookmarkshare.user.controller.dto.request.UserSignUpRequestDto"
                                         useGeneratedKeys="true" keyProperty="userId">
         INSERT
         INTO TUSERACCOUNT(USER_SEQ, USER_EMAIL, USER_PWD, USER_NAME, USER_PHONE, USER_REG_DATE, USER_MOD_DATE,
@@ -81,9 +81,7 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ DELETE ============================================ -->
 
-    <delete id="deleteRefreshTokenByUserId" parameterType="long">
-        DELETE FROM TREFRESHTOKEN WHERE USER_SEQ = #{userId}
-    </delete>
+
 
     <delete id="deleteByUserId" parameterType="long">
         UPDATE TUSERACCOUNT SET USER_STATE = 'e' WHERE USER_SEQ = #{userId}

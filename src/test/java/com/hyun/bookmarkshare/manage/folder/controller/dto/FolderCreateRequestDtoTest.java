@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.manage.folder.controller.dto;
 
+import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderCreateRequestDto;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.user.service.response;
 
+import com.hyun.bookmarkshare.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,15 @@ public class UserLoginResponse {
         this.userRole = userRole;
         this.userAccessToken = userAccessToken;
         this.userRefreshToken = userRefreshToken;
+    }
+
+    public static UserLoginResponse of(User user) {
+        return UserLoginResponse.builder()
+                .userId(user.getUserId())
+                .userEmail(user.getUserEmail())
+                .userRole(user.getUserRole())
+                .userAccessToken(user.getUserAccessToken())
+                .userRefreshToken(user.getUserRefreshToken())
+                .build();
     }
 }
