@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.exceptions;
 
+import com.hyun.bookmarkshare.exceptions.errorcode.CustomErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;

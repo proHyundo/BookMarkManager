@@ -1,4 +1,4 @@
-package com.hyun.bookmarkshare.exceptions;
+package com.hyun.bookmarkshare.exceptions.errorcode;
 
 import org.springframework.http.HttpStatus;
 

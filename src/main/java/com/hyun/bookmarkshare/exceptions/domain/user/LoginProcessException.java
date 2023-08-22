@@ -1,5 +1,6 @@
-package com.hyun.bookmarkshare.user.exceptions;
+package com.hyun.bookmarkshare.exceptions.domain.user;
 
+import com.hyun.bookmarkshare.exceptions.errorcode.UserErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LoginProcessException extends RuntimeException {
 
-    private final LoginExceptionErrorCode loginExceptionErrorCode;
+    private final UserErrorCode userErrorCode;
     private final String message;
 
 }

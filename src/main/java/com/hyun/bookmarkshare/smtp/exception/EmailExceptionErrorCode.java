@@ -1,6 +1,6 @@
 package com.hyun.bookmarkshare.smtp.exception;
 
-import com.hyun.bookmarkshare.exceptions.CustomErrorCode;
+import com.hyun.bookmarkshare.exceptions.errorcode.CustomErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
