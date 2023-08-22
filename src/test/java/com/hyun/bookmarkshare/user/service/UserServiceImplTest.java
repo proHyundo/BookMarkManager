@@ -5,7 +5,7 @@ import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
 import com.hyun.bookmarkshare.user.dao.TokenRepository;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
 import com.hyun.bookmarkshare.user.entity.User;
-import com.hyun.bookmarkshare.exceptions.domain.user.LoginProcessException;
+import com.hyun.bookmarkshare.exceptions.domain.user.UserLoginException;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -88,7 +87,7 @@ class UserServiceImplTest {
         String targetEmail = "test@test.com";
         // when // then
         assertThatThrownBy(() -> userService.checkDuplicateEmail(targetEmail))
-                .isInstanceOf(LoginProcessException.class)
+                .isInstanceOf(UserLoginException.class)
                 .hasMessageContaining(UserErrorCode.USER_SIGNIN_ALREADY_EXIST.getMessage());
     }
 

@@ -3,7 +3,8 @@ package com.hyun.bookmarkshare.exceptions;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.smtp.exception.EmailProcessException;
 import com.hyun.bookmarkshare.exceptions.domain.user.LoginInputValidateFailException;
-import com.hyun.bookmarkshare.exceptions.domain.user.LoginProcessException;
+import com.hyun.bookmarkshare.exceptions.domain.user.UserLoginException;
+import com.hyun.bookmarkshare.utils.ApiErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,29 +16,29 @@ public class CustomExceptionHandler {
 
     // Deprecated since 2023-04-25 : InputValidate not used. Because of using @Valid
     @ExceptionHandler(LoginInputValidateFailException.class)
-    protected ResponseEntity<CustomErrorResponseEntity> handleLoginInputValidateFailException(LoginInputValidateFailException e){
+    protected ApiErrorResponse handleLoginInputValidateFailException(LoginInputValidateFailException e){
         log.info("LoginInputValidateFailException getMessage() >> "+e.getMessage());
         log.info("LoginInputValidateFailException getLoginExceptionErrorCode() >> "+e.getUserErrorCode());
-        return CustomErrorResponseEntity.toResponseEntity(e.getUserErrorCode());
+        return ApiErrorResponse.of(e.getUserErrorCode());
     }
 
-    @ExceptionHandler(LoginProcessException.class)
-    protected ResponseEntity<CustomErrorResponseEntity> handleLoginProcessException(LoginProcessException e){
-        return CustomErrorResponseEntity.toResponseEntity(e.getUserErrorCode());
+    @ExceptionHandler(UserLoginException.class)
+    protected ApiErrorResponse handleLoginProcessException(UserLoginException e){
+        return ApiErrorResponse.of(e.getUserErrorCode());
     }
 
     @ExceptionHandler(FolderRequestException.class)
-    protected ResponseEntity<CustomErrorResponseEntity> handleFolderProcessException(FolderRequestException e){
+    protected ApiErrorResponse handleFolderProcessException(FolderRequestException e){
         log.info("FolderRequestException getMessage() >> "+e.getMessage());
         log.info("FolderRequestException getFolderExceptionErrorCode() >> "+e.getFolderExceptionErrorCode());
-        return CustomErrorResponseEntity.toResponseEntity(e.getFolderExceptionErrorCode());
+        return ApiErrorResponse.of(e.getFolderExceptionErrorCode());
     }
 
     @ExceptionHandler(EmailProcessException.class)
-    protected ResponseEntity<CustomErrorResponseEntity> handleEmailProcessException(EmailProcessException e){
+    protected ApiErrorResponse handleEmailProcessException(EmailProcessException e){
         log.info("EmailRequestException getMessage() >> "+e.getMessage());
         log.info("EmailRequestException getEmailExceptionErrorCode() >> "+e.getEmailExceptionErrorCode());
-        return CustomErrorResponseEntity.toResponseEntity(e.getEmailExceptionErrorCode());
+        return ApiErrorResponse.of(e.getEmailExceptionErrorCode());
     }
 
 }

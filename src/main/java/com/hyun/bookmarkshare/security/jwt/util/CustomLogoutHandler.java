@@ -3,7 +3,7 @@ package com.hyun.bookmarkshare.security.jwt.util;
 import com.hyun.bookmarkshare.exceptions.errorcode.RefreshTokenErrorCode;
 import com.hyun.bookmarkshare.user.dao.TokenRepository;
 import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
-import com.hyun.bookmarkshare.exceptions.domain.user.LogoutProcessException;
+import com.hyun.bookmarkshare.exceptions.domain.user.UserLogoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -38,10 +38,10 @@ public class CustomLogoutHandler implements LogoutHandler {
                         log.info("userRefreshToken: "+userRefreshToken);
                         // DB 에서 RefreshToken 존재 확인
                         UserRefreshToken userRefreshTokenEntity = tokenRepository.findByRefreshToken(userRefreshToken)
-                                .orElseThrow(() -> new LogoutProcessException(RefreshTokenErrorCode.RT_NOT_FOUND));
+                                .orElseThrow(() -> new UserLogoutException(RefreshTokenErrorCode.RT_NOT_FOUND));
                         // DB 에서 RefreshToken 삭제
                         int deletedRows = tokenRepository.deleteRefreshTokenByUserId(userRefreshTokenEntity.getUserId());
-                        if(deletedRows != 1) throw new LogoutProcessException(RefreshTokenErrorCode.RT_DB_RESULT_WRONG);
+                        if(deletedRows != 1) throw new UserLogoutException(RefreshTokenErrorCode.RT_DB_RESULT_WRONG);
                     });
         }
 

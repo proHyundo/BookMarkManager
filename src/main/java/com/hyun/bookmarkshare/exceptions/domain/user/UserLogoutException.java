@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LogoutProcessException extends RuntimeException{
+public class UserLogoutException extends RuntimeException{
 
     private final RefreshTokenErrorCode userErrorCode;
 

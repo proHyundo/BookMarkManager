@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.api.controller.developer;
 
+import com.hyun.bookmarkshare.exceptions.errorcode.UserErrorCode;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class DeveloperRestController {
     @GetMapping("/api/v1/developer/exception/user/{userId}")
     public ApiResponse<UserResponse> getUserException(@PathVariable("userId") Long userId){
         if (userId == 99) {
-            throw new IllegalArgumentException("유저가 존재하지 않습니다.");
+            throw new IllegalArgumentException(UserErrorCode.USER_NOT_FOUND.getMessage());
         }
         return ApiResponse.of(HttpStatus.OK, "유저 조회 실패", UserResponse.builder().userId(userId).build());
     }

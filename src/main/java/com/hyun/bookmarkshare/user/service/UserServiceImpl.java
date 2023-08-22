@@ -1,7 +1,7 @@
 package com.hyun.bookmarkshare.user.service;
 
-import com.hyun.bookmarkshare.exceptions.domain.user.LoginProcessException;
-import com.hyun.bookmarkshare.exceptions.domain.user.LogoutProcessException;
+import com.hyun.bookmarkshare.exceptions.domain.user.UserLoginException;
+import com.hyun.bookmarkshare.exceptions.domain.user.UserLogoutException;
 import com.hyun.bookmarkshare.exceptions.domain.user.UserProcessException;
 import com.hyun.bookmarkshare.exceptions.errorcode.RefreshTokenErrorCode;
 import com.hyun.bookmarkshare.exceptions.errorcode.UserErrorCode;
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService{
         // 3. save user
         int resultRows = userRepository.saveNew(newUser);
         if(resultRows != 1){
-            throw new LoginProcessException(UserErrorCode.USER_DB_RESULT_WRONG, UserErrorCode.USER_DB_RESULT_WRONG.getMessage());
+            throw new UserLoginException(UserErrorCode.USER_DB_RESULT_WRONG, UserErrorCode.USER_DB_RESULT_WRONG.getMessage());
         }
 
         // 4. delete email validation
@@ -73,14 +73,14 @@ public class UserServiceImpl implements UserService{
 
         // 5. return signUp success User Entity
         return UserResponse.of(userRepository.findByUserId(newUser.getUserId())
-                .orElseThrow(() -> new LoginProcessException(UserErrorCode.USER_NOT_FOUND, UserErrorCode.USER_NOT_FOUND.getMessage())));
+                .orElseThrow(() -> new UserLoginException(UserErrorCode.USER_NOT_FOUND, UserErrorCode.USER_NOT_FOUND.getMessage())));
     }
 
     @Override
     public boolean checkDuplicateEmail(String userEmail) {
         // check if user already exist
         if(userRepository.countByUserEmail(userEmail) > 0){
-            throw new LoginProcessException(UserErrorCode.USER_SIGNIN_ALREADY_EXIST, UserErrorCode.USER_SIGNIN_ALREADY_EXIST.getMessage());
+            throw new UserLoginException(UserErrorCode.USER_SIGNIN_ALREADY_EXIST, UserErrorCode.USER_SIGNIN_ALREADY_EXIST.getMessage());
         }
         return false;
     }
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService{
 
         // 1. DB select & return User Entity
         User resultUser = userRepository.findByLoginServiceRequestDto(loginRequestDto)
-                .orElseThrow(() -> new LoginProcessException(UserErrorCode.USER_NOT_FOUND, UserErrorCode.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserLoginException(UserErrorCode.USER_NOT_FOUND, UserErrorCode.USER_NOT_FOUND.getMessage()));
 
         // 2. Generate access and refresh tokens by JWT library
         List<String> userRoles = List.of(resultUser.getUserRole());
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService{
         }else{
             resultRows = tokenRepository.saveRefreshToken(resultUser.getUserId(), resultUser.getUserRefreshToken());
         }
-        if(resultRows != 1) throw new LoginProcessException(UserErrorCode.USER_DB_RESULT_WRONG,
+        if(resultRows != 1) throw new UserLoginException(UserErrorCode.USER_DB_RESULT_WRONG,
                 UserErrorCode.USER_DB_RESULT_WRONG.getMessage());
 
         return UserLoginResponse.builder().userId(resultUser.getUserId())
@@ -133,10 +133,10 @@ public class UserServiceImpl implements UserService{
     public void logoutProcess(String refreshToken) {
         // DB 에서 RefreshToken 존재 확인
         UserRefreshToken userRefreshToken = tokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new LogoutProcessException(RefreshTokenErrorCode.RT_NOT_FOUND));
+                .orElseThrow(() -> new UserLogoutException(RefreshTokenErrorCode.RT_NOT_FOUND));
 
         int deletedRows = tokenRepository.deleteRefreshTokenByUserId(userRefreshToken.getUserId());
-        if(deletedRows != 1) throw new LogoutProcessException(RefreshTokenErrorCode.RT_DB_RESULT_WRONG);
+        if(deletedRows != 1) throw new UserLogoutException(RefreshTokenErrorCode.RT_DB_RESULT_WRONG);
     }
 
     @Override
