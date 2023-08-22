@@ -1,6 +1,5 @@
 package com.hyun.bookmarkshare.user.dao;
 
-import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -72,6 +69,7 @@ public class UserRepositorySelectQueryTest {
                 .extracting("userId", "userEmail")
                 .containsExactly(1L, "test@test.com");
     }
+
 
     @DisplayName("특정 email로 등록된 사용자가 몇 행 있는지 조회한다.")
     @Test

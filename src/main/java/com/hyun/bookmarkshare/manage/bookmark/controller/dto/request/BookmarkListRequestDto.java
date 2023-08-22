@@ -6,11 +6,9 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-@ToString
-@Builder
+
 @Getter
-@Setter
-@AllArgsConstructor
+@NoArgsConstructor
 public class BookmarkListRequestDto {
 
     // valid : null, 0, 음수 불가
@@ -23,11 +21,25 @@ public class BookmarkListRequestDto {
     @Positive
     private Long folderSeq;
 
+    @Builder
+    public BookmarkListRequestDto(Long userId, Long folderSeq) {
+        this.userId = userId;
+        this.folderSeq = folderSeq;
+    }
+
     public BookmarkServiceRequestDto toServiceDto(){
         return BookmarkServiceRequestDto.builder()
                 .userId(this.userId)
                 .bookmarkSeq(null)
                 .folderSeq(this.folderSeq)
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "BookmarkListRequestDto{" +
+                "userId=" + userId +
+                ", folderSeq=" + folderSeq +
+                '}';
     }
 }

@@ -37,4 +37,8 @@
         WHERE USER_SEQ = #{userId};
     </update>
 
+    <delete id="deleteRefreshTokenByUserId" parameterType="long">
+        DELETE FROM TREFRESHTOKEN WHERE USER_SEQ = #{userId}
+    </delete>
+
 </mapper>

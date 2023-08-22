@@ -5,6 +5,7 @@ import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
+import com.hyun.bookmarkshare.user.service.response.UserSignoutResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,9 +24,9 @@ public interface UserService {
 
     String extendLoginState(String refreshToken);
 
-    UserResponse getUserInfo(String token);
+    UserResponse getUserInfo(String refreshToken);
 
-    UserResponse signOut(String token, String userEmail);
+    UserSignoutResponse signOut(String refreshToken, String userEmail);
 
     boolean checkDuplicateEmail(String userEmail);
 }

@@ -2,10 +2,7 @@ package com.hyun.bookmarkshare.manage.folder.service;
 
 import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderCreateServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderListServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,10 +88,9 @@ public class FolderServiceTest {
         folderRepository.save(folder4);
         folderRepository.save(folder5);
 
-        FolderServiceRequestDto requestDto = FolderServiceRequestDto.builder()
+        FolderDeleteServiceRequestDto requestDto = FolderDeleteServiceRequestDto.builder()
                 .folderSeq(2L)
                 .userId(1L)
-                .folderParentSeq(1L)
                 .build();
 
         // when

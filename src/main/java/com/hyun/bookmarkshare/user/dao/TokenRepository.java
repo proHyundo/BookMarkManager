@@ -19,4 +19,6 @@ public interface TokenRepository {
     Integer saveRefreshToken(Long userId, String userRefreshToken);
 
     Integer updateRefreshToken(Long userId, String userRefreshToken);
+
+    int deleteRefreshTokenByUserId(Long userId);
 }

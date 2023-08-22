@@ -1,4 +1,4 @@
-package com.hyun.bookmarkshare.manage.folder.controller.dto;
+package com.hyun.bookmarkshare.manage.folder.controller.dto.request;
 
 import com.hyun.bookmarkshare.manage.folder.service.request.FolderServiceRequestDto;
 import lombok.*;

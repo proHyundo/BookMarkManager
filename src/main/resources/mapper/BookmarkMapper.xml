@@ -73,7 +73,7 @@
     <!-- ================================================================================================ -->
     <!-- ============================================ INSERT ============================================ -->
 
-    <insert id="saveBookmark" parameterType="com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkCreateRequestDto"
+    <insert id="saveBookmark" parameterType="com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto"
             useGeneratedKeys="true" keyProperty="bookmarkSeq">
         INSERT INTO TBOOKMARK(USER_SEQ, FOLDER_SEQ, BOOK_TITLE, BOOK_CAPTION, BOOK_URL, BOOK_SCHEME,
                               BOOK_HOST, BOOK_DOMAIN, BOOK_PORT, BOOK_PATH, BOOK_ORDER)

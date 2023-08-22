@@ -1,6 +1,6 @@
 package com.hyun.bookmarkshare.user.dao;
 
-import com.hyun.bookmarkshare.user.controller.dto.UserSignUpRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.request.UserSignUpRequestDto;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
@@ -39,9 +39,6 @@ public interface UserRepository {
 
     /* ================================================================================================ */
     /* ============================================ DELETE ============================================ */
-
-    /* TREFRESHTOKEN TABLE */
-    int deleteRefreshTokenByUserId(Long userId);
 
     int deleteByUserId(Long userId);
 

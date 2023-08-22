@@ -1,4 +1,4 @@
-package com.hyun.bookmarkshare.user.controller.dto;
+package com.hyun.bookmarkshare.user.controller.dto.request;
 
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import lombok.*;

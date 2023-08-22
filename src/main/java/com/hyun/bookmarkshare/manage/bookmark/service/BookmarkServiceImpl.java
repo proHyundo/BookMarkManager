@@ -27,7 +27,7 @@ public class BookmarkServiceImpl implements BookmarkService{
     @Override
     public BookmarkResponseDto getBookmark(BookmarkServiceRequestDto requestDto) {
         return bookmarkRepository.findByUserIdAndBookmarkSeq(requestDto.getUserId(), requestDto.getBookmarkSeq())
-                .orElseThrow(() -> new NoSuchElementException());
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
