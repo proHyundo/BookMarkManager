@@ -3,8 +3,8 @@ package com.hyun.bookmarkshare.user.controller;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyun.bookmarkshare.api.controller.ControllerTestConfig;
-import com.hyun.bookmarkshare.user.controller.dto.LoginRequestDto;
-import com.hyun.bookmarkshare.user.controller.dto.UserSignUpRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.request.LoginRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.request.UserSignUpRequestDto;
 import com.hyun.bookmarkshare.user.service.UserService;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -179,8 +178,7 @@ class UserPermitRestControllerTest extends ControllerTestConfig {
                                 fieldWithPath("data.userRegDate").type(JsonFieldType.STRING).description("사용자 등록일"),
                                 fieldWithPath("data.userModDate").type(JsonFieldType.STRING).description("사용자 수정일")
                         )
-                ))
-        ;
+                ));
     }
 
     @DisplayName("사용자 로그인 연장 API")
@@ -212,8 +210,7 @@ class UserPermitRestControllerTest extends ControllerTestConfig {
                                 fieldWithPath("timestamp").type(JsonFieldType.STRING).description("응답 시간"),
                                 fieldWithPath("data").type(JsonFieldType.STRING).description("사용자 Access 토큰")
                         )
-                ))
-                ;
+                ));
     }
 
     @DisplayName("중복 Email 여부 확인 API")
@@ -250,8 +247,7 @@ class UserPermitRestControllerTest extends ControllerTestConfig {
                                 fieldWithPath("data").type(JsonFieldType.STRING).description("사용 가능한 이메일")
                         )
 
-                ))
-                ;
+                ));
 
     }
 }

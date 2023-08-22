@@ -7,9 +7,12 @@ import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseD
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkSeqResponse;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,17 @@ public class BookmarkRestController {
     @GetMapping("/api/v1/manage/bookmarks")
     public ApiResponse<List<BookmarkResponseDto>> getBookListRequest(@RequestBody @Valid BookmarkListRequestDto bookmarkListRequestDto){
         return ApiResponse.ok(bookmarkService.getBookList(bookmarkListRequestDto.toServiceDto()));
+    }
+
+    @GetMapping("/api/v1/manage/bookmarks/{userId}/{folderSeq}")
+    public ApiResponse<List<BookmarkResponseDto>> getBookListRequest2nd(@PathVariable("userId") @NotNull @Positive Long userId,
+                                                                        @PathVariable("folderSeq") @NotNull @Positive Long folderSeq,
+                                                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+        return ApiResponse.ok(bookmarkService.getBookList(BookmarkListRequestDto.builder()
+                .userId(userId)
+                .folderSeq(folderSeq)
+                .build()
+                .toServiceDto()));
     }
 
 

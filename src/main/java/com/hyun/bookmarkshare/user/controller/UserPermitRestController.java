@@ -1,6 +1,7 @@
 package com.hyun.bookmarkshare.user.controller;
 
-import com.hyun.bookmarkshare.user.controller.dto.*;
+import com.hyun.bookmarkshare.user.controller.dto.request.LoginRequestDto;
+import com.hyun.bookmarkshare.user.controller.dto.request.UserSignUpRequestDto;
 import com.hyun.bookmarkshare.user.service.UserService;
 import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
@@ -45,9 +46,7 @@ public class UserPermitRestController {
         Optional<Cookie> refreshTokenCookie = Arrays.stream(request.getCookies())
                 .filter(cookie -> cookie.getName().equals("userRefreshToken"))
                 .findFirst();
-        String refreshToken = refreshTokenCookie.map(Cookie::getValue).orElseThrow(() -> {
-            throw new IllegalArgumentException("RefreshToken 이 존재하지 않습니다.");
-        });
+        String refreshToken = refreshTokenCookie.map(Cookie::getValue).orElseThrow(() -> new IllegalArgumentException("RefreshToken 이 존재하지 않습니다."));
         return ApiResponse.of(HttpStatus.OK, "로그인 연장 성공", userService.extendLoginState(refreshToken));
     }
 

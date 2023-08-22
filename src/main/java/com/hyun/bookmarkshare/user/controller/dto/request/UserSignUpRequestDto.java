@@ -1,4 +1,4 @@
-package com.hyun.bookmarkshare.user.controller.dto;
+package com.hyun.bookmarkshare.user.controller.dto.request;
 
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
 import lombok.*;
@@ -7,7 +7,6 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class UserSignUpRequestDto {
 
