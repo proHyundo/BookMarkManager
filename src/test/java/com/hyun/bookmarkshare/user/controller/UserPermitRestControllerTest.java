@@ -10,10 +10,12 @@ import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
+import com.hyun.bookmarkshare.utils.ApiResponseWithCookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,6 +24,7 @@ import org.springframework.mock.web.MockCookie;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -54,7 +57,6 @@ class UserPermitRestControllerTest extends ControllerTestConfig {
     @MockBean
     private UserService userService;
 
-
     @DisplayName("사용자 로그인 API")
     @Test
     void loginRequest() throws Exception {
@@ -70,7 +72,6 @@ class UserPermitRestControllerTest extends ControllerTestConfig {
                         .userAccessToken("testAccessToken")
                         .userRefreshToken("testRefreshToken")
                         .build());
-
         // when // then
         mockMvc.perform(RestDocumentationRequestBuilders
                         .post("/api/v1/user/login")

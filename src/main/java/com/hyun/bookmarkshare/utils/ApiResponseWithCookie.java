@@ -1,8 +1,10 @@
 package com.hyun.bookmarkshare.utils;
 
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -25,9 +27,9 @@ public class ApiResponseWithCookie<T> {
         this.cookie = cookie;
     }
 
-    public static <T> ApiResponseWithCookie<T> withCookieOf(HttpStatus status, String message, T data, String refreshToken) {
+    public static <T> ApiResponseWithCookie<T> withCookieOf(HttpStatus status, String message, T data, String refreshToken, String domainName) {
         ResponseCookie refreshTokenCookie = ResponseCookie.from("userRefreshToken", refreshToken)
-                .domain("localhost")
+                .domain(domainName)
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
@@ -36,4 +38,6 @@ public class ApiResponseWithCookie<T> {
                 .build();
         return new ApiResponseWithCookie<>(status, message, data, refreshTokenCookie);
     }
+
+
 }

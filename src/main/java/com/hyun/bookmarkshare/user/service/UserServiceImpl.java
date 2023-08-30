@@ -161,15 +161,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse getUserInfo(String refreshToken) {
-        return UserResponse.of(userRepository.findByUserId(jwtTokenizer.getUserIdFromToken(refreshToken)).orElseThrow(
+    public UserResponse getUserInfo(String accessToken) {
+        return UserResponse.of(userRepository.findByUserId(jwtTokenizer.getUserIdFromAccessToken(accessToken)).orElseThrow(
                 () -> new UserProcessException(UserErrorCode.USER_NOT_FOUND)
         ));
     }
 
     @Override
-    public UserSignoutResponse signOut(String token, String userEmail) {
-        Long userIdFromToken = jwtTokenizer.getUserIdFromToken(token);
+    public UserSignoutResponse signOut(String accessToken, String userEmail) {
+        Long userIdFromToken = jwtTokenizer.getUserIdFromAccessToken(accessToken);
         // userEmail 로 User 조회
         User targetUser = userRepository.findByUserEmail(userEmail).orElseThrow(
                 () -> new UserProcessException(UserErrorCode.USER_NOT_FOUND)

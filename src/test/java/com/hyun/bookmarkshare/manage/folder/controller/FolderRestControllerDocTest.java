@@ -4,10 +4,7 @@ import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyun.bookmarkshare.api.controller.ControllerTestConfig;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderCreateRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderListRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderReorderRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderRequestDto;
+import com.hyun.bookmarkshare.manage.folder.controller.dto.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.FolderService;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
@@ -255,7 +252,7 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
     @Test
     void deleteFolderRequest() throws Exception {
         // given
-        FolderRequestDto request = FolderRequestDto.builder()
+        FolderDeleteRequestDto request = FolderDeleteRequestDto.builder()
                 .folderSeq(1L)
                 .userId(1L)
                 .build();

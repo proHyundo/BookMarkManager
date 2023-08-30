@@ -5,7 +5,6 @@ import com.hyun.bookmarkshare.smtp.dao.EmailRepository;
 import com.hyun.bookmarkshare.smtp.exception.EmailExceptionErrorCode;
 import com.hyun.bookmarkshare.smtp.exception.EmailProcessException;
 import com.hyun.bookmarkshare.user.dao.UserRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +27,7 @@ public class EmailService {
     private final EmailRepository emailRepository;
     private final UserRepository userRepository;
     // TODO : 왜 final 로 선언했을 때 에러가 나는지 확인 필요.
-    @Value("${email.value.property}")
+    @Value("${property.email.senderEmail}")
     private String fromEmail;
 
     /**
