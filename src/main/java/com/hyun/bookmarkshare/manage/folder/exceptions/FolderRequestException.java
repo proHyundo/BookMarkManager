@@ -1,6 +1,5 @@
 package com.hyun.bookmarkshare.manage.folder.exceptions;
 
-import com.hyun.bookmarkshare.user.exceptions.LoginExceptionErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

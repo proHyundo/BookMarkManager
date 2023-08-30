@@ -22,12 +22,12 @@ jobs:
 
       # Create application.properties
       - uses: actions/checkout@v3
-      - run: touch ./src/main/resources/application.properties
-      - run: echo -e "${{secrets.APPLICATION}}" > ./src/main/resources/application.properties
+      - run: touch ./src/main/resources/application.yml
+      - run: echo -e "${{secrets.APPLICATION}}" | base64 --decode > ./src/main/resources/application.yml
       - uses: actions/upload-artifact@v3
         with:
-          name: application.properties
-          path: ./src/main/resources/application.properties
+          name: application.yml
+          path: ./src/main/resources/application.yml
           retention-days: 1
 
       - name: Setup Gradle
@@ -88,6 +88,7 @@ jobs:
               sudo docker rmi $(docker images -q)
             fi
             sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-server-image
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-web-image
             sudo docker compose -f /home/ubuntu/docker-compose.yaml up -d --force-recreate
             docker image prune -a -f
 

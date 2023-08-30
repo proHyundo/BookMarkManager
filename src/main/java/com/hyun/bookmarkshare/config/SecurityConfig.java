@@ -2,7 +2,6 @@ package com.hyun.bookmarkshare.config;
 
 import com.hyun.bookmarkshare.security.jwt.exception.CustomAuthenticationEntryPoint;
 import com.hyun.bookmarkshare.security.jwt.util.CustomLogoutHandler;
-import com.hyun.bookmarkshare.user.controller.dto.LogoutResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,20 +9,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
@@ -61,9 +55,11 @@ public class SecurityConfig {
             .httpBasic().disable()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .mvcMatchers("/", "/signup", "/api/v1/user/login", "/refresh/login-state",
-                    "/v3/api-docs", "/documentation/swagger*/**", "/documentation/swagger-ui/**").permitAll()
-            .mvcMatchers("/signup/email/verification", "/signup/email/verification/check").permitAll()
+            .mvcMatchers("/", "/api/v1/user/signup", "/api/v1/user/login", "/api/v1/user/refresh").permitAll()
+            .mvcMatchers("/api/v1/user/email/check", "/api/v1/email/verification/check").permitAll()
+            .mvcMatchers("/v3/api-docs/**", "/documentation/swagger*/**", "/documentation/swagger-ui/**",
+                    "/docs/open-api-3.0.1.json", "/docs/swagger*/**", "/docs/swagger-ui/**").permitAll()
+            .mvcMatchers("/api/v1/developer/**").permitAll()
             .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(POST, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")
             .mvcMatchers(DELETE, "/**").hasAnyRole("USER", "MANAGER", "ADMIN")

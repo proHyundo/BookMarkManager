@@ -1,8 +1,7 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderListRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderReorderRequestDto;
-import com.hyun.bookmarkshare.manage.folder.controller.dto.FolderRequestDto;
+import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderListRequestDto;
+import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
@@ -53,24 +52,18 @@ public class FolderRequestValidator {
     private void availableUpdateFolderSeq(Long folderSeq){
         folderRepository.findByFolderSeqExcludeDeleted(folderSeq)
                 .filter(folder -> !folder.getFolderSeq().equals(0))
-                .orElseThrow(() -> {
-                    throw new FolderRequestException(FolderExceptionErrorCode.NOT_FOUND_FOLDER, "존재 하지 않거나 제어 불가한 폴더 입니다");
-                });
+                .orElseThrow(() -> new FolderRequestException(FolderExceptionErrorCode.NOT_FOUND_FOLDER, "존재 하지 않거나 제어 불가한 폴더 입니다"));
     }
 
     // 조회 가능한 폴더인지 (조회하려는 폴더식별번호가 존재하는/접근가능한 폴더여야 한다)
     private void availableSelectFolderSeq(Long folderParentSeq){
         folderRepository.findByFolderSeqExcludeDeleted(folderParentSeq)
-                .orElseThrow(()->{
-                    throw new NoSuchElementException("");
-                });
+                .orElseThrow(()-> new NoSuchElementException(""));
     }
 
     // 존재하는 유저인지
     private void existUser(Long userId) {
-        userRepository.findByUserId(userId).orElseThrow(() -> {
-            throw new NoSuchElementException("존재 하지 않는 사용자 입니다.");
-        });
+        userRepository.findByUserId(userId).orElseThrow(() -> new NoSuchElementException("존재 하지 않는 사용자 입니다."));
     }
 
 

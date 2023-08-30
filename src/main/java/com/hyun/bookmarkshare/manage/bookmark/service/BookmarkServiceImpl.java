@@ -1,18 +1,17 @@
 package com.hyun.bookmarkshare.manage.bookmark.service;
 
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.*;
 import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkUpdateServiceRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkSeqResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public class BookmarkServiceImpl implements BookmarkService{
     @Override
     public BookmarkResponseDto getBookmark(BookmarkServiceRequestDto requestDto) {
         return bookmarkRepository.findByUserIdAndBookmarkSeq(requestDto.getUserId(), requestDto.getBookmarkSeq())
-                .orElseThrow(() -> new NoSuchElementException());
+                .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
@@ -41,7 +40,7 @@ public class BookmarkServiceImpl implements BookmarkService{
                 serviceRequestDto.getFolderSeq());
 
         if(allByUserIdAndFolderParentSeq.isEmpty()) throw new IllegalStateException();
-        return allByUserIdAndFolderParentSeq.stream().map(Bookmark::toBookmarkResponseDto).collect(Collectors.toList());
+        return allByUserIdAndFolderParentSeq.stream().map(bookmark -> BookmarkResponseDto.of(bookmark)).collect(Collectors.toList());
 //        return allByUserIdAndFolderParentSeq;
     }
 
@@ -52,8 +51,7 @@ public class BookmarkServiceImpl implements BookmarkService{
         Bookmark targetBookmark = afterSetUrlUnitsBookmarkServiceRequestDto.toBookmarkEntity();
         bookmarkRepository.save(targetBookmark);
 //        validateSqlUpdatedRows(updatedRows);
-        return bookmarkRepository.findByBookmarkSeq(targetBookmark.getBookmarkSeq())
-                .get().toBookmarkResponseDto();
+        return BookmarkResponseDto.of(bookmarkRepository.findByBookmarkSeq(targetBookmark.getBookmarkSeq()).get());
     }
 
     @Override
@@ -68,9 +66,8 @@ public class BookmarkServiceImpl implements BookmarkService{
         int updatedRows = bookmarkRepository.update(freshBookmark);
         validateSqlUpdatedRows(updatedRows);
         // 저장한 북마크 객체를 응답하기 위해 반환객체로 변환한다.
-        return bookmarkRepository.findByBookmarkSeq(freshBookmark.getBookmarkSeq())
-                .orElseThrow(() -> new NoSuchElementException())
-                .toBookmarkResponseDto();
+        return BookmarkResponseDto.of(bookmarkRepository.findByBookmarkSeq(freshBookmark.getBookmarkSeq())
+                .orElseThrow(() -> new NoSuchElementException()));
     }
 
     private BookmarkUpdateServiceRequestDto doUrlAssignWhenUrlIsDifferentBetween(BookmarkUpdateServiceRequestDto requestDto, Bookmark targetBookmark) {
@@ -112,6 +109,26 @@ public class BookmarkServiceImpl implements BookmarkService{
 
     private void validateSqlUpdatedRows(int updatedRows) {
         if(updatedRows != 1) throw new IllegalStateException("sql update error");
+    }
+
+    private void validateSqlAffectedRows(int affectedRows, SqlAffectedType affectedType){
+        switch (affectedType){
+            case INSERT_ONE:
+            case UPDATE_ONE:
+            case DELETE_ONE:
+                if(affectedRows != 1) throw new IllegalStateException("sql "+affectedType.name()+" error");
+                break;
+            case INSERT_MANY:
+            case UPDATE_MANY:
+            case DELETE_MANY:
+                if(affectedRows < 1) throw new IllegalStateException("sql "+affectedType.name()+" error");
+                break;
+        }
+    }
+
+    enum SqlAffectedType{
+        INSERT_ONE, UPDATE_ONE, DELETE_ONE,
+        INSERT_MANY, UPDATE_MANY, DELETE_MANY,
     }
 
 }

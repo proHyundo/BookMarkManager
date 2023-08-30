@@ -15,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -83,8 +82,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] permitUrls = {"/signup/email/verification", "/signup/email/verification/check", "/signup",
-                                "/refresh/login-state"};
+        String[] permitUrls = {"/api/v1/email/verification/check", "/api/v1/user/signup", "/api/v1/user/login",
+                                "/api/v1/user/refresh", "/api/v1/user/email/check"};
         return Arrays.asList(permitUrls).contains(request.getRequestURI());
     }
 
@@ -110,11 +109,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private boolean isPermitRequest(HttpServletRequest request) {
-        String uri = request.getRequestURI();
-        if (uri.equals("/signup/email/verification") || uri.equals("/signup/email/verification/check")) {
-            return true;
-        }
-        return false;
-    }
+//    private boolean isPermitRequest(HttpServletRequest request) {
+//        String uri = request.getRequestURI();
+//        if (uri.equals("/signup/email/verification") || uri.equals("/signup/email/verification/check")) {
+//            return true;
+//        }
+//        return false;
+//    }
 }

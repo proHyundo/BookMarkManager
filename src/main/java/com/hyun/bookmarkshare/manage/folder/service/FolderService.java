@@ -1,9 +1,6 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderCreateServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderListServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.request.FolderServiceRequestDto;
+import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
@@ -26,7 +23,7 @@ public interface FolderService {
      * */
     FolderResponse createFolder(FolderCreateServiceRequestDto requestDto);
 
-    FolderSeqResponse deleteFolder(FolderServiceRequestDto requestDto);
+    FolderSeqResponse deleteFolder(FolderDeleteServiceRequestDto requestDto);
 
     FolderResponse updateFolder(FolderServiceRequestDto requestDto);
 
