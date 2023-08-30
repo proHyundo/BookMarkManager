@@ -8,6 +8,7 @@ import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import com.hyun.bookmarkshare.utils.ApiResponseWithCookie;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,8 @@ import java.util.Optional;
 public class UserPermitRestController {
 
     private final UserService userService;
+    @Value("${property.domain.domainName}")
+    private String domainName;
 
     /**
      * 로그인 요청을 처리한다.
@@ -30,7 +33,7 @@ public class UserPermitRestController {
     @PostMapping("/api/v1/user/login")
     public ApiResponseWithCookie<UserLoginResponse> loginRequest(@RequestBody @Valid LoginRequestDto loginRequestDto){
         UserLoginResponse resultUser = userService.loginProcess(loginRequestDto.toServiceDto());
-        return ApiResponseWithCookie.withCookieOf(HttpStatus.OK, "로그인 성공", resultUser, resultUser.getUserRefreshToken());
+        return ApiResponseWithCookie.withCookieOf(HttpStatus.OK, "로그인 성공", resultUser, resultUser.getUserRefreshToken(), domainName);
     }
 
     /**

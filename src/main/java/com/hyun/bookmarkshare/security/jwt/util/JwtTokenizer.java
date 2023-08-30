@@ -23,7 +23,7 @@ public class JwtTokenizer {
     public final static Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L; // 7 days
 
     // properties 에 선언한 값을 @Value 로 가져올 수 있다.
-    public JwtTokenizer(@Value("${jwt.secretKey}") String accessSecret, @Value("${jwt.refreshKey}") String refreshSecret) {
+    public JwtTokenizer(@Value("${property.jwt.secretKey}") String accessSecret, @Value("${property.jwt.refreshKey}") String refreshSecret) {
         this.accessSecret = accessSecret.getBytes(StandardCharsets.UTF_8);
         this.refreshSecret = refreshSecret.getBytes(StandardCharsets.UTF_8);
     }
@@ -59,10 +59,10 @@ public class JwtTokenizer {
     /**
      * 토큰에서 유저 아이디 얻기
      */
-    public Long getUserIdFromToken(String refreshToken) {
-        String[] tokenArr = refreshToken.split(" ");
-        refreshToken = tokenArr[1];
-        Claims claims = parseToken(refreshToken, accessSecret);
+    public Long getUserIdFromAccessToken(String accessToken) {
+        String[] tokenArr = accessToken.split(" ");
+        accessToken = tokenArr[1];
+        Claims claims = parseAccessToken(accessToken);
         return Long.valueOf((Integer)claims.get("userId"));
     }
 

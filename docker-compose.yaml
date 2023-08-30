@@ -7,6 +7,8 @@ services:
       - 9090
     ports:
       - 9090:9090
+    environment:
+      - "SPRING_PROFILES_ACTIVE=prod1"
     restart: "always"
 
   web:
