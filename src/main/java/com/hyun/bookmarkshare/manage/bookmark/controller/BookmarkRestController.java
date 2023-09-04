@@ -6,14 +6,17 @@ import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderSer
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkSeqResponse;
 import com.hyun.bookmarkshare.security.jwt.util.JwtTokenizer;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,12 +27,24 @@ public class BookmarkRestController {
     private final BookmarkService bookmarkService;
     private final JwtTokenizer jwtTokenizer;
 
+//    @GetMapping("/api/v1/manage/bookmarks/{folderSeq}")
+//    public ApiResponse<List<BookmarkResponseDto>> getBookListRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq,
+//                                                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken){
+//        List<BookmarkResponseDto> bookList = bookmarkService.getBookList(
+//                BookmarkListRequestDto.builder()
+//                        .userId(jwtTokenizer.getUserIdFromAccessToken(accessToken))
+//                        .folderSeq(folderSeq)
+//                        .build()
+//                        .toServiceDto());
+//        return ApiResponse.ok(bookList);
+//    }
+
     @GetMapping("/api/v1/manage/bookmarks/{folderSeq}")
-    public ApiResponse<List<BookmarkResponseDto>> getBookListRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq,
-                                                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken){
+    public ApiResponse<List<BookmarkResponseDto>> getBookListRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq){
+        LoginInfoDto loginInfoDto = (LoginInfoDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<BookmarkResponseDto> bookList = bookmarkService.getBookList(
                 BookmarkListRequestDto.builder()
-                        .userId(jwtTokenizer.getUserIdFromAccessToken(accessToken))
+                        .userId(loginInfoDto.getUserId())
                         .folderSeq(folderSeq)
                         .build()
                         .toServiceDto());
