@@ -9,6 +9,7 @@ import com.hyun.bookmarkshare.manage.bookmark.service.BookmarkService;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
 import com.hyun.bookmarkshare.security.jwt.util.JwtTokenizer;
+import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -55,6 +56,7 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
     @DisplayName("북마크 리스트 요청 API")
     @Test
     void getBookListRequest() throws Exception {

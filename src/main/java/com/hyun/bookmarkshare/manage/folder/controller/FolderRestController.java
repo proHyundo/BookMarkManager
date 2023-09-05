@@ -6,12 +6,17 @@ import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderService
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,12 +33,29 @@ public class FolderRestController {
         return ApiResponse.of(HttpStatus.OK, "신규 폴더 생성 완료", resultFolderResponse);
     }
 
+    // 0905 신규 생성
+    @GetMapping("/api/v1/manage/folder/{folderSeq}")
+    public ApiResponse<FolderResponse> getFolderRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq,
+                                                        @AuthenticationPrincipal LoginInfoDto loginInfoDto){
+        return ApiResponse.of(HttpStatus.OK, "폴더 조회 완료", folderService.findFolderInfo(FolderRequestDto.builder()
+                .userId(loginInfoDto.getUserId())
+                .folderSeq(folderSeq)
+                .build()
+                .toServiceDto()));
+    }
+
+    // 0905 변경됨.
     // 특정 부모폴더 내부에 속한 폴더 List 조회
-    @GetMapping("/api/v1/manage/folders")
-    public ApiResponse<List<FolderResponse>> getFolderListRequest(@Valid @RequestBody FolderListRequestDto requestDto){
+    @GetMapping("/api/v1/manage/folders/{folderParentSeq}")
+    public ApiResponse<List<FolderResponse>> getFolderListRequest(@PathVariable("folderParentSeq") @NotNull @PositiveOrZero Long folderParentSeq,
+                                                                  @AuthenticationPrincipal LoginInfoDto loginInfoDto){
         return ApiResponse.of(HttpStatus.OK,
                 "폴더 리스트 조회 완료",
-                folderService.findFolderList(requestDto.toServiceDto())
+                folderService.findFolderList(FolderListRequestDto.builder()
+                        .folderParentSeq(folderParentSeq)
+                        .userId(loginInfoDto.getUserId())
+                        .build()
+                        .toServiceDto())
         );
     }
 

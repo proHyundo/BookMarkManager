@@ -25,6 +25,13 @@ public class FolderServiceImpl implements FolderService{
     private final FolderRequestValidator validator;
 
     @Override
+    public FolderResponse findFolderInfo(FolderServiceRequestDto requestDto) {
+        Folder resultFolder = folderRepository.findByFolderSeqExcludeDeleted(requestDto.getFolderSeq())
+                .orElseThrow(() -> new NoSuchElementException("Not Found Folder"));
+        return FolderResponse.of(resultFolder);
+    }
+
+    @Override
     public List<FolderResponse> findFolderList(FolderListServiceRequestDto requestDto) {
         List<Folder> resultFolders = folderRepository.findAllByUserIdAndParentSeq(
                 requestDto.getUserId(),

@@ -10,6 +10,7 @@ import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -144,10 +145,11 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
     @Test
     void getFolderListRequest() throws Exception {
         // given
-        FolderListRequestDto request = FolderListRequestDto.builder()
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .email("test@test.com")
                 .userId(1L)
-                .folderParentSeq(1L)
                 .build();
+
         BDDMockito.given(folderService.findFolderList(any(FolderListServiceRequestDto.class)))
                 .willReturn(List.of(
                         FolderResponse.builder()

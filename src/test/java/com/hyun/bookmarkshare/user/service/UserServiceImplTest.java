@@ -231,7 +231,7 @@ class UserServiceImplTest {
         UserLoginResponse loggedInUser = userService.loginProcess(LoginServiceRequestDto.builder().email("test3@test.com").pwd("3333").build());
         String refreshToken = "Authorization " + loggedInUser.getUserRefreshToken();
         // when
-        UserResponse userInfo = userService.getUserInfo(refreshToken);
+        UserResponse userInfo = userService.getUserInfo(user3.getUserId());
         // then
         assertThat(userInfo).extracting("userId", "userEmail")
                 .containsExactlyInAnyOrder(3L, "test3@test.com");

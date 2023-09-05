@@ -161,8 +161,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse getUserInfo(String accessToken) {
-        return UserResponse.of(userRepository.findByUserId(jwtTokenizer.getUserIdFromAccessToken(accessToken)).orElseThrow(
+    public UserResponse getUserInfo(Long userId) {
+        return UserResponse.of(userRepository.findByUserId(userId).orElseThrow(
                 () -> new UserProcessException(UserErrorCode.USER_NOT_FOUND)
         ));
     }

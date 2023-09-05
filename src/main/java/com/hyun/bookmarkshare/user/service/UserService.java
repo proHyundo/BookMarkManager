@@ -24,7 +24,7 @@ public interface UserService {
 
     String extendLoginState(String refreshToken);
 
-    UserResponse getUserInfo(String accessToken);
+    UserResponse getUserInfo(Long userId);
 
     UserSignoutResponse signOut(String refreshToken, String userEmail);
 

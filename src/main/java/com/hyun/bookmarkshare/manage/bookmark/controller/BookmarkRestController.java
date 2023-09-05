@@ -9,14 +9,12 @@ import com.hyun.bookmarkshare.security.jwt.util.JwtTokenizer;
 import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,21 +25,10 @@ public class BookmarkRestController {
     private final BookmarkService bookmarkService;
     private final JwtTokenizer jwtTokenizer;
 
-//    @GetMapping("/api/v1/manage/bookmarks/{folderSeq}")
-//    public ApiResponse<List<BookmarkResponseDto>> getBookListRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq,
-//                                                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken){
-//        List<BookmarkResponseDto> bookList = bookmarkService.getBookList(
-//                BookmarkListRequestDto.builder()
-//                        .userId(jwtTokenizer.getUserIdFromAccessToken(accessToken))
-//                        .folderSeq(folderSeq)
-//                        .build()
-//                        .toServiceDto());
-//        return ApiResponse.ok(bookList);
-//    }
-
+    // 0905 변경됨.
     @GetMapping("/api/v1/manage/bookmarks/{folderSeq}")
-    public ApiResponse<List<BookmarkResponseDto>> getBookListRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq){
-        LoginInfoDto loginInfoDto = (LoginInfoDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ApiResponse<List<BookmarkResponseDto>> getBookListRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq,
+                                                                     @AuthenticationPrincipal LoginInfoDto loginInfoDto){
         List<BookmarkResponseDto> bookList = bookmarkService.getBookList(
                 BookmarkListRequestDto.builder()
                         .userId(loginInfoDto.getUserId())
@@ -51,9 +38,15 @@ public class BookmarkRestController {
         return ApiResponse.ok(bookList);
     }
 
-    @PostMapping("/api/v1/manage/bookmark")
-    public ApiResponse<BookmarkResponseDto> getBookmarkRequest(@RequestBody @Valid BookmarkRequestDto bookmarkRequestDto){
-        return ApiResponse.ok(bookmarkService.getBookmark(bookmarkRequestDto.toServiceRequestDto()));
+    // 0905 변경됨.
+    @PostMapping("/api/v1/manage/bookmark/{bookmarkSeq}")
+    public ApiResponse<BookmarkResponseDto> getBookmarkRequest(@PathVariable("bookmarkSeq") @NotNull @Positive Long bookmarkSeq,
+                                                               @AuthenticationPrincipal LoginInfoDto loginInfoDto){
+        return ApiResponse.ok(bookmarkService.getBookmark(BookmarkRequestDto.builder()
+                .userId(loginInfoDto.getUserId())
+                .bookmarkSeq(bookmarkSeq)
+                .build()
+                .toServiceRequestDto()));
     }
 
     @PostMapping("/api/v1/manage/bookmark/new")

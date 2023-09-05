@@ -4,9 +4,11 @@ import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyun.bookmarkshare.api.controller.ControllerTestConfig;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.user.service.UserService;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import com.hyun.bookmarkshare.user.service.response.UserSignoutResponse;
+import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -55,12 +57,14 @@ class UserRestControllerTest extends ControllerTestConfig {
     @MockBean
     private UserService userService;
 
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
     @DisplayName("사용자 정보 호출 API")
     @Test
     void getUserInfoRequest() throws Exception {
         // given
         String accessTokenFromRequestHeader = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI";
-        BDDMockito.given(userService.getUserInfo(any(String.class)))
+
+        BDDMockito.given(userService.getUserInfo(any(Long.class)))
                 .willReturn(UserResponse.builder()
                         .userId(1L)
                         .userEmail("test@test.com")
@@ -69,6 +73,7 @@ class UserRestControllerTest extends ControllerTestConfig {
                         .userRegDate(LocalDateTime.of(2023, 8, 6, 12, 34, 15))
                         .userModDate(LocalDateTime.of(2023, 8, 10, 3, 41, 21))
                         .build());
+
         // when // then
         mockMvc.perform(RestDocumentationRequestBuilders
                 .get("/api/v1/user/info")

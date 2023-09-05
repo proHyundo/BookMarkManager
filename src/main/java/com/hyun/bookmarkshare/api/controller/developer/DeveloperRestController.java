@@ -1,19 +1,25 @@
 package com.hyun.bookmarkshare.api.controller.developer;
 
 import com.hyun.bookmarkshare.exceptions.errorcode.UserErrorCode;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.Arrays;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class DeveloperRestController {
@@ -21,7 +27,7 @@ public class DeveloperRestController {
     private final Environment environment;
     private ServletWebServerApplicationContext webServerAppCtxt;
 
-    @GetMapping("/api/v1/developer/whoami/profile")
+    @GetMapping("/api/test/developer/whoami/profile")
     public ResponseEntity<String> getProfile() {
         return ResponseEntity
                 .ok()
@@ -29,14 +35,14 @@ public class DeveloperRestController {
     }
 
     // 참고 링크 : https://www.baeldung.com/spring-boot-running-port
-    @GetMapping("/api/v1/developer/whoami/port")
+    @GetMapping("/api/test/developer/whoami/port")
     public ResponseEntity<String> getPort() {
         return ResponseEntity
                 .ok()
                 .body("현재 실행중인 port >> " + webServerAppCtxt.getWebServer().getPort() + "입니다.");
     }
 
-    @GetMapping("/api/v1/developer/exception/user/{userId}")
+    @GetMapping("/api/test/developer/exception/user/{userId}")
     public ApiResponse<UserResponse> getUserException(@PathVariable("userId") Long userId){
         if (userId == 99) {
             throw new IllegalArgumentException(UserErrorCode.USER_NOT_FOUND.getMessage());
@@ -44,6 +50,21 @@ public class DeveloperRestController {
         return ApiResponse.of(HttpStatus.OK, "유저 조회 실패", UserResponse.builder().userId(userId).build());
     }
 
+    @GetMapping("/api/test/user/info")
+    public ApiResponse<String> getUserInfoWithPrinciple(Principal principal){
+        log.info("principal.getName() : {}", principal.getName());
+        log.info("SecurityContextHolder.getContext().getAuthentication().getName() : {}", SecurityContextHolder.getContext().getAuthentication().getName());
+        log.info("SecurityContextHolder.getContext().getAuthentication().getPrincipal() : {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        LoginInfoDto loginInfoDto = (LoginInfoDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("loginInfoDto.toString() : {}", loginInfoDto.toString());
+        return ApiResponse.of(HttpStatus.OK, principal.toString());
+    }
+
+    @GetMapping("/api/test/user/info/v2")
+    public ApiResponse<String> getUserInfoWithAnnotation(@AuthenticationPrincipal LoginInfoDto loginInfoDto){
+        log.info("loginInfoDto.toString() : {}", loginInfoDto.toString());
+        return ApiResponse.of(HttpStatus.OK, null);
+    }
 
 
 }
