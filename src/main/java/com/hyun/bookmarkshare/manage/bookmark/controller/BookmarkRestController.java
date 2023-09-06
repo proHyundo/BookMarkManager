@@ -39,7 +39,7 @@ public class BookmarkRestController {
     }
 
     // 0905 변경됨.
-    @PostMapping("/api/v1/manage/bookmark/{bookmarkSeq}")
+    @GetMapping("/api/v1/manage/bookmark/{bookmarkSeq}")
     public ApiResponse<BookmarkResponseDto> getBookmarkRequest(@PathVariable("bookmarkSeq") @NotNull @Positive Long bookmarkSeq,
                                                                @AuthenticationPrincipal LoginInfoDto loginInfoDto){
         return ApiResponse.ok(bookmarkService.getBookmark(BookmarkRequestDto.builder()
