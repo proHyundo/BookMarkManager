@@ -6,6 +6,7 @@ import com.hyun.bookmarkshare.api.controller.ControllerTestConfig;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.FolderService;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderDeleteResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
@@ -294,9 +295,10 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .userId(1L)
                 .build();
         BDDMockito.given(folderService.deleteFolder(any(FolderDeleteServiceRequestDto.class)))
-                .willReturn(FolderSeqResponse.builder()
+                .willReturn(FolderDeleteResponse.builder()
                         .userId(1L)
                         .folderSeqList(List.of(1L, 4L, 5L))
+                        .deleteBookmarksCount(0)
                         .build());
         // when // then
         mockMvc.perform(RestDocumentationRequestBuilders
@@ -327,7 +329,8 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                                 fieldWithPath("timestamp").type(JsonFieldType.STRING).description("응답 시간"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
                                 fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("사용자 식별번호"),
-                                fieldWithPath("data.folderSeqList").type(JsonFieldType.ARRAY).description("삭제된 폴더 식별번호 리스트")
+                                fieldWithPath("data.folderSeqList").type(JsonFieldType.ARRAY).description("삭제된 폴더 식별번호 리스트"),
+                                fieldWithPath("data.deleteBookmarksCount").type(JsonFieldType.NUMBER).description("삭제된 북마크 수")
                         )
                 ));
     }

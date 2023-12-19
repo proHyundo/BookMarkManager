@@ -100,11 +100,12 @@ public class BookmarkServiceImpl implements BookmarkService{
     }
 
     @Override
-    public List<BookmarkSeqResponse> deleteAllBookmarksInFolderSeqAndUserId(List<Long> targetFolderSeqList, Long userId) {
+    public Integer deleteAllBookmarksInFolderSeqAndUserId(List<Long> targetFolderSeqList, Long userId) {
+        Integer deletedBookmarksCnt = 0;
         for(Long targetFolderSeq : targetFolderSeqList){
-            bookmarkRepository.deleteAllByUserIdAndFolderSeq(userId, targetFolderSeq);
+            deletedBookmarksCnt = bookmarkRepository.deleteAllByUserIdAndFolderSeq(userId, targetFolderSeq);
         }
-        return null;
+        return deletedBookmarksCnt;
     }
 
     private void validateSqlUpdatedRows(int updatedRows) {

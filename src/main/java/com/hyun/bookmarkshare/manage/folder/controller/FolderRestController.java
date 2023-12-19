@@ -3,10 +3,7 @@ package com.hyun.bookmarkshare.manage.folder.controller;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.FolderService;
 import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderWithChildResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.*;
 import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +74,7 @@ public class FolderRestController {
 
     // 특정 폴더 삭제
     @DeleteMapping("/api/v1/manage/folder/delete")
-    public ApiResponse<FolderSeqResponse> deleteFolderRequest(@Valid @RequestBody FolderDeleteRequestDto requestDto){
+    public ApiResponse<FolderDeleteResponse> deleteFolderRequest(@Valid @RequestBody FolderDeleteRequestDto requestDto){
         return ApiResponse.of(HttpStatus.OK, "폴더 삭제 완료", folderService.deleteFolder(requestDto.toServiceDto()));
     }
 

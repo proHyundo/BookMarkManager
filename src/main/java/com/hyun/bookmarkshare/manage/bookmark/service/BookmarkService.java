@@ -38,7 +38,7 @@ public interface BookmarkService {
      * */
     BookmarkSeqResponse deleteBookmark(BookmarkServiceRequestDto bookmarkServiceRequestDto);
 
-    List<BookmarkSeqResponse> deleteAllBookmarksInFolderSeqAndUserId(List<Long> folderSeqList, Long userId);
+    Integer deleteAllBookmarksInFolderSeqAndUserId(List<Long> folderSeqList, Long userId);
 
     Boolean updateBookmarkOrder(List<BookmarkReorderServiceRequestDto> bookmarkReorderServiceRequestDto);
 }

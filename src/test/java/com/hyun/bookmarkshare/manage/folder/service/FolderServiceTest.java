@@ -1,9 +1,13 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
+import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkCreateRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
+import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderDeleteResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
@@ -32,6 +36,9 @@ public class FolderServiceTest {
     FolderService folderService;
     @Autowired
     FolderRepository folderRepository;
+
+    @Autowired
+    BookmarkRepository bookmarkRepository;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -135,6 +142,39 @@ public class FolderServiceTest {
         assertThat(folderRepository.findByFolderSeq(folder3.getFolderSeq()).get().getFolderDelFlag()).isEqualTo("y");
         assertThat(folderRepository.findByFolderSeq(folder4.getFolderSeq()).get().getFolderDelFlag()).isEqualTo("y");
         assertThat(folderRepository.findByFolderSeq(folder5.getFolderSeq()).get().getFolderDelFlag()).isEqualTo("y");
+    }
+
+    @DisplayName("폴더 삭제 시, 하위 폴더에 포함된 북마크들도 모두 삭제 처리 된다.")
+    @Test
+    void deleteFolderAffectDeleteBookmarks(){
+        // given
+        Bookmark bookmark1 = Bookmark.builder()
+                .bookmarkSeq(null)
+                .userId(1L)
+                .folderSeq(1L)
+                .bookmarkTitle("bookmarkTitle")
+                .bookmarkCaption("bookmarkCaption")
+                .bookmarkScheme("")
+                .bookmarkHost("")
+                .bookmarkPort("")
+                .bookmarkDomain("")
+                .bookmarkPath("")
+                .bookmarkUrl("https://www.bookmark-tool.com")
+                .bookmarkRegDate(null)
+                .bookmarkModDate(null)
+                .bookmarkOrder(null)
+                .bookmarkDelFlag("n")
+                .build();
+        bookmarkRepository.save(bookmark1);
+
+        FolderDeleteServiceRequestDto requestDto = FolderDeleteServiceRequestDto.builder()
+                .folderSeq(1L)
+                .userId(1L)
+                .build();
+        // when
+        FolderDeleteResponse folderDeleteResponse = folderService.deleteFolder(requestDto);
+        // then
+        assertThat(folderDeleteResponse.getDeleteBookmarksCount()).isEqualTo(1);
     }
 
     @DisplayName("폴더 수정 시, 해당 폴더의 정보가 수정된다. 수정 가능한 속성은 폴더 이름, 폴더 설명, 폴더 공개 범위이다.")

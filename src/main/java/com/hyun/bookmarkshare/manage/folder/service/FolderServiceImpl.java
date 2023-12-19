@@ -6,10 +6,7 @@ import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderWithChildResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -100,20 +97,19 @@ public class FolderServiceImpl implements FolderService{
     }
 
     @Override
-    public FolderSeqResponse deleteFolder(FolderDeleteServiceRequestDto requestDto) {
-        // TODO : [검증] 1) requestDto 에 대한 도메인 정책 검증, 2) 각 쿼리 수행결과에 대한 검증
-
+    public FolderDeleteResponse deleteFolder(FolderDeleteServiceRequestDto requestDto) {
         // 1. 삭제 요청 받은 폴더의 식별번호로 하위 폴더 식별번호 리스트를 조회.
-        List<Long> deleteTarget = folderRepository.findAllFolderSeqWithSameAncestor(requestDto.getFolderSeq(), requestDto.getUserId());
+        List<Long> deleteTargetList = folderRepository.findAllFolderSeqWithSameAncestor(requestDto.getFolderSeq(), requestDto.getUserId());
         // 2. 리스트에 요청받은 폴더의 식별번호를 추가.
-        deleteTarget.add(requestDto.getFolderSeq());
+        deleteTargetList.add(requestDto.getFolderSeq());
         // 3. 리스트에 담긴 폴더 식별번호로 폴더 삭제 처리
-        deleteTarget.stream().forEach(folderRepository::deleteByFolderSeq);
+        deleteTargetList.stream().forEach(folderRepository::deleteByFolderSeq);
         // 4. 각 폴더 내부의 북마크 삭제 처리
-//        bookmarkService.deleteAllBookmarkInFolderList(deleteTarget);
-        return FolderSeqResponse.builder()
+        Integer deletedBookmarksCnt = bookmarkService.deleteAllBookmarksInFolderSeqAndUserId(deleteTargetList, requestDto.getUserId());
+        return FolderDeleteResponse.builder()
                 .userId(requestDto.getUserId())
-                .folderSeqList(deleteTarget)
+                .folderSeqList(deleteTargetList)
+                .deleteBookmarksCount(deletedBookmarksCnt)
                 .build();
     }
 

@@ -1,10 +1,7 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderWithChildResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +21,7 @@ public interface FolderService {
      * */
     FolderResponse createFolder(FolderCreateServiceRequestDto requestDto, Long userId);
 
-    FolderSeqResponse deleteFolder(FolderDeleteServiceRequestDto requestDto);
+    FolderDeleteResponse deleteFolder(FolderDeleteServiceRequestDto requestDto);
 
     FolderResponse updateFolder(FolderServiceRequestDto requestDto);
 
