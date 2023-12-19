@@ -2,9 +2,11 @@ package com.hyun.bookmarkshare.manage.folder.service;
 
 import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
+import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,6 +62,22 @@ public class FolderServiceTest {
         assertThat(folderResponse)
                 .extracting("folderSeq", "userId", "folderCaption", "folderOrder")
                 .containsExactlyInAnyOrder(3L, 1L, "", 2L);
+    }
+
+    @DisplayName("폴더 생성 시, 요청DTO와 로그인한 사용자의 식별 번호가 다를 경우 예외를 발생시킨다.")
+    @Test
+    void createNewFolderThrowExceptionWhenNotSameUserId(){
+        // given
+        FolderCreateServiceRequestDto requestDto = FolderCreateServiceRequestDto.builder()
+                .userId(1L)
+                .build();
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .userId(2L)
+                .build();
+        // when // then
+        assertThatThrownBy(() -> folderService.createFolder(requestDto, loginInfoDto.getUserId()))
+                .isInstanceOf(FolderRequestException.class)
+                .hasMessageContaining("요청한 사용자의 식별번호와 로그인한 사용자의 식별번호가 일치하지 않습니다.");
     }
     
     @DisplayName("특정 사용자의 특정 폴더에 존재하는 모든 폴더 리스트를 조회한다.")
