@@ -4,6 +4,7 @@ import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderWithChildResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface FolderService {
     FolderResponse findFolderInfo(FolderServiceRequestDto requestDto);
 
     List<FolderResponse> findFolderList(FolderListServiceRequestDto requestDto);
+
+    FolderWithChildResponse findAllFoldersAsHierarchy(Long userId);
 
     /**@param requestDto
      * @return repository sql result - success : 1

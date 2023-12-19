@@ -3,6 +3,8 @@ name: SpringBoot CICD with Gradle version 1.2.1
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - '.github/workflows/github-actions-server.yaml'
 
 permissions:
   contents: read

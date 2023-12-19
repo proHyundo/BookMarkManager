@@ -18,6 +18,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     // https://sas-study.tistory.com/362
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        log.info("request url : {}", request.getRequestURI());
         String exception = (String) request.getAttribute("exception");
         log.error("Commence Get Exception : {}", exception);
 

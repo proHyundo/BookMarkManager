@@ -4,8 +4,10 @@ import com.hyun.bookmarkshare.exceptions.errorcode.UserErrorCode;
 import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import com.hyun.bookmarkshare.utils.ApiResponse;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -20,15 +22,17 @@ import java.security.Principal;
 import java.util.Arrays;
 
 @Slf4j
-@RequiredArgsConstructor
+@NoArgsConstructor
 @RestController
 public class DeveloperRestController {
 
-    private final Environment environment;
-    private ServletWebServerApplicationContext webServerAppCtxt;
+    @Autowired
+    private Environment environment;
 
+    // 참고 링크 : https://inspeerity.com/blog/setting-default-spring-profile-for-tests-with-override-option
     @GetMapping("/api/test/developer/whoami/profile")
     public ResponseEntity<String> getProfile() {
+        System.out.println("현재 실행중인 profile >> " + Arrays.toString(environment.getActiveProfiles()) + "입니다.");
         return ResponseEntity
                 .ok()
                 .body("현재 실행중인 profile >> " + Arrays.toString(environment.getActiveProfiles()) + "입니다.");
@@ -37,9 +41,10 @@ public class DeveloperRestController {
     // 참고 링크 : https://www.baeldung.com/spring-boot-running-port
     @GetMapping("/api/test/developer/whoami/port")
     public ResponseEntity<String> getPort() {
+        System.out.println("현재 실행중인 port >> " + environment.getProperty("local.server.port") + "입니다.");
         return ResponseEntity
                 .ok()
-                .body("현재 실행중인 port >> " + webServerAppCtxt.getWebServer().getPort() + "입니다.");
+                .body("현재 실행중인 port >> " + environment.getProperty("local.server.port") + "입니다.");
     }
 
     @GetMapping("/api/test/developer/exception/user/{userId}")

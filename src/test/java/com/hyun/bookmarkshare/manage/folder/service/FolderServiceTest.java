@@ -5,6 +5,7 @@ import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
+import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,20 @@ public class FolderServiceTest {
                 .containsExactlyInAnyOrder(
                         tuple(2L, 1L, 1L)
                 );
+    }
+
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
+    @DisplayName("특정 사용자의 모든 폴더를 계층구조로 응답객체에 담는다.")
+    @Test
+    void findAllFolderList() {
+        // given
+        Folder folder3 = createFolder(1L, 2L, "folder3");
+        Folder folder4 = createFolder(1L, 2L, "folder4");
+        Folder folder5 = createFolder(1L, 2L, "folder5");
+
+        // when
+        folderService.findAllFoldersAsHierarchy(1L);
+        // then
     }
 
     @DisplayName("폴더 삭제 시, 해당 폴더의 deleteFlag 는 'y'로 변경되며, 해당 폴더의 하위폴더들도 모두 deleteFlag 가 'y'로 변경된다.")

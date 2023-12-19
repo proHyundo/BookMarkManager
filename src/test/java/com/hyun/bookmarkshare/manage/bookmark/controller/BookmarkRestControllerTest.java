@@ -10,21 +10,18 @@ import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkReq
 import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkUpdateRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.BookmarkService;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkUpdateServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkSeqResponse;
 import com.hyun.bookmarkshare.security.jwt.util.JwtTokenizer;
 import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
@@ -35,8 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -58,9 +53,6 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
 
     @MockBean
     private BookmarkService bookmarkService;
-
-    @MockBean
-    private JwtTokenizer jwtTokenizer;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired

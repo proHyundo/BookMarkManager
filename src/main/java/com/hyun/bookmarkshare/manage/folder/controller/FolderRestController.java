@@ -6,6 +6,7 @@ import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderService
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderWithChildResponse;
 import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class FolderRestController {
         return ApiResponse.of(HttpStatus.OK, "신규 폴더 생성 완료", resultFolderResponse);
     }
 
-    // 0905 신규 생성
+    // 특정 폴더 정보 조회
     @GetMapping("/api/v1/manage/folder/{folderSeq}")
     public ApiResponse<FolderResponse> getFolderRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq,
                                                         @AuthenticationPrincipal LoginInfoDto loginInfoDto){
@@ -44,7 +45,6 @@ public class FolderRestController {
                 .toServiceDto()));
     }
 
-    // 0905 변경됨.
     // 특정 부모폴더 내부에 속한 폴더 List 조회
     @GetMapping("/api/v1/manage/folders/{folderParentSeq}")
     public ApiResponse<List<FolderResponse>> getFolderListRequest(@PathVariable("folderParentSeq") @NotNull @PositiveOrZero Long folderParentSeq,
@@ -56,6 +56,15 @@ public class FolderRestController {
                         .userId(loginInfoDto.getUserId())
                         .build()
                         .toServiceDto())
+        );
+    }
+
+    // 사용자의 모든 폴더 조회
+    @GetMapping("/api/v1/manage/folders")
+    public ApiResponse<FolderWithChildResponse> getAllFolderListRequest(@AuthenticationPrincipal LoginInfoDto loginInfoDto){
+        return ApiResponse.of(HttpStatus.OK,
+                "폴더 리스트 조회 완료",
+                folderService.findAllFoldersAsHierarchy(loginInfoDto.getUserId())
         );
     }
 

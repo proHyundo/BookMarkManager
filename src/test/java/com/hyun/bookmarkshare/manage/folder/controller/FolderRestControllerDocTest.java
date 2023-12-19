@@ -48,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 * */
 
 // WithMockUser : https://docs.spring.io/spring-security/reference/servlet/test/method.html#test-method-withmockuser
-@Tag(name = "Folder API", description = "폴더 관련 API")
+//@Tag(name = "Folder API", description = "폴더 관련 API")
 @WithMockUser
 @WebMvcTest(FolderRestController.class)
 public class FolderRestControllerDocTest extends ControllerTestConfig {
@@ -118,6 +118,9 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("신규 폴더 생성 완료"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-create",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("신규 폴더 생성 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
@@ -149,7 +152,7 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
     }
 
     @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
-    @DisplayName("폴더 리스트 요청 API")
+    @DisplayName("상위 폴더 내, 폴더 리스트 요청 API")
     @Test
     void getFolderListRequest() throws Exception {
         // given
@@ -179,6 +182,9 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-list",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("상위 폴더 내, 폴더 리스트 요청 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -245,6 +251,9 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("폴더 수정 완료"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-update",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("폴더 수정 요청 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
@@ -301,6 +310,9 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("폴더 삭제 완료"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-delete",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("폴더 삭제 요청 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
@@ -349,6 +361,9 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("폴더 순서 수정 완료"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-reorder-multi",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("클라이언트에서 변경된 순서와 일치하는 폴더 식별 번호 배열을 전달받아, 폴더 순서 변경 요청을 처리한다.").summary("폴더 순서 변경 요청 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(

@@ -58,7 +58,7 @@ class UserRestControllerTest extends ControllerTestConfig {
     private UserService userService;
 
     @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
-    @DisplayName("사용자 정보 호출 API")
+    @DisplayName("사용자 정보 조회 API")
     @Test
     void getUserInfoRequest() throws Exception {
         // given
@@ -86,6 +86,9 @@ class UserRestControllerTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andDo(MockMvcRestDocumentationWrapper.document("user-info",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("User API")
+                                .description("사용자 정보 조회 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
@@ -137,6 +140,9 @@ class UserRestControllerTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("회원탈퇴 성공"))
                 .andDo(MockMvcRestDocumentationWrapper.document("user-signout",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("User API")
+                                .description("사용자 회원 탈퇴 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(

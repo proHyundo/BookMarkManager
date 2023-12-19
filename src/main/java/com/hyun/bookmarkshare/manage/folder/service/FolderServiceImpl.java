@@ -9,11 +9,11 @@ import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderWithChildResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +41,52 @@ public class FolderServiceImpl implements FolderService{
                 .map(FolderResponse::of)
                 .collect(Collectors.toList());
     }
+
+    // TODO : 메서드명 교체 > findAllFoldersAsHierarchy
+    // 참고 : https://www.java-success.com/00-%E2%99%A6-creating-tree-list-flattening-back-list-java/
+    @Override
+    public FolderWithChildResponse findAllFoldersAsHierarchy(Long userId) {
+        Folder rootFolder = folderRepository.findRootFolderByUserId(userId)
+                .orElseThrow(() -> new NoSuchElementException("Not Found Root Folder"));
+        FolderWithChildResponse root = FolderWithChildResponse.of(rootFolder);
+
+        List<FolderWithChildResponse> allFolders = folderRepository.findAllFolderWithSameAncestor(rootFolder.getFolderSeq(), userId).stream()
+                .map(FolderWithChildResponse::of)
+                .collect(Collectors.toList());
+        allFolders.add(0, root);
+
+        Map<Long, FolderWithChildResponse> nodeMap = new HashMap<>();
+
+        //Save all nodes to a map
+        for (FolderWithChildResponse current : allFolders) {
+            current.setChildFolderList(new ArrayList<>());
+            nodeMap.put(current.getFolderSeq(), current);
+        }
+
+        for (FolderWithChildResponse aData : allFolders) {
+            if (aData.getFolderParentSeq() != 0L) {
+                FolderWithChildResponse parentNode = nodeMap.get(aData.getFolderParentSeq());
+                if(parentNode != null) {
+                    parentNode.getChildFolderList().add(nodeMap.get(aData.getFolderSeq()));
+                    nodeMap.put(aData.getFolderParentSeq(), parentNode);
+                    // 왜 현재 노드를 다시 map 에 넣어줘야 하는가?
+//                    nodeMap.put(aData.getFolderSeq(), aData);
+                }
+            }
+        }
+//        FolderWithChildResponse rootNode = null;
+//        for (FolderWithChildResponse node : nodeMap.values()) {
+//            if(node.getFolderParentSeq() == 0L) {
+//                rootNode = node;
+//                break;
+//            }
+//        }
+        // 개선할 수 있지 않을까?
+         FolderWithChildResponse rootNode2nd = nodeMap.get(root.getFolderSeq());
+
+        return rootNode2nd;
+    }
+
 
     @Override
     public FolderResponse createFolder(FolderCreateServiceRequestDto serviceRequestDto) {

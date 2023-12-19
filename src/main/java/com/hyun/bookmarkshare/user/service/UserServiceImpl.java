@@ -16,6 +16,7 @@ import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.entity.UserRefreshToken;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
+import com.hyun.bookmarkshare.user.service.request.UserSocialSignUpServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import com.hyun.bookmarkshare.user.service.response.UserSignoutResponse;
@@ -76,11 +77,38 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new UserLoginException(UserErrorCode.USER_NOT_FOUND, UserErrorCode.USER_NOT_FOUND.getMessage())));
     }
 
+    @Transactional
+    @Override
+    public UserResponse signUpBySocialAccount(UserSocialSignUpServiceRequestDto requestDto){
+        User newUserBySocialAccount = requestDto.toEntity();
+        try {
+            newUserBySocialAccount.setUserPwd(pwdEncoder.encode(requestDto.getSocialUserPwd()));
+        } catch (NoSuchAlgorithmException e) {
+            log.warn("[오류][UserServiceImpl.signUpBySocialAccount().encodePwd]"+e.getMessage());
+            throw new RuntimeException("Failed to encode password", e);
+        }
+        int resultRows = userRepository.saveNew(newUserBySocialAccount);
+        if(resultRows != 1){
+            throw new UserLoginException(UserErrorCode.USER_DB_RESULT_WRONG, UserErrorCode.USER_DB_RESULT_WRONG.getMessage());
+        }
+        return UserResponse.of(userRepository.findByUserId(newUserBySocialAccount.getUserId())
+                .orElseThrow(() -> new UserLoginException(UserErrorCode.USER_NOT_FOUND, UserErrorCode.USER_NOT_FOUND.getMessage())));
+    }
+
+
     @Override
     public boolean checkDuplicateEmail(String userEmail) {
         // check if user already exist
         if(userRepository.countByUserEmail(userEmail) > 0){
             throw new UserLoginException(UserErrorCode.USER_SIGNIN_ALREADY_EXIST, UserErrorCode.USER_SIGNIN_ALREADY_EXIST.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean checkRegisteredEmail(String userEmail, String provider) {
+        if(userRepository.countByUserEmail(userEmail) == 1){
+            return true;
         }
         return false;
     }

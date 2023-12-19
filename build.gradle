@@ -108,9 +108,9 @@ openapi3 {
 	InputStream inputStream = new FileInputStream(project.rootProject.file('src/main/resources/application.yml'))
 	server = properties.getProperty("property.doc.docUrl", "http://localhost:9090")
 	title = "Bookmark-tool API Documentation"
-	description = "Spring REST Docs with SwaggerUI. \n" +
-			"Deploy URL : https://bookmark-tool.com \n" +
-			"Github URL : https://https://github.com/proHyundo/BookMarkManager"
+	description = "Spring REST Docs with SwaggerUI. </br>" +
+			"Deploy URL : <a href='https://bookmark-tool.com' target='_blank' rel='noopener noreferrer'>https://bookmark-tool.com</a> </br>" +
+			"Github URL : <a href='https://https://github.com/proHyundo/BookMarkManager' target='_blank' rel='noopener noreferrer'>https://https://github.com/proHyundo/BookMarkManager</a>"
 	version = "0.0.1"
 	outputFileNamePrefix = 'open-api-3.0.1'
 	format = 'json'
