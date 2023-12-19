@@ -67,4 +67,6 @@ public class UserPermitRestController {
         return ApiResponse.of(status, message, data);
     }
 
+
+
 }

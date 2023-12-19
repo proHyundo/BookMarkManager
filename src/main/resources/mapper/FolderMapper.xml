@@ -66,10 +66,35 @@
                 a.FOLDER_SEQ,
                 a.FOLDER_PARENT_SEQ
             FROM tfolder a
-                INNER JOIN CTE b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
+                     INNER JOIN CTE b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
         )
         SELECT FOLDER_SEQ, FOLDER_PARENT_SEQ FROM CTE;
     </select>
+
+    <select id="findRootFolderByUserId" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
+                                        resultMap="folderEntityResultMap">
+        SELECT *
+        FROM TFOLDER
+        WHERE USER_SEQ = #{userId} AND FOLDER_ROOT_FLAG = 'y' AND FOLDER_DEL_FLAG = 'n'
+        LIMIT 1;
+    </select>
+
+    <select id="findAllFolderWithSameAncestor" resultType="com.hyun.bookmarkshare.manage.folder.entity.Folder"
+            resultMap="folderEntityResultMap">
+        WITH RECURSIVE CTE AS (
+            SELECT *
+            FROM tfolder
+            WHERE FOLDER_PARENT_SEQ = #{folderSeq} AND USER_SEQ = #{userId} AND FOLDER_DEL_FLAG = 'n'
+
+            UNION ALL
+
+            SELECT a.*
+            FROM tfolder AS a
+                JOIN CTE AS b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
+        )
+        SELECT * FROM CTE;
+    </select>
+
 
     <!-- ================================================================================================ -->
     <!-- ============================================ INSERT ============================================ -->

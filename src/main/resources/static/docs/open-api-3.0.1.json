@@ -1,8 +1,8 @@
 {
   "openapi" : "3.0.1",
   "info" : {
-    "title" : "restdocs-swagger API Documentation",
-    "description" : "Spring REST Docs with SwaggerUI.",
+    "title" : "Bookmark-tool API Documentation",
+    "description" : "Spring REST Docs with SwaggerUI. </br>Deploy URL : <a href='https://bookmark-tool.com'>https://bookmark-tool.com</a> </br>Github URL : <a href='https://https://github.com/proHyundo/BookMarkManager'>https://https://github.com/proHyundo/BookMarkManager</a>",
     "version" : "0.0.1"
   },
   "servers" : [ {
@@ -10,6 +10,141 @@
   } ],
   "tags" : [ ],
   "paths" : {
+    "/api/v1/manage/bookmark" : {
+      "delete" : {
+        "tags" : [ "Bookmark API" ],
+        "summary" : "단일 북마크 삭제 요청 API",
+        "description" : "단일 북마크 삭제 요청 API",
+        "operationId" : "bookmark-delete",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "사용자 Access 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcklkIjoxLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifSwicm9sZXMiOiJST0xFX1RFU1QiLCJ1c2VyaWQiOjF9.jW8sg5JmIqST_2WAxXT89AthwRG921dBycV_xqkWW60"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-manage-bookmark582707426"
+              },
+              "examples" : {
+                "bookmark-delete" : {
+                  "value" : "{\r\n  \"userId\" : 1,\r\n  \"bookmarkSeq\" : 1\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-bookmark-1176466861"
+                },
+                "examples" : {
+                  "bookmark-delete" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:37.2678851\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"OK\",\r\n  \"data\" : {\r\n    \"bookmarkSeq\" : 1,\r\n    \"userId\" : 1,\r\n    \"folderSeq\" : 1\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuthJWT" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "Bookmark API" ],
+        "summary" : "북마크 정보 수정 요청 API",
+        "description" : "북마크 정보 수정 요청 API",
+        "operationId" : "bookmark-update",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "사용자 Access 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcklkIjoxLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifSwicm9sZXMiOiJST0xFX1RFU1QiLCJ1c2VyaWQiOjF9.jW8sg5JmIqST_2WAxXT89AthwRG921dBycV_xqkWW60"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-manage-bookmark-new1128652118"
+              },
+              "examples" : {
+                "bookmark-update" : {
+                  "value" : "{\r\n  \"bookmarkSeq\" : 1,\r\n  \"userId\" : 1,\r\n  \"folderSeq\" : 1,\r\n  \"bookmarkTitle\" : \"bookmark updated title\",\r\n  \"bookmarkCaption\" : \"bookmark updated caption\",\r\n  \"bookmarkUrl\" : \"https://bookmark-tool.com/update-sample\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-bookmark-new1527045881"
+                },
+                "examples" : {
+                  "bookmark-update" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:37.4710146\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"OK\",\r\n  \"data\" : {\r\n    \"bookmarkSeq\" : 1,\r\n    \"userId\" : 1,\r\n    \"folderSeq\" : 1,\r\n    \"bookmarkTitle\" : \"bookmark updated title\",\r\n    \"bookmarkCaption\" : \"bookmark updated caption\",\r\n    \"bookmarkUrl\" : \"bookmark-tool.com/update-sample\",\r\n    \"bookmarkOrder\" : 1,\r\n    \"bookmarkRegDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkModDate\" : \"2021-01-02T01:42:00\",\r\n    \"bookmarkDelFlag\" : \"n\"\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuthJWT" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/user/info" : {
+      "get" : {
+        "tags" : [ "api" ],
+        "operationId" : "user-info",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "사용자 Access 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-user-signup832206760"
+                },
+                "examples" : {
+                  "user-info" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:50.3434079\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"OK\",\r\n  \"data\" : {\r\n    \"userId\" : 1,\r\n    \"userEmail\" : \"test@test.com\",\r\n    \"userName\" : \"test\",\r\n    \"userPhoneNum\" : null,\r\n    \"userRegDate\" : \"2023-08-06T12:34:15\",\r\n    \"userModDate\" : \"2023-08-10T03:41:21\",\r\n    \"userState\" : \"n\",\r\n    \"userGrade\" : null,\r\n    \"userRole\" : null,\r\n    \"userSocial\" : null\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/user/login" : {
       "post" : {
         "tags" : [ "api" ],
@@ -34,11 +169,556 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-user-login959674528"
+                  "$ref" : "#/components/schemas/api-v1-user-login-292714037"
                 },
                 "examples" : {
                   "user-login" : {
-                    "value" : "{\r\n  \"timestamp\" : \"2023-08-09T17:29:31.8455383\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"로그인 성공\",\r\n  \"data\" : {\r\n    \"userId\" : 1,\r\n    \"userEmail\" : \"test@test.com\",\r\n    \"userRole\" : \"ROLE_USER\",\r\n    \"userAccessToken\" : \"testAccessToken\",\r\n    \"userRefreshToken\" : \"testRefreshToken\"\r\n  },\r\n  \"cookie\" : {\r\n    \"name\" : \"userRefreshToken\",\r\n    \"value\" : \"testRefreshToken\",\r\n    \"maxAge\" : \"PT72H\",\r\n    \"domain\" : \"localhost\",\r\n    \"path\" : \"/\",\r\n    \"secure\" : true,\r\n    \"httpOnly\" : true,\r\n    \"sameSite\" : \"None\"\r\n  }\r\n}"
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:49.131097\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"로그인 성공\",\r\n  \"data\" : {\r\n    \"userId\" : 1,\r\n    \"userEmail\" : \"test@test.com\",\r\n    \"userRole\" : \"ROLE_USER\",\r\n    \"userAccessToken\" : \"testAccessToken\",\r\n    \"userRefreshToken\" : \"testRefreshToken\"\r\n  },\r\n  \"cookie\" : {\r\n    \"name\" : \"userRefreshToken\",\r\n    \"value\" : \"testRefreshToken\",\r\n    \"maxAge\" : \"PT72H\",\r\n    \"domain\" : \"localhost\",\r\n    \"path\" : \"/\",\r\n    \"secure\" : true,\r\n    \"httpOnly\" : true,\r\n    \"sameSite\" : \"None\"\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/refresh" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "operationId" : "user-refresh-token",
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-user-refresh1642579430"
+                },
+                "examples" : {
+                  "user-refresh-token" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:48.8322615\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"로그인 연장 성공\",\r\n  \"data\" : \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.HgJhtt0PLS3wX5xjFrUHWfthSBYZmHzdw4-Hlsf-HQA\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/signup" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "operationId" : "user-signup",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-user-signup-2013724882"
+              },
+              "examples" : {
+                "user-signup" : {
+                  "value" : "{\r\n  \"userId\" : null,\r\n  \"userEmail\" : \"test@test.com\",\r\n  \"userPwd\" : \"1111\",\r\n  \"userName\" : \"test\",\r\n  \"userPhoneNum\" : \"01012341234\",\r\n  \"userGender\" : \"m\",\r\n  \"emailValidationCode\" : \"12345678\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-user-signup832206760"
+                },
+                "examples" : {
+                  "user-signup" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:49.052974\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"회원가입 성공\",\r\n  \"data\" : {\r\n    \"userId\" : 1,\r\n    \"userEmail\" : \"test@test.com\",\r\n    \"userName\" : \"test\",\r\n    \"userPhoneNum\" : null,\r\n    \"userRegDate\" : \"2023-08-08T12:34:00\",\r\n    \"userModDate\" : \"2023-08-08T12:34:00\",\r\n    \"userState\" : \"n\",\r\n    \"userGrade\" : null,\r\n    \"userRole\" : null,\r\n    \"userSocial\" : null\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manage/bookmark/new" : {
+      "post" : {
+        "tags" : [ "Bookmark API" ],
+        "summary" : "북마크 신규 생성 요청 API",
+        "description" : "북마크 신규 생성 요청 API",
+        "operationId" : "bookmark-create",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "사용자 Access 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcklkIjoxLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifSwicm9sZXMiOiJST0xFX1RFU1QiLCJ1c2VyaWQiOjF9.jW8sg5JmIqST_2WAxXT89AthwRG921dBycV_xqkWW60"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-manage-bookmark-new1128652118"
+              },
+              "examples" : {
+                "bookmark-create" : {
+                  "value" : "{\r\n  \"bookmarkSeq\" : null,\r\n  \"userId\" : 1,\r\n  \"folderSeq\" : 1,\r\n  \"bookmarkTitle\" : \"bookmark title1\",\r\n  \"bookmarkCaption\" : \"bookmark caption1\",\r\n  \"bookmarkUrl\" : \"https://bookmark-tool.com/sample\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-bookmark-new1527045881"
+                },
+                "examples" : {
+                  "bookmark-create" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:37.3772604\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"OK\",\r\n  \"data\" : {\r\n    \"bookmarkSeq\" : 1,\r\n    \"userId\" : 1,\r\n    \"folderSeq\" : 1,\r\n    \"bookmarkTitle\" : \"bookmark title1\",\r\n    \"bookmarkCaption\" : \"bookmark caption1\",\r\n    \"bookmarkUrl\" : \"bookmark-tool.com/example1\",\r\n    \"bookmarkOrder\" : 1,\r\n    \"bookmarkRegDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkModDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkDelFlag\" : \"n\"\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuthJWT" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/manage/bookmark/reorder" : {
+      "patch" : {
+        "tags" : [ "Bookmark API" ],
+        "summary" : "북마크 정렬 순서 변경 요청 API",
+        "description" : "북마크 정렬 순서 변경 요청 API",
+        "operationId" : "bookmark-reorder",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "사용자 Access 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcklkIjoxLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifSwicm9sZXMiOiJST0xFX1RFU1QiLCJ1c2VyaWQiOjF9.jW8sg5JmIqST_2WAxXT89AthwRG921dBycV_xqkWW60"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-manage-bookmark-reorder1646701177"
+              },
+              "examples" : {
+                "bookmark-reorder" : {
+                  "value" : "[ {\r\n  \"userId\" : 1,\r\n  \"folderSeq\" : 1,\r\n  \"bookmarkSeqOrder\" : [ 1, 3, 2 ]\r\n} ]"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-bookmark-reorder1304805566"
+                },
+                "examples" : {
+                  "bookmark-reorder" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:37.0022595\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"OK\",\r\n  \"data\" : true\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuthJWT" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/manage/bookmark/{bookmarkSeq}" : {
+      "get" : {
+        "tags" : [ "Bookmark API" ],
+        "summary" : "단일 북마크 정보 요청 API",
+        "description" : "단일 북마크 정보 요청 API",
+        "operationId" : "bookmark-single-info",
+        "parameters" : [ {
+          "name" : "bookmarkSeq",
+          "in" : "path",
+          "description" : "북마크 식별자",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "사용자 Access 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-bookmark-new1527045881"
+                },
+                "examples" : {
+                  "bookmark-single-info" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:37.0960099\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"OK\",\r\n  \"data\" : {\r\n    \"bookmarkSeq\" : 1,\r\n    \"userId\" : 1,\r\n    \"folderSeq\" : 1,\r\n    \"bookmarkTitle\" : \"bookmark title1\",\r\n    \"bookmarkCaption\" : \"bookmark caption1\",\r\n    \"bookmarkUrl\" : \"bookmark-tool.com/example1\",\r\n    \"bookmarkOrder\" : 1,\r\n    \"bookmarkRegDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkModDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkDelFlag\" : \"n\"\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuthJWT" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/manage/bookmarks/{folderSeq}" : {
+      "get" : {
+        "tags" : [ "Bookmark API" ],
+        "summary" : "북마크 리스트 요청 API",
+        "description" : "북마크 리스트 요청 API",
+        "operationId" : "bookmark-list",
+        "parameters" : [ {
+          "name" : "folderSeq",
+          "in" : "path",
+          "description" : "폴더 시퀀스",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "사용자 Access 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-bookmarks-folderSeq-949237916"
+                },
+                "examples" : {
+                  "bookmark-list" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:35.3257029\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"OK\",\r\n  \"data\" : [ {\r\n    \"bookmarkSeq\" : 1,\r\n    \"userId\" : 1,\r\n    \"folderSeq\" : 1,\r\n    \"bookmarkTitle\" : \"bookmark title1\",\r\n    \"bookmarkCaption\" : \"bookmark caption1\",\r\n    \"bookmarkUrl\" : \"bookmark-tool.com/example1\",\r\n    \"bookmarkOrder\" : 1,\r\n    \"bookmarkRegDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkModDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkDelFlag\" : \"n\"\r\n  }, {\r\n    \"bookmarkSeq\" : 2,\r\n    \"userId\" : 1,\r\n    \"folderSeq\" : 1,\r\n    \"bookmarkTitle\" : \"bookmark title2\",\r\n    \"bookmarkCaption\" : \"bookmark caption2\",\r\n    \"bookmarkUrl\" : \"bookmark-tool.com/example2\",\r\n    \"bookmarkOrder\" : 2,\r\n    \"bookmarkRegDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkModDate\" : \"2021-01-01T00:00:00\",\r\n    \"bookmarkDelFlag\" : \"n\"\r\n  } ]\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuthJWT" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/manage/folder/delete" : {
+      "delete" : {
+        "tags" : [ "Folder API" ],
+        "summary" : "폴더 삭제 요청 API",
+        "description" : "폴더 삭제 요청 API",
+        "operationId" : "folder-delete",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-manage-folder-delete1834505945"
+              },
+              "examples" : {
+                "folder-delete" : {
+                  "value" : "{\r\n  \"folderSeq\" : 1,\r\n  \"userId\" : 1\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-folder-delete-670136476"
+                },
+                "examples" : {
+                  "folder-delete" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:45.4728632\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"폴더 삭제 완료\",\r\n  \"data\" : {\r\n    \"userId\" : 1,\r\n    \"folderSeqList\" : [ 1, 4, 5 ]\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manage/folder/new" : {
+      "post" : {
+        "tags" : [ "Folder API" ],
+        "summary" : "신규 폴더 생성 API",
+        "description" : "신규 폴더 생성 API",
+        "operationId" : "folder-create",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-manage-folder-update-1826851402"
+              },
+              "examples" : {
+                "folder-create" : {
+                  "value" : "{\r\n  \"folderSeq\" : null,\r\n  \"userId\" : 1,\r\n  \"folderParentSeq\" : 1,\r\n  \"folderName\" : \"folderName\",\r\n  \"folderCaption\" : \"folderCaption\",\r\n  \"folderScope\" : \"p\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-folder-update-1813678232"
+                },
+                "examples" : {
+                  "folder-create" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:45.5666101\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"신규 폴더 생성 완료\",\r\n  \"data\" : {\r\n    \"folderSeq\" : 1,\r\n    \"userId\" : 1,\r\n    \"folderParentSeq\" : 1,\r\n    \"folderRootFlag\" : \"n\",\r\n    \"folderName\" : \"folderName\",\r\n    \"folderCaption\" : \"folderCaption\",\r\n    \"folderOrder\" : 2,\r\n    \"folderScope\" : \"p\",\r\n    \"folderRegDate\" : \"2021-01-01T00:00:00\",\r\n    \"folderModDate\" : \"2021-01-01T00:00:00\"\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuthJWT" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/manage/folder/update" : {
+      "patch" : {
+        "tags" : [ "Folder API" ],
+        "summary" : "폴더 수정 요청 API",
+        "description" : "폴더 수정 요청 API",
+        "operationId" : "folder-update",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-manage-folder-update-1826851402"
+              },
+              "examples" : {
+                "folder-update" : {
+                  "value" : "{\r\n  \"folderSeq\" : 1,\r\n  \"userId\" : 1,\r\n  \"folderName\" : \"UpdateFolderName\",\r\n  \"folderCaption\" : \"folderCaption\",\r\n  \"folderScope\" : \"p\",\r\n  \"folderParentSeq\" : 1\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-folder-update-1813678232"
+                },
+                "examples" : {
+                  "folder-update" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:45.6759853\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"폴더 수정 완료\",\r\n  \"data\" : {\r\n    \"folderSeq\" : 1,\r\n    \"userId\" : 1,\r\n    \"folderParentSeq\" : 1,\r\n    \"folderRootFlag\" : \"n\",\r\n    \"folderName\" : \"UpdateFolderName\",\r\n    \"folderCaption\" : \"folderCaption\",\r\n    \"folderOrder\" : 2,\r\n    \"folderScope\" : \"p\",\r\n    \"folderRegDate\" : \"2021-01-01T00:00:00\",\r\n    \"folderModDate\" : \"2021-02-13T00:00:00\"\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manage/folders/{folderParentSeq}" : {
+      "get" : {
+        "tags" : [ "Folder API" ],
+        "summary" : "상위 폴더 내, 폴더 리스트 요청 API",
+        "description" : "상위 폴더 내, 폴더 리스트 요청 API",
+        "operationId" : "folder-list",
+        "parameters" : [ {
+          "name" : "folderParentSeq",
+          "in" : "path",
+          "description" : "상위 폴더 식별번호",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "JWT 인증 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-folders-folderParentSeq1639981077"
+                },
+                "examples" : {
+                  "folder-list" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:44.9372067\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"폴더 리스트 조회 완료\",\r\n  \"data\" : [ {\r\n    \"folderSeq\" : 1,\r\n    \"userId\" : 1,\r\n    \"folderParentSeq\" : 1,\r\n    \"folderRootFlag\" : \"n\",\r\n    \"folderName\" : \"folderName1\",\r\n    \"folderCaption\" : \"folderCaption1\",\r\n    \"folderOrder\" : 1,\r\n    \"folderScope\" : \"p\",\r\n    \"folderRegDate\" : \"2021-01-01T00:00:00\",\r\n    \"folderModDate\" : \"2021-01-01T00:00:00\"\r\n  }, {\r\n    \"folderSeq\" : 2,\r\n    \"userId\" : 1,\r\n    \"folderParentSeq\" : 1,\r\n    \"folderRootFlag\" : \"n\",\r\n    \"folderName\" : \"folderName2\",\r\n    \"folderCaption\" : \"folderCaption2\",\r\n    \"folderOrder\" : 2,\r\n    \"folderScope\" : \"p\",\r\n    \"folderRegDate\" : \"2021-01-02T00:00:00\",\r\n    \"folderModDate\" : \"2021-01-02T00:00:00\"\r\n  } ]\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "bearerAuthJWT" : [ ]
+        } ]
+      }
+    },
+    "/api/v1/user/email/check" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "operationId" : "user-check-duplicate-email",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-user-email-check1697204129"
+              },
+              "examples" : {
+                "user-check-duplicate-email" : {
+                  "value" : "{\r\n  \"userEmail\" : \"fresh@test.com\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-user-email-check-1648644077"
+                },
+                "examples" : {
+                  "user-check-duplicate-email" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:48.6709264\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"사용 가능한 이메일입니다.\",\r\n  \"data\" : \"fresh@test.com\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/sign/out" : {
+      "delete" : {
+        "tags" : [ "api" ],
+        "operationId" : "user-signout",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "사용자 Access 토큰",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-user-sign-out486549215"
+              },
+              "examples" : {
+                "user-signout" : {
+                  "value" : "\"test@test.com\""
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-user-sign-out-557795373"
+                },
+                "examples" : {
+                  "user-signout" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:50.6187724\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"회원탈퇴 성공\",\r\n  \"data\" : {\r\n    \"userEmail\" : \"test@test.com\",\r\n    \"userState\" : \"e\"\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manage/folder/reorder/multi" : {
+      "patch" : {
+        "tags" : [ "Folder API" ],
+        "summary" : "폴더 순서 변경 요청 API",
+        "description" : "클라이언트에서 변경된 순서와 일치하는 폴더 식별 번호 배열을 전달받아, 폴더 순서 변경 요청을 처리한다.",
+        "operationId" : "folder-reorder-multi",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-manage-folder-reorder-multi457341173"
+              },
+              "examples" : {
+                "folder-reorder-multi" : {
+                  "value" : "[ {\r\n  \"userId\" : 1,\r\n  \"folderParentSeq\" : 1,\r\n  \"folderSeqOrder\" : [ 3, 1, 2 ]\r\n} ]"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-manage-folder-reorder-multi865931963"
+                },
+                "examples" : {
+                  "folder-reorder-multi" : {
+                    "value" : "{\r\n  \"timestamp\" : \"2023-10-13T15:07:45.3887855\",\r\n  \"code\" : 200,\r\n  \"status\" : \"OK\",\r\n  \"message\" : \"폴더 순서 수정 완료\",\r\n  \"data\" : [ {\r\n    \"userId\" : 1,\r\n    \"folderParentSeq\" : 1,\r\n    \"folderSeqOrder\" : [ 3, 1, 2 ]\r\n  } ]\r\n}"
                   }
                 }
               }
@@ -50,7 +730,98 @@
   },
   "components" : {
     "schemas" : {
-      "api-v1-user-login959674528" : {
+      "api-v1-manage-folder-delete1834505945" : {
+        "type" : "object",
+        "properties" : {
+          "folderSeq" : {
+            "type" : "number",
+            "description" : "폴더 식별번호"
+          },
+          "userId" : {
+            "type" : "number",
+            "description" : "사용자 식별번호"
+          }
+        }
+      },
+      "api-v1-user-refresh1642579430" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "string",
+            "description" : "사용자 Access 토큰"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-manage-folder-reorder-multi865931963" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "array",
+            "description" : "응답 데이터",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "folderSeqOrder" : {
+                  "type" : "array",
+                  "description" : "폴더 순서 리스트",
+                  "items" : {
+                    "oneOf" : [ {
+                      "type" : "object"
+                    }, {
+                      "type" : "boolean"
+                    }, {
+                      "type" : "string"
+                    }, {
+                      "type" : "number"
+                    } ]
+                  }
+                },
+                "userId" : {
+                  "type" : "number",
+                  "description" : "사용자 식별번호"
+                },
+                "folderParentSeq" : {
+                  "type" : "number",
+                  "description" : "상위 폴더 식별번호"
+                }
+              }
+            }
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-user-login-292714037" : {
         "type" : "object",
         "properties" : {
           "code" : {
@@ -100,11 +871,11 @@
             "properties" : {
               "userAccessToken" : {
                 "type" : "string",
-                "description" : "사용자 접근 토큰"
+                "description" : "사용자 Access 토큰"
               },
               "userRefreshToken" : {
                 "type" : "string",
-                "description" : "사용자 갱신 토큰"
+                "description" : "사용자 Refresh 토큰"
               },
               "userEmail" : {
                 "type" : "string",
@@ -135,6 +906,115 @@
           }
         }
       },
+      "api-v1-user-email-check1697204129" : {
+        "type" : "object",
+        "properties" : {
+          "userEmail" : {
+            "type" : "string",
+            "description" : "중복 확인 대상 이메일"
+          }
+        }
+      },
+      "api-v1-user-email-check-1648644077" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "string",
+            "description" : "사용 가능한 이메일"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-manage-folder-delete-670136476" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "folderSeqList" : {
+                "type" : "array",
+                "description" : "삭제된 폴더 식별번호 리스트",
+                "items" : {
+                  "oneOf" : [ {
+                    "type" : "object"
+                  }, {
+                    "type" : "boolean"
+                  }, {
+                    "type" : "string"
+                  }, {
+                    "type" : "number"
+                  } ]
+                }
+              },
+              "userId" : {
+                "type" : "number",
+                "description" : "사용자 식별번호"
+              }
+            },
+            "description" : "응답 데이터"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-manage-folder-update-1826851402" : {
+        "type" : "object",
+        "properties" : {
+          "folderSeq" : {
+            "type" : "number",
+            "description" : "폴더 식별번호"
+          },
+          "folderName" : {
+            "type" : "string",
+            "description" : "폴더명"
+          },
+          "folderCaption" : {
+            "type" : "string",
+            "description" : "폴더 설명"
+          },
+          "userId" : {
+            "type" : "number",
+            "description" : "사용자 식별번호"
+          },
+          "folderParentSeq" : {
+            "type" : "number",
+            "description" : "상위 폴더 식별번호"
+          },
+          "folderScope" : {
+            "type" : "string",
+            "description" : "폴더 공개 범위"
+          }
+        }
+      },
       "api-v1-user-login662697492" : {
         "type" : "object",
         "properties" : {
@@ -147,6 +1027,589 @@
             "description" : "사용자 이메일"
           }
         }
+      },
+      "api-v1-manage-folder-update-1813678232" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "folderSeq" : {
+                "type" : "number",
+                "description" : "폴더 식별번호"
+              },
+              "folderRegDate" : {
+                "type" : "string",
+                "description" : "폴더 생성일"
+              },
+              "folderModDate" : {
+                "type" : "string",
+                "description" : "폴더 수정일"
+              },
+              "folderRootFlag" : {
+                "type" : "string",
+                "description" : "루트 폴더 여부"
+              },
+              "folderOrder" : {
+                "type" : "number",
+                "description" : "폴더 정렬 순서"
+              },
+              "folderName" : {
+                "type" : "string",
+                "description" : "폴더명"
+              },
+              "folderCaption" : {
+                "type" : "string",
+                "description" : "폴더 설명"
+              },
+              "userId" : {
+                "type" : "number",
+                "description" : "사용자 식별번호"
+              },
+              "folderParentSeq" : {
+                "type" : "number",
+                "description" : "상위 폴더 식별번호"
+              },
+              "folderScope" : {
+                "type" : "string",
+                "description" : "폴더 공개 범위"
+              }
+            },
+            "description" : "응답 데이터"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-manage-bookmarks-folderSeq-949237916" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "array",
+            "description" : "응답 데이터",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "folderSeq" : {
+                  "type" : "number",
+                  "description" : "폴더 시퀀스"
+                },
+                "bookmarkOrder" : {
+                  "type" : "number",
+                  "description" : "북마크 순서"
+                },
+                "bookmarkRegDate" : {
+                  "type" : "string",
+                  "description" : "북마크 등록일"
+                },
+                "bookmarkModDate" : {
+                  "type" : "string",
+                  "description" : "북마크 수정일"
+                },
+                "bookmarkDelFlag" : {
+                  "type" : "string",
+                  "description" : "북마크 삭제 여부"
+                },
+                "bookmarkCaption" : {
+                  "type" : "string",
+                  "description" : "북마크 설명"
+                },
+                "bookmarkTitle" : {
+                  "type" : "string",
+                  "description" : "북마크 제목"
+                },
+                "bookmarkUrl" : {
+                  "type" : "string",
+                  "description" : "북마크 URL"
+                },
+                "userId" : {
+                  "type" : "number",
+                  "description" : "사용자 시퀀스"
+                },
+                "bookmarkSeq" : {
+                  "type" : "number",
+                  "description" : "북마크 시퀀스"
+                }
+              }
+            }
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-user-signup832206760" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "userSocial" : {
+                "type" : "string",
+                "description" : "사용자 로그인 종류"
+              },
+              "userModDate" : {
+                "type" : "string",
+                "description" : "사용자 수정일"
+              },
+              "userGrade" : {
+                "type" : "string",
+                "description" : "사용자 등급"
+              },
+              "userState" : {
+                "type" : "string",
+                "description" : "사용자 상태"
+              },
+              "userRegDate" : {
+                "type" : "string",
+                "description" : "사용자 등록일"
+              },
+              "userEmail" : {
+                "type" : "string",
+                "description" : "사용자 이메일"
+              },
+              "userRole" : {
+                "type" : "string",
+                "description" : "사용자 권한"
+              },
+              "userName" : {
+                "type" : "string",
+                "description" : "사용자 이름"
+              },
+              "userId" : {
+                "type" : "number",
+                "description" : "사용자 ID"
+              },
+              "userPhoneNum" : {
+                "type" : "string",
+                "description" : "사용자 전화번호"
+              }
+            },
+            "description" : "응답 데이터"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-user-sign-out-557795373" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "userState" : {
+                "type" : "string",
+                "description" : "사용자 상태"
+              },
+              "userEmail" : {
+                "type" : "string",
+                "description" : "사용자 이메일"
+              }
+            },
+            "description" : "응답 데이터"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-manage-bookmark-1176466861" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "folderSeq" : {
+                "type" : "number",
+                "description" : "폴더 시퀀스"
+              },
+              "userId" : {
+                "type" : "number",
+                "description" : "사용자 시퀀스"
+              },
+              "bookmarkSeq" : {
+                "type" : "number",
+                "description" : "삭제된 북마크 시퀀스"
+              }
+            },
+            "description" : "응답 데이터"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-manage-bookmark-new1128652118" : {
+        "type" : "object",
+        "properties" : {
+          "folderSeq" : {
+            "type" : "number",
+            "description" : "폴더 시퀀스"
+          },
+          "bookmarkCaption" : {
+            "type" : "string",
+            "description" : "북마크 설명"
+          },
+          "bookmarkTitle" : {
+            "type" : "string",
+            "description" : "북마크 제목"
+          },
+          "bookmarkUrl" : {
+            "type" : "string",
+            "description" : "북마크 URL"
+          },
+          "userId" : {
+            "type" : "number",
+            "description" : "사용자 시퀀스"
+          },
+          "bookmarkSeq" : {
+            "type" : "number",
+            "description" : "북마크 시퀀스"
+          }
+        }
+      },
+      "api-v1-manage-folders-folderParentSeq1639981077" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "array",
+            "description" : "응답 데이터",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "folderSeq" : {
+                  "type" : "number",
+                  "description" : "폴더 식별번호"
+                },
+                "folderRegDate" : {
+                  "type" : "string",
+                  "description" : "폴더 생성일"
+                },
+                "folderModDate" : {
+                  "type" : "string",
+                  "description" : "폴더 수정일"
+                },
+                "folderRootFlag" : {
+                  "type" : "string",
+                  "description" : "루트 폴더 여부"
+                },
+                "folderOrder" : {
+                  "type" : "number",
+                  "description" : "폴더 정렬 순서"
+                },
+                "folderName" : {
+                  "type" : "string",
+                  "description" : "폴더명"
+                },
+                "folderCaption" : {
+                  "type" : "string",
+                  "description" : "폴더 설명"
+                },
+                "userId" : {
+                  "type" : "number",
+                  "description" : "사용자 식별번호"
+                },
+                "folderParentSeq" : {
+                  "type" : "number",
+                  "description" : "상위 폴더 식별번호"
+                },
+                "folderScope" : {
+                  "type" : "string",
+                  "description" : "폴더 공개 범위"
+                }
+              }
+            }
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-user-signup-2013724882" : {
+        "type" : "object",
+        "properties" : {
+          "userPwd" : {
+            "type" : "string",
+            "description" : "사용자 비밀번호"
+          },
+          "emailValidationCode" : {
+            "type" : "string",
+            "description" : "이메일 인증 코드"
+          },
+          "userGender" : {
+            "type" : "string",
+            "description" : "사용자 성별"
+          },
+          "userEmail" : {
+            "type" : "string",
+            "description" : "사용자 이메일"
+          },
+          "userName" : {
+            "type" : "string",
+            "description" : "사용자 이름"
+          },
+          "userPhoneNum" : {
+            "type" : "string",
+            "description" : "사용자 전화번호"
+          }
+        }
+      },
+      "api-v1-manage-folder-reorder-multi457341173" : {
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "folderSeqOrder" : {
+              "type" : "array",
+              "description" : "폴더 순서 리스트",
+              "items" : {
+                "oneOf" : [ {
+                  "type" : "object"
+                }, {
+                  "type" : "boolean"
+                }, {
+                  "type" : "string"
+                }, {
+                  "type" : "number"
+                } ]
+              }
+            },
+            "userId" : {
+              "type" : "number",
+              "description" : "사용자 식별번호"
+            },
+            "folderParentSeq" : {
+              "type" : "number",
+              "description" : "상위 폴더 식별번호"
+            }
+          }
+        }
+      },
+      "api-v1-manage-bookmark582707426" : {
+        "type" : "object",
+        "properties" : {
+          "userId" : {
+            "type" : "number",
+            "description" : "사용자 시퀀스"
+          },
+          "bookmarkSeq" : {
+            "type" : "number",
+            "description" : "북마크 시퀀스"
+          }
+        }
+      },
+      "api-v1-manage-bookmark-reorder1304805566" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "boolean",
+            "description" : "응답 데이터"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-manage-bookmark-new1527045881" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "folderSeq" : {
+                "type" : "number",
+                "description" : "폴더 시퀀스"
+              },
+              "bookmarkOrder" : {
+                "type" : "number",
+                "description" : "북마크 순서"
+              },
+              "bookmarkRegDate" : {
+                "type" : "string",
+                "description" : "북마크 등록일"
+              },
+              "bookmarkModDate" : {
+                "type" : "string",
+                "description" : "북마크 수정일"
+              },
+              "bookmarkDelFlag" : {
+                "type" : "string",
+                "description" : "북마크 삭제 여부"
+              },
+              "bookmarkCaption" : {
+                "type" : "string",
+                "description" : "북마크 설명"
+              },
+              "bookmarkTitle" : {
+                "type" : "string",
+                "description" : "북마크 제목"
+              },
+              "bookmarkUrl" : {
+                "type" : "string",
+                "description" : "북마크 URL"
+              },
+              "userId" : {
+                "type" : "number",
+                "description" : "사용자 시퀀스"
+              },
+              "bookmarkSeq" : {
+                "type" : "number",
+                "description" : "북마크 시퀀스"
+              }
+            },
+            "description" : "응답 데이터"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "응답 상태"
+          }
+        }
+      },
+      "api-v1-user-sign-out486549215" : {
+        "type" : "object"
+      },
+      "api-v1-manage-bookmark-reorder1646701177" : {
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "folderSeq" : {
+              "type" : "number",
+              "description" : "폴더 시퀀스"
+            },
+            "userId" : {
+              "type" : "number",
+              "description" : "사용자 시퀀스"
+            },
+            "bookmarkSeqOrder" : {
+              "type" : "array",
+              "description" : "북마크 시퀀스 순서",
+              "items" : {
+                "oneOf" : [ {
+                  "type" : "object"
+                }, {
+                  "type" : "boolean"
+                }, {
+                  "type" : "string"
+                }, {
+                  "type" : "number"
+                } ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuthJWT" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
       }
     }
   }

@@ -3,10 +3,12 @@ package com.hyun.bookmarkshare.user.service;
 import com.hyun.bookmarkshare.user.entity.User;
 import com.hyun.bookmarkshare.user.service.request.LoginServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.request.UserSignUpServiceRequestDto;
+import com.hyun.bookmarkshare.user.service.request.UserSocialSignUpServiceRequestDto;
 import com.hyun.bookmarkshare.user.service.response.UserLoginResponse;
 import com.hyun.bookmarkshare.user.service.response.UserResponse;
 import com.hyun.bookmarkshare.user.service.response.UserSignoutResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public interface UserService {
@@ -24,9 +26,14 @@ public interface UserService {
 
     String extendLoginState(String refreshToken);
 
-    UserResponse getUserInfo(String accessToken);
+    UserResponse getUserInfo(Long userId);
 
     UserSignoutResponse signOut(String refreshToken, String userEmail);
 
+    @Transactional
+    UserResponse signUpBySocialAccount(UserSocialSignUpServiceRequestDto requestDto);
+
     boolean checkDuplicateEmail(String userEmail);
+
+    Boolean checkRegisteredEmail(String userEmail, String provider);
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -83,7 +84,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String[] permitUrls = {"/api/v1/email/verification/check", "/api/v1/user/signup", "/api/v1/user/login",
-                                "/api/v1/user/refresh", "/api/v1/user/email/check"};
+                                "/api/v1/user/refresh", "/api/v1/user/email/check", "/api/test/developer/whoami/port",
+                                "/api/test/developer/whoami/profile", "/api/v1/social/kakao/callback", "/api/v1/social/kakao/login",
+                                "/api/v1/social/kakao/signup"};
         return Arrays.asList(permitUrls).contains(request.getRequestURI());
     }
 
@@ -93,10 +96,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 생성한 JwtAuthenticationToken 타입의 토큰을 AuthenticationManager 에게 검증을 요청
         // AuthenticationManager 는 Provider를 호출하여 실질적인 검증(인증)을 수행
         // JwtAuthenticationProvider 에서 AuthenticationManager 인터페이스의 authenticate 메서드를 구현했음.
-        authenticationManager.authenticate(authenticationToken);
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         // 검증에 통과하여 예외가 발생되지 않았다면, Context에 인증정보 담는다.
-        SecurityContextHolder.getContext()
-                .setAuthentication(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
     }
 
     // http header 의 Authorization 속성에서 토큰을 추출

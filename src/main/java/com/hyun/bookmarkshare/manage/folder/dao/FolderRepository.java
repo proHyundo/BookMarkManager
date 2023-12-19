@@ -1,6 +1,5 @@
 package com.hyun.bookmarkshare.manage.folder.dao;
 
-import com.hyun.bookmarkshare.manage.folder.controller.dto.request.FolderRequestDto;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
 import com.hyun.bookmarkshare.manage.folder.service.request.FolderReorderServiceRequestDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -37,6 +36,8 @@ public interface FolderRepository {
 
     int deleteByFolderSeq(Long folderSeq);
 
-    // ONLY FOR TEST
+    Optional<Folder> findRootFolderByUserId(Long userId);
 
+
+    List<Folder> findAllFolderWithSameAncestor(Long folderSeq, Long userId);
 }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyun.bookmarkshare.manage.common.dao.ManageRepository">
+
+    <resultMap id="folderWithBookmarkResultMap" type="com.hyun.bookmarkshare.manage.common.service.response.FolderWithIncludeBookmarksAndFolders">
+        <id property="folderSeq" column="FOLDER_SEQ"/>
+        <result property="folderParentSeq" column="FOLDER_PARENT_SEQ"/>
+        <result property="userId" column="USER_SEQ"/>
+        <result property="folderName" column="FOLDER_NAME"/>
+        <result property="folderCaption" column="FOLDER_CAPTION"/>
+        <result property="folderOrder" column="FOLDER_ORDER"/>
+        <result property="folderScope" column="FOLDER_SCOPE"/>
+        <result property="folderRegDate" column="FOLDER_REG_DATE"/>
+        <result property="folderModDate" column="FOLDER_MOD_DATE"/>
+        <collection property="includedBookmarks" ofType="com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto">
+            <id property="bookmarkSeq" column="BOOK_SEQ"/>
+            <result property="userId" column="USER_SEQ"/>
+            <result property="folderSeq" column="FOLDER_SEQ"/>
+            <result property="bookmarkTitle" column="BOOK_TITLE"/>
+            <result property="bookmarkCaption" column="BOOK_CAPTION"/>
+            <result property="bookmarkUrl" column="BOOK_URL"/>
+            <result property="bookmarkOrder" column="BOOK_ORDER"/>
+            <result property="bookmarkRegDate" column="BOOK_REG_DATE"/>
+            <result property="bookmarkModDate" column="BOOK_MOD_DATE"/>
+            <result property="bookmarkDelFlag" column="BOOK_DEL_FLAG"/>
+        </collection>
+    </resultMap>
+
+    <select id="getAllFoldersAndBookmarks" resultMap="folderWithBookmarkResultMap">
+        WITH RECURSIVE CTE AS (
+            SELECT
+                FOLDER_SEQ,
+                FOLDER_PARENT_SEQ,
+                USER_SEQ,
+                FOLDER_NAME,
+                FOLDER_CAPTION,
+                FOLDER_ORDER,
+                FOLDER_SCOPE,
+                FOLDER_REG_DATE,
+                FOLDER_MOD_DATE
+            FROM tfolder
+            WHERE FOLDER_PARENT_SEQ = 0 AND USER_SEQ = #{userSeq} AND FOLDER_DEL_FLAG = 'n'
+
+            UNION ALL
+
+            SELECT
+                a.FOLDER_SEQ,
+                a.FOLDER_PARENT_SEQ,
+                a.USER_SEQ,
+                a.FOLDER_NAME,
+                a.FOLDER_CAPTION,
+                a.FOLDER_ORDER,
+                a.FOLDER_SCOPE,
+                a.FOLDER_REG_DATE,
+                a.FOLDER_MOD_DATE
+            FROM tfolder a
+                     INNER JOIN CTE b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
+        )
+        SELECT CTE.*, tbookmark.BOOK_SEQ, tbookmark.USER_SEQ, tbookmark.FOLDER_SEQ,
+               tbookmark.BOOK_TITLE, tbookmark.BOOK_CAPTION, tbookmark.BOOK_URL, tbookmark.BOOK_ORDER, tbookmark.BOOK_REG_DATE,
+               tbookmark.BOOK_MOD_DATE, tbookmark.BOOK_DEL_FLAG
+        FROM CTE
+                 LEFT JOIN tbookmark on CTE.FOLDER_SEQ = tbookmark.FOLDER_SEQ;
+    </select>
+
+</mapper>
