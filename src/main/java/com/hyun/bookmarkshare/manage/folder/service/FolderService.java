@@ -22,7 +22,7 @@ public interface FolderService {
      * @return repository sql result - success : 1
      * @implNote explain
      * */
-    FolderResponse createFolder(FolderCreateServiceRequestDto requestDto);
+    FolderResponse createFolder(FolderCreateServiceRequestDto requestDto, Long userId);
 
     FolderSeqResponse deleteFolder(FolderDeleteServiceRequestDto requestDto);
 

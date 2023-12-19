@@ -67,4 +67,7 @@ public class FolderRequestValidator {
     }
 
 
+    public boolean notSameUserIdBetween(Long userIdOfRequestDto, Long userIdOfLoginUser) {
+        return !userIdOfRequestDto.equals(userIdOfLoginUser);
+    }
 }

@@ -29,8 +29,9 @@ public class FolderRestController {
 
     // 특정 부모폴더 내부에 신규 폴더 생성
     @PostMapping("/api/v1/manage/folder/new")
-    public ApiResponse<FolderResponse> addFolderRequest(@Valid @RequestBody FolderCreateRequestDto requestDto){
-        FolderResponse resultFolderResponse = folderService.createFolder(requestDto.toServiceRequestDto());
+    public ApiResponse<FolderResponse> addFolderRequest(@Valid @RequestBody FolderCreateRequestDto requestDto,
+                                                        @AuthenticationPrincipal LoginInfoDto loginInfoDto){
+        FolderResponse resultFolderResponse = folderService.createFolder(requestDto.toServiceRequestDto(), loginInfoDto.getUserId());
         return ApiResponse.of(HttpStatus.OK, "신규 폴더 생성 완료", resultFolderResponse);
     }
 

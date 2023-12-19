@@ -77,6 +77,7 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
     }
     */
 
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
     @DisplayName("신규 폴더 생성 API")
     @Test
     void addFolderRequest() throws Exception {
@@ -85,13 +86,13 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
         // given
         FolderCreateRequestDto request = FolderCreateRequestDto.builder()
                 .folderSeq(null)
-                .userId(1L)
+                .userId(null)
                 .folderParentSeq(1L)
                 .folderName("folderName")
                 .folderCaption("folderCaption")
                 .folderScope("p")
                 .build();
-        BDDMockito.given(folderService.createFolder(any(FolderCreateServiceRequestDto.class)))
+        BDDMockito.given(folderService.createFolder(any(FolderCreateServiceRequestDto.class), any(Long.class)))
                 .willReturn(FolderResponse.builder()
                         .folderSeq(1L)
                         .userId(1L)

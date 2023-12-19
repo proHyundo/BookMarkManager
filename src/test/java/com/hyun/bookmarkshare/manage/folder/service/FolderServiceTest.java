@@ -43,6 +43,7 @@ public class FolderServiceTest {
     @Test
     void createNewFolder() {
         // given
+        Long userId = 1L;
         FolderCreateServiceRequestDto requestDto = FolderCreateServiceRequestDto.builder()
                 .folderSeq(null)
                 .userId(1L)
@@ -53,7 +54,7 @@ public class FolderServiceTest {
                 .build();
 
         // when
-        FolderResponse folderResponse = folderService.createFolder(requestDto);
+        FolderResponse folderResponse = folderService.createFolder(requestDto, userId);
 
         // then
         assertThat(folderResponse)

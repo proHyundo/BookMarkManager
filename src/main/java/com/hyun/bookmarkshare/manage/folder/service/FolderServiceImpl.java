@@ -89,7 +89,10 @@ public class FolderServiceImpl implements FolderService{
 
 
     @Override
-    public FolderResponse createFolder(FolderCreateServiceRequestDto serviceRequestDto) {
+    public FolderResponse createFolder(FolderCreateServiceRequestDto serviceRequestDto, Long userId) {
+        if(validator.notSameUserIdBetween(serviceRequestDto.getUserId(), userId)) {
+            throw new FolderRequestException(FolderExceptionErrorCode.CREATE_FOLDER_FAIL, "요청한 사용자의 식별번호와 로그인한 사용자의 식별번호가 일치하지 않습니다.");
+        }
         Folder targetFolder = serviceRequestDto.toFolder();
         folderRepository.save(targetFolder);
         return FolderResponse.of(folderRepository.findByFolderSeqExcludeDeleted(targetFolder.getFolderSeq())
