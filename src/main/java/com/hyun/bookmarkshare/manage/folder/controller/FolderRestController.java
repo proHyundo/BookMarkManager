@@ -36,11 +36,12 @@ public class FolderRestController {
     @GetMapping("/api/v1/manage/folder/{folderSeq}")
     public ApiResponse<FolderResponse> getFolderRequest(@PathVariable("folderSeq") @NotNull @Positive Long folderSeq,
                                                         @AuthenticationPrincipal LoginInfoDto loginInfoDto){
-        return ApiResponse.of(HttpStatus.OK, "폴더 조회 완료", folderService.findFolderInfo(FolderRequestDto.builder()
+        return ApiResponse.of(HttpStatus.OK, "폴더 조회 완료",
+                folderService.findFolderInfo(FolderRequestDto.builder()
                 .userId(loginInfoDto.getUserId())
                 .folderSeq(folderSeq)
                 .build()
-                .toServiceDto()));
+                .toServiceDto(), loginInfoDto.getUserId()));
     }
 
     // 특정 부모폴더 내부에 속한 폴더 List 조회

@@ -7,6 +7,7 @@ import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.*;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,10 @@ public class FolderServiceImpl implements FolderService{
     private final FolderRequestValidator validator;
 
     @Override
-    public FolderResponse findFolderInfo(FolderServiceRequestDto requestDto) {
+    public FolderResponse findFolderInfo(FolderServiceRequestDto requestDto, Long loginInfoUserId) {
+        if(validator.notSameUserIdBetween(requestDto.getUserId(), loginInfoUserId)){
+            throw new FolderRequestException(FolderExceptionErrorCode.GET_FOLDER_FAIL, "폴더 조회 실패-사용자 정보 불일치");
+        }
         Folder resultFolder = folderRepository.findByFolderSeqExcludeDeleted(requestDto.getFolderSeq())
                 .orElseThrow(() -> new NoSuchElementException("Not Found Folder"));
         return FolderResponse.of(resultFolder);
@@ -122,7 +126,6 @@ public class FolderServiceImpl implements FolderService{
         Folder updatedTarget = updateTarget.updateEntityBy(requestDto.toEntity());
         // 3. 업데이트된 폴더 엔티티를 저장
         folderRepository.update(updatedTarget);
-//        validateSqlUpdatedRows(updatedRows);
         return FolderResponse.of(folderRepository.findByFolderSeqExcludeDeleted(requestDto.getFolderSeq())
                                     .orElseThrow(()->new NoSuchElementException("Not Found Folder"))
         );
@@ -149,7 +152,7 @@ public class FolderServiceImpl implements FolderService{
     }
 
     /** Validate (INSERT, UPDATE, DELETE) Result Rows */
-    private void validateSqlUpdatedRows(int updatedRows) {
+    private void validateSqlUpdatedRows(int updatedRows, String manupulateType) {
         if(updatedRows != 1){
             throw new FolderRequestException(FolderExceptionErrorCode.UPDATE_FOLDER_FAIL, "Update Folder Fail");
         }

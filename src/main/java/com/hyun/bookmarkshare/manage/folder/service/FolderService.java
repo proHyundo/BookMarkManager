@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface FolderService {
 
-    FolderResponse findFolderInfo(FolderServiceRequestDto requestDto);
+    FolderResponse findFolderInfo(FolderServiceRequestDto requestDto, Long userId);
 
     List<FolderResponse> findFolderList(FolderListServiceRequestDto requestDto);
 

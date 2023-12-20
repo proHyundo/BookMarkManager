@@ -5,6 +5,7 @@ import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
+import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderDeleteResponse;
@@ -12,12 +13,14 @@ import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderRespon
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,7 +89,45 @@ public class FolderServiceTest {
                 .isInstanceOf(FolderRequestException.class)
                 .hasMessageContaining("요청한 사용자의 식별번호와 로그인한 사용자의 식별번호가 일치하지 않습니다.");
     }
-    
+
+    @DisplayName("특정 폴더의 정보를 조회한다.")
+    @Test
+    void findFolderInfo(){
+        // given
+        FolderServiceRequestDto requestDto = FolderServiceRequestDto.builder()
+                .folderSeq(2L)
+                .userId(1L)
+                .build();
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .userId(1L)
+                .build();
+        // when
+        FolderResponse folderResponse = folderService.findFolderInfo(requestDto, loginInfoDto.getUserId());
+        // then
+        assertThat(folderResponse)
+                .extracting("folderSeq", "userId", "folderParentSeq", "folderName", "folderCaption", "folderScope", "folderOrder")
+                .containsExactlyInAnyOrder(2L, 1L, 1L, "folder2", "folder2", "p", 1L);
+    }
+
+    @DisplayName("특정 폴더의 정보 조회 시, 요청DTO와 로그인한 사용자의 식별 번호가 다를 경우 예외를 발생시킨다.")
+    @Test
+    void findFolderInfoThrowExceptionWhenNotSameUserId() {
+        // given
+        FolderServiceRequestDto requestDto = FolderServiceRequestDto.builder()
+                .folderSeq(2L)
+                .userId(1L)
+                .build();
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .userId(2L)
+                .build();
+        // when // then
+        assertThatThrownBy(() -> folderService.findFolderInfo(requestDto, loginInfoDto.getUserId()))
+                .isInstanceOf(FolderRequestException.class)
+                .hasMessageContaining("폴더 조회 실패-사용자 정보 불일치")
+                .extracting("folderExceptionErrorCode")
+                .isEqualTo(FolderExceptionErrorCode.GET_FOLDER_FAIL);
+    }
+
     @DisplayName("특정 사용자의 특정 폴더에 존재하는 모든 폴더 리스트를 조회한다.")
     @Test
     void findFolderList() {
