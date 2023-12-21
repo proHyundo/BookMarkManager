@@ -57,7 +57,6 @@ public class FolderServiceTest {
         // given
         Long userId = 1L;
         FolderCreateServiceRequestDto requestDto = FolderCreateServiceRequestDto.builder()
-                .folderSeq(null)
                 .userId(1L)
                 .folderParentSeq(1L)
                 .folderName("folderName")
