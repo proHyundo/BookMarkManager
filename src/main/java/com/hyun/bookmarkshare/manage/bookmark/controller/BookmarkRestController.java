@@ -50,14 +50,16 @@ public class BookmarkRestController {
 
     // 북마크 신규 생성
     @PostMapping("/api/v1/manage/bookmark/new")
-    public ApiResponse<BookmarkResponseDto> createBookmarkRequest(@RequestBody @Valid BookmarkCreateRequestDto bookmarkCreateRequestDto){
-        return ApiResponse.ok(bookmarkService.createBookmark(bookmarkCreateRequestDto.toServiceDto()));
+    public ApiResponse<BookmarkResponseDto> createBookmarkRequest(@RequestBody @Valid BookmarkCreateRequestDto bookmarkCreateRequestDto,
+                                                                  @AuthenticationPrincipal LoginInfoDto loginInfoDto){
+        return ApiResponse.ok(bookmarkService.createBookmark(bookmarkCreateRequestDto.toServiceDto(), loginInfoDto.getUserId()));
     }
 
-    // 북마크 수정
+    // 북마크 정보 수정
     @PatchMapping("/api/v1/manage/bookmark")
-    public ApiResponse<BookmarkResponseDto> updateBookmarkRequest(@RequestBody @Valid BookmarkUpdateRequestDto bookmarkUpdateRequestDto){
-        return ApiResponse.ok(bookmarkService.updateBookmark(bookmarkUpdateRequestDto.toServiceRequestDto()));
+    public ApiResponse<BookmarkResponseDto> updateBookmarkRequest(@RequestBody @Valid BookmarkUpdateRequestDto bookmarkUpdateRequestDto,
+                                                                  @AuthenticationPrincipal LoginInfoDto loginInfoDto){
+        return ApiResponse.ok(bookmarkService.updateBookmark(bookmarkUpdateRequestDto.toServiceRequestDto(), loginInfoDto.getUserId()));
     }
 
     // 북마크 순서 변경
@@ -71,11 +73,9 @@ public class BookmarkRestController {
 
     // 북마크 삭제
     @DeleteMapping("/api/v1/manage/bookmark")
-    public ApiResponse<BookmarkSeqResponse> deleteBookmarkRequest(@RequestBody
-                                                                        @Valid BookmarkRequestDto bookmarkRequestDto){
-        return ApiResponse.ok(
-                bookmarkService.deleteBookmark(bookmarkRequestDto.toServiceRequestDto())
-        );
+    public ApiResponse<BookmarkSeqResponse> deleteBookmarkRequest(@RequestBody @Valid BookmarkDeleteRequestDto bookmarkRequestDto,
+                                                                  @AuthenticationPrincipal LoginInfoDto loginInfoDto){
+        return ApiResponse.ok(bookmarkService.deleteBookmark(bookmarkRequestDto.toServiceRequestDto(), loginInfoDto.getUserId()));
     }
 
 

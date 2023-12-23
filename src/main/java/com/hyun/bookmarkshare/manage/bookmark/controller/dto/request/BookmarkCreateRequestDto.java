@@ -12,24 +12,17 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 public class BookmarkCreateRequestDto {
 
-    @Null
-    private Long bookmarkSeq;
-
     @Positive
     private Long userId;
-
     @Positive
     private Long folderSeq;
-
     private String bookmarkTitle;
     private String bookmarkCaption;
-
     @NotEmpty
     private String bookmarkUrl;
 
     @Builder
-    public BookmarkCreateRequestDto(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkUrl) {
-        this.bookmarkSeq = bookmarkSeq;
+    public BookmarkCreateRequestDto(Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkUrl) {
         this.userId = userId;
         this.folderSeq = folderSeq;
         this.bookmarkTitle = bookmarkTitle;

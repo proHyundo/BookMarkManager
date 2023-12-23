@@ -8,6 +8,7 @@ import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkReorderSer
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkUpdateServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkSeqResponse;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -91,6 +92,9 @@ public class BookmarkServiceTest {
     @Test
     void createBookmark() {
         // given
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .userId(1L)
+                .build();
         BookmarkCreateServiceRequestDto requestDto = BookmarkCreateServiceRequestDto.builder()
                 .userId(1L)
                 .folderSeq(1L)
@@ -104,7 +108,7 @@ public class BookmarkServiceTest {
                 .bookmarkUrl("https://www.naver.com/sports/123")
                 .build();
         // when
-        BookmarkResponseDto responseDto = bookmarkService.createBookmark(requestDto);
+        BookmarkResponseDto responseDto = bookmarkService.createBookmark(requestDto, loginInfoDto.getUserId());
         // then
         assertThat(responseDto.getBookmarkOrder()).isEqualTo(1L);
     }
@@ -113,6 +117,9 @@ public class BookmarkServiceTest {
     @Test
     void createBookmarkSetFieldByUrlParser() {
         // given
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .userId(1L)
+                .build();
         BookmarkCreateServiceRequestDto requestDto = BookmarkCreateServiceRequestDto.builder()
                 .userId(1L)
                 .folderSeq(1L)
@@ -126,7 +133,7 @@ public class BookmarkServiceTest {
                 .bookmarkUrl("https://www.naver.com/sports/123")
                 .build();
         // when
-        BookmarkResponseDto responseDto = bookmarkService.createBookmark(requestDto);
+        BookmarkResponseDto responseDto = bookmarkService.createBookmark(requestDto, loginInfoDto.getUserId());
         // then
         assertThat(bookmarkRepository.findByBookmarkSeq(responseDto.getBookmarkSeq()).get())
                 .extracting("bookmarkScheme", "bookmarkHost", "bookmarkPort", "bookmarkDomain", "bookmarkPath")
@@ -137,6 +144,7 @@ public class BookmarkServiceTest {
     @Test
     void updateBookmark() {
         // given
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder().userId(1L).build();
         Bookmark bookmark1 = createBookmark(1L, 1L, "bookmarkTitle1",
                 "https://www.naver.com/sports/123");
         bookmarkRepository.save(bookmark1);
@@ -148,7 +156,7 @@ public class BookmarkServiceTest {
                 .bookmarkUrl("https://www.naver.com/sports/456")
                 .build();
         // when
-        BookmarkResponseDto responseDto = bookmarkService.updateBookmark(requestDto);
+        BookmarkResponseDto responseDto = bookmarkService.updateBookmark(requestDto, loginInfoDto.getUserId());
         // then
         assertThat(responseDto).extracting("bookmarkSeq", "bookmarkTitle", "bookmarkCaption", "bookmarkUrl")
                 .containsExactly(1L, "bookmarkTitle", "bookmarkCaption", "https://www.naver.com/sports/456");
@@ -201,6 +209,7 @@ public class BookmarkServiceTest {
     @Test
     void deleteOneBookmark() {
         // given
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder().userId(1L).build();
         Bookmark bookmark1 = createBookmark(1L, 1L, "bookmarkTitle1", "bookmarkUrl1");
         bookmarkRepository.save(bookmark1);
         BookmarkServiceRequestDto requestDto = BookmarkServiceRequestDto.builder()
@@ -209,7 +218,7 @@ public class BookmarkServiceTest {
                 .folderSeq(1L)
                 .build();
         // when
-        BookmarkSeqResponse responseDto = bookmarkService.deleteBookmark(requestDto);
+        BookmarkSeqResponse responseDto = bookmarkService.deleteBookmark(requestDto, loginInfoDto.getUserId());
         // then
         assertThat(responseDto).extracting("bookmarkSeq").isEqualTo(1L);
     }

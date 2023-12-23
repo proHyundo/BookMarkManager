@@ -2,8 +2,10 @@ package com.hyun.bookmarkshare.manage.bookmark.service.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class BookmarkSeqResponse {
 
     private Long bookmarkSeq;

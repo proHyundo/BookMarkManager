@@ -31,7 +31,6 @@ public class UrlParserTest {
         // given
         String target = "https://www.domain.com:8080/abc/def/ghi/jkl";
         BookmarkCreateServiceRequestDto requestDto = BookmarkCreateServiceRequestDto.builder()
-                .bookmarkSeq(null)
                 .userId(1L)
                 .folderSeq(1L)
                 .bookmarkTitle("bookmarkTitle")
@@ -59,7 +58,6 @@ public class UrlParserTest {
         // given
         String target = "https://velog.io/@name/%A1%9C/URL-%EC%.html";
         BookmarkCreateServiceRequestDto requestDto = BookmarkCreateServiceRequestDto.builder()
-                .bookmarkSeq(null)
                 .userId(1L)
                 .folderSeq(1L)
                 .bookmarkTitle("bookmarkTitle")

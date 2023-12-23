@@ -1,20 +1,18 @@
 package com.hyun.bookmarkshare.manage.bookmark.controller;
 
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.hyun.bookmarkshare.api.controller.ControllerTestConfig;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkCreateRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkReorderRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkRequestDto;
-import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkUpdateRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.*;
 import com.hyun.bookmarkshare.manage.bookmark.service.BookmarkService;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkUpdateServiceRequestDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkSeqResponse;
-import com.hyun.bookmarkshare.security.jwt.util.JwtTokenizer;
 import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -176,7 +174,7 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
     }
 
     @WithCustomAuthUser(email = "test@test.com" , userId = 1, role = "ROLE_USER")
-    @DisplayName("북마크 신규 등록 API")
+    @DisplayName("북마크 신규 생성 API")
     @Test
     void createBookmarkRequest() throws Exception {
         // given
@@ -189,7 +187,7 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
                 .bookmarkUrl("https://bookmark-tool.com/sample")
                 .build();
 
-        BDDMockito.given(bookmarkService.createBookmark(any(BookmarkCreateServiceRequestDto.class)))
+        BDDMockito.given(bookmarkService.createBookmark(any(BookmarkCreateServiceRequestDto.class), any(Long.class)))
                 .willReturn(BookmarkResponseDto.builder()
                         .bookmarkSeq(1L).userId(1L).folderSeq(1L).bookmarkTitle("bookmark title1")
                         .bookmarkCaption("bookmark caption1").bookmarkUrl("bookmark-tool.com/example1").bookmarkOrder(1L)
@@ -220,11 +218,10 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
                                 headerWithName("Authorization").description("사용자 Access 토큰")
                         ),
                         requestFields(
-                                fieldWithPath("bookmarkSeq").description("북마크 시퀀스").type(JsonFieldType.NUMBER).optional(),
                                 fieldWithPath("userId").description("사용자 시퀀스").type(JsonFieldType.NUMBER),
                                 fieldWithPath("folderSeq").description("폴더 시퀀스").type(JsonFieldType.NUMBER),
                                 fieldWithPath("bookmarkTitle").description("북마크 제목").type(JsonFieldType.STRING),
-                                fieldWithPath("bookmarkCaption").description("북마크 설명").type(JsonFieldType.STRING),
+                                fieldWithPath("bookmarkCaption").description("북마크 설명").type(JsonFieldType.STRING).optional(),
                                 fieldWithPath("bookmarkUrl").description("북마크 URL").type(JsonFieldType.STRING)
                         ),
                         responseFields(
@@ -247,9 +244,15 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
                 ));
     }
 
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
     @DisplayName("북마크 정보 수정 API")
     @Test
     void updateBookmarkRequest() throws Exception {
+        // config - Jackson ObjectMapper Ignore Fields When writeValueAsString
+        SimpleBeanPropertyFilter theFilter = SimpleBeanPropertyFilter.serializeAllExcept("bookmarkScheme", "bookmarkHost", "bookmarkDomain", "bookmarkPort", "bookmarkPath");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("BookmarkUpdateServiceRequestDto", theFilter);
+        objectMapper.setFilterProvider(filters);
+
         // given
         String accessTokenFromRequestHeader = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcklkIjoxLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifSwicm9sZXMiOiJST0xFX1RFU1QiLCJ1c2VyaWQiOjF9.jW8sg5JmIqST_2WAxXT89AthwRG921dBycV_xqkWW60";
         BookmarkUpdateRequestDto requestDto = BookmarkUpdateRequestDto.builder()
@@ -260,7 +263,7 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
                 .bookmarkCaption("bookmark updated caption")
                 .bookmarkUrl("https://bookmark-tool.com/update-sample")
                 .build();
-        BDDMockito.given(bookmarkService.updateBookmark(any(BookmarkUpdateServiceRequestDto.class)))
+        BDDMockito.given(bookmarkService.updateBookmark(any(BookmarkUpdateServiceRequestDto.class), any(Long.class)))
                 .willReturn(BookmarkResponseDto.builder()
                         .bookmarkSeq(1L).userId(1L).folderSeq(1L).bookmarkTitle("bookmark updated title")
                         .bookmarkCaption("bookmark updated caption").bookmarkUrl("bookmark-tool.com/update-sample").bookmarkOrder(1L)
@@ -272,7 +275,7 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
                         .header("Authorization", "Bearer " + accessTokenFromRequestHeader)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto))
+                        .content(objectMapper.writeValueAsString(requestDto.toServiceRequestDto()))
                         .with(csrf())
         )
                 .andDo(print())
@@ -363,23 +366,36 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
                 ));
     }
 
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
     @DisplayName("단일 북마크 삭제 API")
     @Test
     void deleteBookmarkRequest() throws Exception {
         // given
         String accessTokenFromRequestHeader = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidXNlcklkIjoxLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifSwicm9sZXMiOiJST0xFX1RFU1QiLCJ1c2VyaWQiOjF9.jW8sg5JmIqST_2WAxXT89AthwRG921dBycV_xqkWW60";
-        BookmarkRequestDto requestDto = BookmarkRequestDto.builder().bookmarkSeq(1L).userId(1L).build();
-        BDDMockito.given(bookmarkService.deleteBookmark(any(BookmarkServiceRequestDto.class)))
-                .willReturn(BookmarkSeqResponse.builder().bookmarkSeq(1L).folderSeq(1L).userId(1L).build());
+
+        BookmarkDeleteRequestDto requestDto = BookmarkDeleteRequestDto.builder()
+                .bookmarkSeq(1L)
+                .userId(1L)
+                .folderSeq(1L)
+                .build();
+
+        BDDMockito.given(bookmarkService.deleteBookmark(any(BookmarkServiceRequestDto.class), any(Long.class)))
+                .willReturn(BookmarkSeqResponse.builder()
+                        .bookmarkSeq(1L)
+                        .folderSeq(1L)
+                        .userId(1L)
+                        .build()
+                );
 
         // when // then
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/manage/bookmark")
-                .header("Authorization", "Bearer " + accessTokenFromRequestHeader)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestDto))
-                .with(csrf())
-        )
+        mockMvc.perform(RestDocumentationRequestBuilders
+                    .delete("/api/v1/manage/bookmark")
+                    .header("Authorization", "Bearer " + accessTokenFromRequestHeader)
+                    .content(objectMapper.writeValueAsString(requestDto.toServiceRequestDto()))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .with(csrf())
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
@@ -387,15 +403,16 @@ class BookmarkRestControllerTest extends ControllerTestConfig {
                 .andDo(MockMvcRestDocumentationWrapper.document("bookmark-delete",
                         MockMvcRestDocumentationWrapper.resourceDetails()
                                 .tag("Bookmark API")
-                                .description("단일 북마크 삭제 요청 API"),
+                                .description("특정 북마크 삭제 요청 API"),
                         Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         requestHeaders(
                                 headerWithName("Authorization").description("사용자 Access 토큰")
                         ),
                         requestFields(
+                                fieldWithPath("userId").description("사용자 시퀀스").type(JsonFieldType.NUMBER),
                                 fieldWithPath("bookmarkSeq").description("북마크 시퀀스").type(JsonFieldType.NUMBER),
-                                fieldWithPath("userId").description("사용자 시퀀스").type(JsonFieldType.NUMBER)
+                                fieldWithPath("folderSeq").description("폴더 시퀀스").type(JsonFieldType.NUMBER)
                         ),
                         responseFields(
                                 fieldWithPath("code").description("응답 코드").type(JsonFieldType.NUMBER),

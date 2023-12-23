@@ -1,10 +1,7 @@
 package com.hyun.bookmarkshare.manage.common.service.response;
 
 import com.hyun.bookmarkshare.manage.bookmark.service.response.BookmarkResponseDto;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +22,21 @@ public class FolderWithIncludeBookmarksAndFolders {
     private LocalDateTime folderModDate;
     private List<BookmarkResponseDto> includedBookmarks;
     private List<FolderWithIncludeBookmarksAndFolders> includedFolders;
+
+    @Builder
+    public FolderWithIncludeBookmarksAndFolders(Long folderSeq, Long folderParentSeq, Long userId, String folderName, String folderCaption, Long folderOrder, String folderScope, LocalDateTime folderRegDate, LocalDateTime folderModDate, List<BookmarkResponseDto> includedBookmarks, List<FolderWithIncludeBookmarksAndFolders> includedFolders) {
+        this.folderSeq = folderSeq;
+        this.folderParentSeq = folderParentSeq;
+        this.userId = userId;
+        this.folderName = folderName;
+        this.folderCaption = folderCaption;
+        this.folderOrder = folderOrder;
+        this.folderScope = folderScope;
+        this.folderRegDate = folderRegDate;
+        this.folderModDate = folderModDate;
+        this.includedBookmarks = includedBookmarks;
+        this.includedFolders = includedFolders;
+    }
 
     @Override
     public String toString() {
