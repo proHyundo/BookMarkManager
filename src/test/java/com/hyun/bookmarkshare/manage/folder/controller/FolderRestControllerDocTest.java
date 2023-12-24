@@ -1,15 +1,19 @@
 package com.hyun.bookmarkshare.manage.folder.controller;
 
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyun.bookmarkshare.api.controller.ControllerTestConfig;
 import com.hyun.bookmarkshare.manage.folder.controller.dto.request.*;
 import com.hyun.bookmarkshare.manage.folder.service.FolderService;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderDeleteResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
+import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -26,12 +30,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,6 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 * */
 
 // WithMockUser : https://docs.spring.io/spring-security/reference/servlet/test/method.html#test-method-withmockuser
+//@Tag(name = "Folder API", description = "폴더 관련 API")
 @WithMockUser
 @WebMvcTest(FolderRestController.class)
 public class FolderRestControllerDocTest extends ControllerTestConfig {
@@ -72,19 +79,86 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
     }
     */
 
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
+    @DisplayName("폴더 상세 정보 조회 API")
+    @Test
+    void getFolderRequest() throws Exception {
+        // given
+        String accessTokenFromRequestHeader = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI";
+
+        BDDMockito.given(folderService.findFolderInfo(any(FolderServiceRequestDto.class), any(Long.class)))
+                        .willReturn(FolderResponse.builder()
+                                .folderSeq(1L)
+                                .userId(1L)
+                                .folderParentSeq(1L)
+                                .folderRootFlag("n")
+                                .folderName("folderName")
+                                .folderCaption("folderCaption")
+                                .folderScope("p")
+                                .folderOrder(1L)
+                                .folderRootFlag("y")
+                                .folderRegDate(LocalDateTime.of(2021, 1, 1, 0, 0, 0))
+                                .folderModDate(LocalDateTime.of(2021, 1, 1, 0, 0, 0))
+                                .build());
+
+        // when
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/v1/manage/folder/{folderSeq}", 1L)
+                .header("Authorization", "Bearer " + accessTokenFromRequestHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.data.folderSeq").value(1L))
+                .andDo(MockMvcRestDocumentationWrapper.document("get-folder-info",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("폴더 상세 정보 조회 API"),
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("JWT Access Token")
+                        ),
+                        pathParameters(
+                                parameterWithName("folderSeq").description("폴더 식별 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("timestamp").type(JsonFieldType.STRING).description("응답 시간"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.folderSeq").type(JsonFieldType.NUMBER).description("폴더 식별 번호"),
+                                fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("사용자 식별 번호"),
+                                fieldWithPath("data.folderParentSeq").type(JsonFieldType.NUMBER).description("상위 폴더 시퀀스"),
+                                fieldWithPath("data.folderRootFlag").type(JsonFieldType.STRING).description("루트 폴더 여부"),
+                                fieldWithPath("data.folderName").type(JsonFieldType.STRING).description("폴더명"),
+                                fieldWithPath("data.folderCaption").type(JsonFieldType.STRING).description("폴더 설명"),
+                                fieldWithPath("data.folderOrder").type(JsonFieldType.NUMBER).description("폴더 순서"),
+                                fieldWithPath("data.folderScope").type(JsonFieldType.STRING).description("폴더 공개 범위"),
+                                fieldWithPath("data.folderRegDate").type(JsonFieldType.STRING).description("폴더 생성 일시"),
+                                fieldWithPath("data.folderModDate").type(JsonFieldType.STRING).description("폴더 수정 일시")
+                        )
+                ));
+    }
+
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
     @DisplayName("신규 폴더 생성 API")
     @Test
     void addFolderRequest() throws Exception {
+        String accessTokenFromRequestHeader = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI";
+
         // given
         FolderCreateRequestDto request = FolderCreateRequestDto.builder()
-                .folderSeq(null)
                 .userId(1L)
                 .folderParentSeq(1L)
                 .folderName("folderName")
                 .folderCaption("folderCaption")
                 .folderScope("p")
                 .build();
-        BDDMockito.given(folderService.createFolder(any(FolderCreateServiceRequestDto.class)))
+        BDDMockito.given(folderService.createFolder(any(FolderCreateServiceRequestDto.class), any(Long.class)))
                 .willReturn(FolderResponse.builder()
                         .folderSeq(1L)
                         .userId(1L)
@@ -100,6 +174,7 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
         // when // then
         mockMvc.perform(RestDocumentationRequestBuilders
                     .post("/api/v1/manage/folder/new")
+                    .header("Authorization", "Bearer " + accessTokenFromRequestHeader)
                     .content(objectMapper.writeValueAsString(request.toServiceRequestDto()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -110,10 +185,12 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("신규 폴더 생성 완료"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-create",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("신규 폴더 생성 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("folderSeq").type(JsonFieldType.NUMBER).description("폴더 식별번호").optional(),
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("사용자 식별번호"),
                                 fieldWithPath("folderParentSeq").type(JsonFieldType.NUMBER).description("상위 폴더 식별번호"),
                                 fieldWithPath("folderName").type(JsonFieldType.STRING).description("폴더명"),
@@ -140,44 +217,66 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                         ));
     }
 
-    @DisplayName("폴더 리스트 요청 API")
+    @WithCustomAuthUser(email = "test@test.com", userId = 1, role = "ROLE_USER")
+    @DisplayName("상위 폴더 내, 폴더 리스트 요청 API")
     @Test
     void getFolderListRequest() throws Exception {
         // given
-        FolderListRequestDto request = FolderListRequestDto.builder()
-                .userId(1L)
-                .folderParentSeq(1L)
-                .build();
+        String accessTokenFromRequestHeader = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwicm9sZXMiOiJ0ZXN0IiwidXNlcmlkIjoxfQ.eMKhy-XdJmhuS2QeH1fjycXLS4lucpSa0D56JFMr0fI";
+
         BDDMockito.given(folderService.findFolderList(any(FolderListServiceRequestDto.class)))
                 .willReturn(List.of(
-                        FolderResponse.builder()
-                                .folderSeq(1L)
-                                .userId(1L)
-                                .folderParentSeq(1L)
-                                .folderRootFlag("n")
-                                .folderName("folderName1")
-                                .folderCaption("folderCaption1")
-                                .folderOrder(1L)
-                                .folderScope("p")
+                        FolderResponse.builder().folderSeq(1L).userId(1L).folderParentSeq(1L).folderRootFlag("n")
+                                .folderName("folderName1").folderCaption("folderCaption1").folderOrder(1L).folderScope("p")
                                 .folderRegDate(LocalDateTime.of(2021, 1, 1, 0, 0, 0))
                                 .folderModDate(LocalDateTime.of(2021, 1, 1, 0, 0, 0))
                                 .build(),
-                        FolderResponse.builder()
-                                .folderSeq(2L)
-                                .userId(1L)
-                                .folderParentSeq(1L)
-                                .folderRootFlag("n")
-                                .folderName("folderName2")
-                                .folderCaption("folderCaption2")
-                                .folderOrder(2L)
-                                .folderScope("p")
+                        FolderResponse.builder().folderSeq(2L).userId(1L).folderParentSeq(1L).folderRootFlag("n")
+                                .folderName("folderName2").folderCaption("folderCaption2").folderOrder(2L).folderScope("p")
                                 .folderRegDate(LocalDateTime.of(2021, 1, 2, 0, 0, 0))
                                 .folderModDate(LocalDateTime.of(2021, 1, 2, 0, 0, 0))
                                 .build()
                 ));
         // when // then
-
-
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/v1/manage/folders/{folderParentSeq}", 1L)
+                .header("Authorization", "Bearer " + accessTokenFromRequestHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andDo(MockMvcRestDocumentationWrapper.document("folder-list",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("상위 폴더 내, 폴더 리스트 요청 API"),
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("folderParentSeq").description("상위 폴더 식별번호")
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization").description("JWT 인증 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("timestamp").type(JsonFieldType.STRING).description("응답 시간"),
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("응답 데이터"),
+                                fieldWithPath("data[].folderSeq").type(JsonFieldType.NUMBER).description("폴더 식별번호"),
+                                fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("사용자 식별번호"),
+                                fieldWithPath("data[].folderParentSeq").type(JsonFieldType.NUMBER).description("상위 폴더 식별번호"),
+                                fieldWithPath("data[].folderRootFlag").type(JsonFieldType.STRING).description("루트 폴더 여부"),
+                                fieldWithPath("data[].folderName").type(JsonFieldType.STRING).description("폴더명"),
+                                fieldWithPath("data[].folderCaption").type(JsonFieldType.STRING).description("폴더 설명"),
+                                fieldWithPath("data[].folderOrder").type(JsonFieldType.NUMBER).description("폴더 정렬 순서"),
+                                fieldWithPath("data[].folderScope").type(JsonFieldType.STRING).description("폴더 공개 범위"),
+                                fieldWithPath("data[].folderRegDate").type(JsonFieldType.STRING).description("폴더 생성일"),
+                                fieldWithPath("data[].folderModDate").type(JsonFieldType.STRING).description("폴더 수정일")
+                        )
+                ));
     }
 
     @DisplayName("폴더 수정 요청 API")
@@ -218,6 +317,9 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("폴더 수정 완료"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-update",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("폴더 수정 요청 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
@@ -225,7 +327,7 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("사용자 식별번호"),
                                 fieldWithPath("folderParentSeq").type(JsonFieldType.NUMBER).description("상위 폴더 식별번호"),
                                 fieldWithPath("folderName").type(JsonFieldType.STRING).description("폴더명"),
-                                fieldWithPath("folderCaption").type(JsonFieldType.STRING).description("폴더 설명"),
+                                fieldWithPath("folderCaption").type(JsonFieldType.STRING).description("폴더 설명").optional(),
                                 fieldWithPath("folderScope").type(JsonFieldType.STRING).description("폴더 공개 범위")
                         ),
                         responseFields(
@@ -257,9 +359,10 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .userId(1L)
                 .build();
         BDDMockito.given(folderService.deleteFolder(any(FolderDeleteServiceRequestDto.class)))
-                .willReturn(FolderSeqResponse.builder()
+                .willReturn(FolderDeleteResponse.builder()
                         .userId(1L)
                         .folderSeqList(List.of(1L, 4L, 5L))
+                        .deleteBookmarksCount(0)
                         .build());
         // when // then
         mockMvc.perform(RestDocumentationRequestBuilders
@@ -274,6 +377,9 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("폴더 삭제 완료"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-delete",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("폴더 삭제 요청 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
@@ -287,7 +393,8 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                                 fieldWithPath("timestamp").type(JsonFieldType.STRING).description("응답 시간"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
                                 fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("사용자 식별번호"),
-                                fieldWithPath("data.folderSeqList").type(JsonFieldType.ARRAY).description("삭제된 폴더 식별번호 리스트")
+                                fieldWithPath("data.folderSeqList").type(JsonFieldType.ARRAY).description("삭제된 폴더 식별번호 리스트"),
+                                fieldWithPath("data.deleteBookmarksCount").type(JsonFieldType.NUMBER).description("삭제된 북마크 수")
                         )
                 ));
     }
@@ -322,6 +429,9 @@ public class FolderRestControllerDocTest extends ControllerTestConfig {
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("폴더 순서 수정 완료"))
                 .andDo(MockMvcRestDocumentationWrapper.document("folder-reorder-multi",
+                        MockMvcRestDocumentationWrapper.resourceDetails()
+                                .tag("Folder API")
+                                .description("클라이언트에서 변경된 순서와 일치하는 폴더 식별 번호 배열을 전달받아, 폴더 순서 변경 요청을 처리한다.").summary("폴더 순서 변경 요청 API"),
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(

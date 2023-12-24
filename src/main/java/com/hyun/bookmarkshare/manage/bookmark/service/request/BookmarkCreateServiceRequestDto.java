@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 public class BookmarkCreateServiceRequestDto {
 
-    private Long bookmarkSeq;
     private Long userId;
     private Long folderSeq;
 
@@ -25,8 +24,7 @@ public class BookmarkCreateServiceRequestDto {
     private String bookmarkUrl;
 
     @Builder
-    public BookmarkCreateServiceRequestDto(Long bookmarkSeq, Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkScheme, String bookmarkHost, String bookmarkDomain, String bookmarkPort, String bookmarkPath, String bookmarkUrl) {
-        this.bookmarkSeq = bookmarkSeq;
+    public BookmarkCreateServiceRequestDto(Long userId, Long folderSeq, String bookmarkTitle, String bookmarkCaption, String bookmarkScheme, String bookmarkHost, String bookmarkDomain, String bookmarkPort, String bookmarkPath, String bookmarkUrl) {
         this.userId = userId;
         this.folderSeq = folderSeq;
         this.bookmarkTitle = bookmarkTitle;
@@ -41,7 +39,7 @@ public class BookmarkCreateServiceRequestDto {
 
     public Bookmark toBookmarkEntity(){
         return Bookmark.builder()
-                .bookmarkSeq(bookmarkSeq)
+                .bookmarkSeq(null)
                 .userId(userId)
                 .folderSeq(folderSeq)
                 .bookmarkTitle(bookmarkTitle)

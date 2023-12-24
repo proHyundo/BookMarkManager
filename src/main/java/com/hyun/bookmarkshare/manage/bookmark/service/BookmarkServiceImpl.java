@@ -1,5 +1,7 @@
 package com.hyun.bookmarkshare.manage.bookmark.service;
 
+import com.hyun.bookmarkshare.exceptions.domain.manage.BookmarkException;
+import com.hyun.bookmarkshare.exceptions.errorcode.BookmarkErrorCode;
 import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.bookmark.service.request.BookmarkCreateServiceRequestDto;
@@ -32,30 +34,31 @@ public class BookmarkServiceImpl implements BookmarkService{
 
     @Override
     public List<BookmarkResponseDto> getBookList(BookmarkServiceRequestDto serviceRequestDto) {
-        // TODO : 조회 결과 List 가 비어있을 경우, 어떤 예외를 던져야 할까?
-        // 참고링크) https://stackoverflow.com/questions/11201420/which-exception-to-throw-if-list-is-empty-in-java
-
         List<Bookmark> allByUserIdAndFolderParentSeq = bookmarkRepository.findAllByUserIdAndFolderSeqExcludeDeleted(
                 serviceRequestDto.getUserId(),
                 serviceRequestDto.getFolderSeq());
 
-        if(allByUserIdAndFolderParentSeq.isEmpty()) throw new IllegalStateException();
+        if(allByUserIdAndFolderParentSeq.isEmpty()) throw new BookmarkException(BookmarkErrorCode.BOOKMARK_NOT_FOUND, "Bookmark List is Empty");
         return allByUserIdAndFolderParentSeq.stream().map(bookmark -> BookmarkResponseDto.of(bookmark)).collect(Collectors.toList());
-//        return allByUserIdAndFolderParentSeq;
     }
 
     @Override
-    public BookmarkResponseDto createBookmark(BookmarkCreateServiceRequestDto serviceRequestDto) {
+    public BookmarkResponseDto createBookmark(BookmarkCreateServiceRequestDto serviceRequestDto, Long loginInfoUserId) {
+        if(serviceRequestDto.getUserId() != loginInfoUserId)
+            throw new BookmarkException(BookmarkErrorCode.BOOKMARK_INVALID_ACCESS, "Bookmark Create Request's userId is not equal to loginInfo's userId.");
+
         // bookmark url disunite & set units to bookmarkAddRequestDto
         BookmarkCreateServiceRequestDto afterSetUrlUnitsBookmarkServiceRequestDto = urlParser.assignUrlFields(serviceRequestDto);
         Bookmark targetBookmark = afterSetUrlUnitsBookmarkServiceRequestDto.toBookmarkEntity();
         bookmarkRepository.save(targetBookmark);
-//        validateSqlUpdatedRows(updatedRows);
         return BookmarkResponseDto.of(bookmarkRepository.findByBookmarkSeq(targetBookmark.getBookmarkSeq()).get());
     }
 
     @Override
-    public BookmarkResponseDto updateBookmark(BookmarkUpdateServiceRequestDto requestDto) {
+    public BookmarkResponseDto updateBookmark(BookmarkUpdateServiceRequestDto requestDto, Long loginInfoUserId) {
+        if(requestDto.getUserId() != loginInfoUserId)
+            throw new BookmarkException(BookmarkErrorCode.BOOKMARK_INVALID_ACCESS, "Bookmark Update Request's userId is not equal to loginInfo's userId.");
+
         Bookmark targetBookmark = bookmarkRepository.findByBookmarkSeq(requestDto.getBookmarkSeq())
                                                     .orElseThrow(() -> new NoSuchElementException());
         // 기존 북마크와 다른 url 이 요청되었을 경우, url 을 파싱 작업을 수행한다.
@@ -81,7 +84,10 @@ public class BookmarkServiceImpl implements BookmarkService{
     }
 
     @Override
-    public BookmarkSeqResponse deleteBookmark(BookmarkServiceRequestDto bookmarkServiceRequestDto) {
+    public BookmarkSeqResponse deleteBookmark(BookmarkServiceRequestDto bookmarkServiceRequestDto, Long loginInfoUserId) {
+        if(bookmarkServiceRequestDto.getUserId() != loginInfoUserId)
+            throw new BookmarkException(BookmarkErrorCode.BOOKMARK_INVALID_ACCESS, "Bookmark Delete Request's userId is not equal to loginInfo's userId.");
+
         int updatedRows = bookmarkRepository.deleteByUserIdAndBookmarkSeq(bookmarkServiceRequestDto.getUserId(),
                                                                           bookmarkServiceRequestDto.getBookmarkSeq());
         validateSqlUpdatedRows(updatedRows);
@@ -100,11 +106,12 @@ public class BookmarkServiceImpl implements BookmarkService{
     }
 
     @Override
-    public List<BookmarkSeqResponse> deleteAllBookmarksInFolderSeqAndUserId(List<Long> targetFolderSeqList, Long userId) {
+    public Integer deleteAllBookmarksInFolderSeqAndUserId(List<Long> targetFolderSeqList, Long userId) {
+        Integer deletedBookmarksCnt = 0;
         for(Long targetFolderSeq : targetFolderSeqList){
-            bookmarkRepository.deleteAllByUserIdAndFolderSeq(userId, targetFolderSeq);
+            deletedBookmarksCnt = bookmarkRepository.deleteAllByUserIdAndFolderSeq(userId, targetFolderSeq);
         }
-        return null;
+        return deletedBookmarksCnt;
     }
 
     private void validateSqlUpdatedRows(int updatedRows) {

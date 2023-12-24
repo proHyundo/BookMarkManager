@@ -13,6 +13,7 @@ public enum FolderExceptionErrorCode implements CustomErrorCode{
     NOT_FOUND_FOLDER(HttpStatus.NOT_FOUND, "Not Found Folder"),
 
     /* 409 CONFLICT */
+    GET_FOLDER_FAIL(HttpStatus.CONFLICT, "Get Folder Fail"),
     CREATE_FOLDER_FAIL(HttpStatus.CONFLICT, "Create Folder Fail"),
     DELETE_FOLDER_FAIL(HttpStatus.CONFLICT, "Delete Folder Fail"),
     UPDATE_FOLDER_FAIL(HttpStatus.CONFLICT, "Update Folder Fail"),

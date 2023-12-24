@@ -26,19 +26,19 @@ public interface BookmarkService {
     /**
      * userId, folderParentSeq, bookmarkUrl, bookmarkTitle, bookmarkCaption 으로 새로운 bookmark 를 생성한다.
      * */
-    BookmarkResponseDto createBookmark(BookmarkCreateServiceRequestDto bookmarkCreateServiceRequestDto);
+    BookmarkResponseDto createBookmark(BookmarkCreateServiceRequestDto bookmarkCreateServiceRequestDto, Long loginInfoUserId);
 
     /**
      * userId, bookmarkSeq, bookmarkUrl, bookmarkTitle, bookmarkCaption 으로 특정 bookmark 를 수정한다.
      * */
-    BookmarkResponseDto updateBookmark(BookmarkUpdateServiceRequestDto bookmarkUpdateServiceRequestDto);
+    BookmarkResponseDto updateBookmark(BookmarkUpdateServiceRequestDto bookmarkUpdateServiceRequestDto, Long loginInfoUserId);
 
     /**
      * userId, bookmarkSeq 로 특정 bookmark 를 삭제한다.
      * */
-    BookmarkSeqResponse deleteBookmark(BookmarkServiceRequestDto bookmarkServiceRequestDto);
+    BookmarkSeqResponse deleteBookmark(BookmarkServiceRequestDto bookmarkServiceRequestDto, Long loginInfoUserId);
 
-    List<BookmarkSeqResponse> deleteAllBookmarksInFolderSeqAndUserId(List<Long> folderSeqList, Long userId);
+    Integer deleteAllBookmarksInFolderSeqAndUserId(List<Long> folderSeqList, Long userId);
 
     Boolean updateBookmarkOrder(List<BookmarkReorderServiceRequestDto> bookmarkReorderServiceRequestDto);
 }

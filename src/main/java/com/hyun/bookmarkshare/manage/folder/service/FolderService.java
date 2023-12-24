@@ -1,9 +1,7 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
-import com.hyun.bookmarkshare.manage.folder.service.response.FolderSeqResponse;
+import com.hyun.bookmarkshare.manage.folder.service.response.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,19 +9,19 @@ import java.util.List;
 @Service
 public interface FolderService {
 
-    /** 사용자의 특정 부모 폴더 내부에 속한 모든 폴더들을 조회한다.
-     * @param requestDto FolderListRequestDto
-     * @return list of folder
-     * */
+    FolderResponse findFolderInfo(FolderServiceRequestDto requestDto, Long userId);
+
     List<FolderResponse> findFolderList(FolderListServiceRequestDto requestDto);
+
+    FolderWithChildResponse findAllFoldersAsHierarchy(Long userId);
 
     /**@param requestDto
      * @return repository sql result - success : 1
      * @implNote explain
      * */
-    FolderResponse createFolder(FolderCreateServiceRequestDto requestDto);
+    FolderResponse createFolder(FolderCreateServiceRequestDto requestDto, Long userId);
 
-    FolderSeqResponse deleteFolder(FolderDeleteServiceRequestDto requestDto);
+    FolderDeleteResponse deleteFolder(FolderDeleteServiceRequestDto requestDto);
 
     FolderResponse updateFolder(FolderServiceRequestDto requestDto);
 

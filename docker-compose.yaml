@@ -13,7 +13,7 @@ services:
 
   web:
     container_name: web
-    image: guseh08/bookmark-web-image
+    image: guseh08/bookmark-web
     expose:
       - 5173
 
@@ -35,6 +35,8 @@ services:
     depends_on:
       - "server"
       - "web"
+    environment:
+       TZ: "Asia/Seoul"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
   certbot:

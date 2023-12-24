@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${property.url.clientUrl")
+    @Value("${property.url.clientUrl}")
     private String clientUrl;
 
     // CORS 설정. 해당 개념은 반드시 학습해야 한다.

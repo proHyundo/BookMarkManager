@@ -42,9 +42,9 @@ class FolderCreateRequestDtoTest {
     @DisplayName("FolderCreateRequestDto validation - 성공 케이스")
     @ParameterizedTest
     @MethodSource("paramsForFolderCreateRequestDto_success")
-    void fuc(Long folderSeq, Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope){
+    void fuc(Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope){
         // given
-        FolderCreateRequestDto targetDto = new FolderCreateRequestDto(folderSeq, userId, folderParentSeq, folderName, folderCaption, folderScope);
+        FolderCreateRequestDto targetDto = new FolderCreateRequestDto(userId, folderParentSeq, folderName, folderCaption, folderScope);
         // when
         Set<ConstraintViolation<FolderCreateRequestDto>> constraintViolations = validator.validate(targetDto);
         // then
@@ -53,22 +53,22 @@ class FolderCreateRequestDtoTest {
 
     static Stream<Arguments> paramsForFolderCreateRequestDto_success(){
         return Stream.of(
-                Arguments.of(null, 1L, 0L, "folderName0216", null, "p"),
-                Arguments.of(null, 1L, 1L, "folderName0217", null, "p"),
-                Arguments.of(null, 1L, 1L, "folderName_0217", null, "p"), // folderName에 대소문자+언더바가 들어간 경우
-                Arguments.of(null, 1L, 1L, "folderName 0217", null, "p"), // folderName에 대소문자+공백 경우
-                Arguments.of(null, 1L, 1L, "folderName0217", null, "p"), // folderName에 대소문자+숫자 경우
-                Arguments.of(null, 1L, 1L, " ", null, "p"), // folderName에 공백인 경우
-                Arguments.of(null, 1L, 1L, null, null, "p") // #6 folderName이 Null인 경우
+                Arguments.of(1L, 0L, "folderName0216", null, "p"),
+                Arguments.of(1L, 1L, "folderName0217", null, "p"),
+                Arguments.of(1L, 1L, "folderName_0217", null, "p"), // folderName에 대소문자+언더바가 들어간 경우
+                Arguments.of(1L, 1L, "folderName 0217", null, "p"), // folderName에 대소문자+공백 경우
+                Arguments.of(1L, 1L, "folderName0217", null, "p"), // folderName에 대소문자+숫자 경우
+                Arguments.of(1L, 1L, " ", null, "p"), // folderName에 공백인 경우
+                Arguments.of(1L, 1L, null, null, "p") // #6 folderName이 Null인 경우
         );
     }
 
     @DisplayName("FolderCreateRequestDto validation - 실패 케이스")
     @ParameterizedTest
     @MethodSource("paramsForFolderCreateRequestDto_fail")
-    void fuc_fail(Long folderSeq, Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope){
+    void fuc_fail(Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope){
         // given
-        FolderCreateRequestDto targetDto = new FolderCreateRequestDto(folderSeq, userId, folderParentSeq, folderName, folderCaption, folderScope);
+        FolderCreateRequestDto targetDto = new FolderCreateRequestDto(userId, folderParentSeq, folderName, folderCaption, folderScope);
         // when
         Set<ConstraintViolation<FolderCreateRequestDto>> constraintViolations = validator.validate(targetDto);
         // then
@@ -80,7 +80,13 @@ class FolderCreateRequestDtoTest {
 
     static Stream<Arguments> paramsForFolderCreateRequestDto_fail(){
         return Stream.of(
-                Arguments.of(999L, 1L, 0L, "folderName0216", null, "p")
+                Arguments.of(null, 0L, "folderName0216", null, "p"), // Case1. userId is null
+                Arguments.of(-1L, 0L, "folderName0216", null, "p"), // Case2. userId is negative
+                Arguments.of(1L, null, "folderName0216", null, "p"), // Case3. folderParentSeq is null
+                Arguments.of(1L, -2L, "folderName0216", null, "p"), // Case4. folderParentSeq is negative
+                Arguments.of(1L, 0L, "folderName123456789123456789", null, "p"), // Case5. folderName size over
+                Arguments.of(1L, 0L, "folderName0216", null, "A") // Case6. folderScope pattern dismatch
+
         );
     }
 

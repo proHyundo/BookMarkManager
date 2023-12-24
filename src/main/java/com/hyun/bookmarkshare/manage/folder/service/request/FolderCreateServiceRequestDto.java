@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 public class FolderCreateServiceRequestDto {
 
-    private Long folderSeq;
     private Long userId;
     private Long folderParentSeq;
     private String folderName;
@@ -15,8 +14,7 @@ public class FolderCreateServiceRequestDto {
     private String folderScope;
 
     @Builder
-    public FolderCreateServiceRequestDto(Long folderSeq, Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope) {
-        this.folderSeq = folderSeq;
+    public FolderCreateServiceRequestDto(Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope) {
         this.userId = userId;
         this.folderParentSeq = folderParentSeq;
         this.folderName = folderName;
@@ -26,7 +24,7 @@ public class FolderCreateServiceRequestDto {
 
     public Folder toFolder() {
         return Folder.builder()
-                .folderSeq(this.folderSeq)
+                .folderSeq(null)
                 .userId(this.userId)
                 .folderParentSeq(this.folderParentSeq)
                 .folderRootFlag("n")
