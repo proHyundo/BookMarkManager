@@ -1,17 +1,26 @@
 package com.hyun.bookmarkshare.manage.folder.service;
 
+import com.hyun.bookmarkshare.manage.bookmark.controller.dto.request.BookmarkCreateRequestDto;
+import com.hyun.bookmarkshare.manage.bookmark.dao.BookmarkRepository;
+import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import com.hyun.bookmarkshare.manage.folder.dao.FolderRepository;
 import com.hyun.bookmarkshare.manage.folder.entity.Folder;
+import com.hyun.bookmarkshare.manage.folder.exceptions.FolderExceptionErrorCode;
+import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.manage.folder.service.request.*;
+import com.hyun.bookmarkshare.manage.folder.service.response.FolderDeleteResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderReorderResponse;
 import com.hyun.bookmarkshare.manage.folder.service.response.FolderResponse;
+import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;
 import com.hyun.bookmarkshare.utils.WithCustomAuthUser;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +41,9 @@ public class FolderServiceTest {
     FolderRepository folderRepository;
 
     @Autowired
+    BookmarkRepository bookmarkRepository;
+
+    @Autowired
     JdbcTemplate jdbcTemplate;
 
     @BeforeEach
@@ -43,8 +55,8 @@ public class FolderServiceTest {
     @Test
     void createNewFolder() {
         // given
+        Long userId = 1L;
         FolderCreateServiceRequestDto requestDto = FolderCreateServiceRequestDto.builder()
-                .folderSeq(null)
                 .userId(1L)
                 .folderParentSeq(1L)
                 .folderName("folderName")
@@ -53,14 +65,68 @@ public class FolderServiceTest {
                 .build();
 
         // when
-        FolderResponse folderResponse = folderService.createFolder(requestDto);
+        FolderResponse folderResponse = folderService.createFolder(requestDto, userId);
 
         // then
         assertThat(folderResponse)
                 .extracting("folderSeq", "userId", "folderCaption", "folderOrder")
                 .containsExactlyInAnyOrder(3L, 1L, "", 2L);
     }
-    
+
+    @DisplayName("폴더 생성 시, 요청DTO와 로그인한 사용자의 식별 번호가 다를 경우 예외를 발생시킨다.")
+    @Test
+    void createNewFolderThrowExceptionWhenNotSameUserId(){
+        // given
+        FolderCreateServiceRequestDto requestDto = FolderCreateServiceRequestDto.builder()
+                .userId(1L)
+                .build();
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .userId(2L)
+                .build();
+        // when // then
+        assertThatThrownBy(() -> folderService.createFolder(requestDto, loginInfoDto.getUserId()))
+                .isInstanceOf(FolderRequestException.class)
+                .hasMessageContaining("요청한 사용자의 식별번호와 로그인한 사용자의 식별번호가 일치하지 않습니다.");
+    }
+
+    @DisplayName("특정 폴더의 정보를 조회한다.")
+    @Test
+    void findFolderInfo(){
+        // given
+        FolderServiceRequestDto requestDto = FolderServiceRequestDto.builder()
+                .folderSeq(2L)
+                .userId(1L)
+                .build();
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .userId(1L)
+                .build();
+        // when
+        FolderResponse folderResponse = folderService.findFolderInfo(requestDto, loginInfoDto.getUserId());
+        // then
+        assertThat(folderResponse)
+                .extracting("folderSeq", "userId", "folderParentSeq", "folderName", "folderCaption", "folderScope", "folderOrder")
+                .containsExactlyInAnyOrder(2L, 1L, 1L, "folder2", "folder2", "p", 1L);
+    }
+
+    @DisplayName("특정 폴더의 정보 조회 시, 요청DTO와 로그인한 사용자의 식별 번호가 다를 경우 예외를 발생시킨다.")
+    @Test
+    void findFolderInfoThrowExceptionWhenNotSameUserId() {
+        // given
+        FolderServiceRequestDto requestDto = FolderServiceRequestDto.builder()
+                .folderSeq(2L)
+                .userId(1L)
+                .build();
+        LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+                .userId(2L)
+                .build();
+        // when // then
+        assertThatThrownBy(() -> folderService.findFolderInfo(requestDto, loginInfoDto.getUserId()))
+                .isInstanceOf(FolderRequestException.class)
+                .hasMessageContaining("폴더 조회 실패-사용자 정보 불일치")
+                .extracting("folderExceptionErrorCode")
+                .isEqualTo(FolderExceptionErrorCode.GET_FOLDER_FAIL);
+    }
+
     @DisplayName("특정 사용자의 특정 폴더에 존재하는 모든 폴더 리스트를 조회한다.")
     @Test
     void findFolderList() {
@@ -116,6 +182,39 @@ public class FolderServiceTest {
         assertThat(folderRepository.findByFolderSeq(folder3.getFolderSeq()).get().getFolderDelFlag()).isEqualTo("y");
         assertThat(folderRepository.findByFolderSeq(folder4.getFolderSeq()).get().getFolderDelFlag()).isEqualTo("y");
         assertThat(folderRepository.findByFolderSeq(folder5.getFolderSeq()).get().getFolderDelFlag()).isEqualTo("y");
+    }
+
+    @DisplayName("폴더 삭제 시, 하위 폴더에 포함된 북마크들도 모두 삭제 처리 된다.")
+    @Test
+    void deleteFolderAffectDeleteBookmarks(){
+        // given
+        Bookmark bookmark1 = Bookmark.builder()
+                .bookmarkSeq(null)
+                .userId(1L)
+                .folderSeq(1L)
+                .bookmarkTitle("bookmarkTitle")
+                .bookmarkCaption("bookmarkCaption")
+                .bookmarkScheme("")
+                .bookmarkHost("")
+                .bookmarkPort("")
+                .bookmarkDomain("")
+                .bookmarkPath("")
+                .bookmarkUrl("https://www.bookmark-tool.com")
+                .bookmarkRegDate(null)
+                .bookmarkModDate(null)
+                .bookmarkOrder(null)
+                .bookmarkDelFlag("n")
+                .build();
+        bookmarkRepository.save(bookmark1);
+
+        FolderDeleteServiceRequestDto requestDto = FolderDeleteServiceRequestDto.builder()
+                .folderSeq(1L)
+                .userId(1L)
+                .build();
+        // when
+        FolderDeleteResponse folderDeleteResponse = folderService.deleteFolder(requestDto);
+        // then
+        assertThat(folderDeleteResponse.getDeleteBookmarksCount()).isEqualTo(1);
     }
 
     @DisplayName("폴더 수정 시, 해당 폴더의 정보가 수정된다. 수정 가능한 속성은 폴더 이름, 폴더 설명, 폴더 공개 범위이다.")

@@ -1,4 +1,4 @@
-package com.hyun.bookmarkshare.api.controller.social;
+package com.hyun.bookmarkshare.social.controller;
 
 import com.hyun.bookmarkshare.social.service.SocialLoginService;
 import com.hyun.bookmarkshare.social.service.request.KakaoUser;

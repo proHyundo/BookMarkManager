@@ -1,5 +1,6 @@
 package com.hyun.bookmarkshare.exceptions;
 
+import com.hyun.bookmarkshare.exceptions.domain.manage.BookmarkException;
 import com.hyun.bookmarkshare.manage.folder.exceptions.FolderRequestException;
 import com.hyun.bookmarkshare.smtp.exception.EmailProcessException;
 import com.hyun.bookmarkshare.exceptions.domain.user.LoginInputValidateFailException;
@@ -39,6 +40,13 @@ public class CustomExceptionHandler {
         log.info("EmailRequestException getMessage() >> "+e.getMessage());
         log.info("EmailRequestException getEmailExceptionErrorCode() >> "+e.getEmailExceptionErrorCode());
         return ApiErrorResponse.of(e.getEmailExceptionErrorCode());
+    }
+
+    @ExceptionHandler(BookmarkException.class)
+    protected ApiErrorResponse handleBookmarkException(BookmarkException e){
+        log.info("BookmarkException getMessage() >> "+e.getMessage());
+        log.info("BookmarkException getBookmarkErrorCode() >> "+e.getBookmarkErrorCode());
+        return ApiErrorResponse.of(e.getBookmarkErrorCode());
     }
 
 }

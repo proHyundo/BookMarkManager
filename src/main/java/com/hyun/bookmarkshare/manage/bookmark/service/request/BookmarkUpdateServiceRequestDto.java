@@ -1,9 +1,12 @@
 package com.hyun.bookmarkshare.manage.bookmark.service.request;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hyun.bookmarkshare.manage.bookmark.entity.Bookmark;
 import lombok.Builder;
 import lombok.Getter;
 
+@JsonFilter("BookmarkUpdateServiceRequestDto")
 @Getter
 public class BookmarkUpdateServiceRequestDto {
 
@@ -14,10 +17,15 @@ public class BookmarkUpdateServiceRequestDto {
     private String bookmarkCaption;
     private String bookmarkUrl;
 
+//    @JsonIgnore
     private String bookmarkScheme;
+//    @JsonIgnore
     private String bookmarkHost;
+//    @JsonIgnore
     private String bookmarkDomain;
+//    @JsonIgnore
     private String bookmarkPort;
+//    @JsonIgnore
     private String bookmarkPath;
 
     @Builder

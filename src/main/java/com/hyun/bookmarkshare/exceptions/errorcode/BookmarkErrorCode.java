@@ -8,11 +8,13 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum BookmarkErrorCode implements CustomErrorCode{
 
-    // common
+    /** Bookmark */
     BOOKMARK_URL_PARSE_FAIL(HttpStatus.ACCEPTED, "Bookmark url parse fail."),
     BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "Bookmark not found."),
     BOOKMARK_NO_AUTH(HttpStatus.BAD_REQUEST, "Bookmark no auth to access."),
     BOOKMARK_INVALID_INPUT(HttpStatus.BAD_REQUEST, "Bookmark invalid input."),
+    BOOKMARK_INVALID_ACCESS(HttpStatus.BAD_REQUEST, "Bookmark invalid access."),
+
     ;
 
     private final HttpStatus httpStatus;

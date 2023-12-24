@@ -1,4 +1,4 @@
-package com.hyun.bookmarkshare.api.controller.developer;
+package com.hyun.bookmarkshare.developer.controller;
 
 import com.hyun.bookmarkshare.exceptions.errorcode.UserErrorCode;
 import com.hyun.bookmarkshare.security.jwt.util.LoginInfoDto;

@@ -12,8 +12,6 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 public class FolderCreateRequestDto {
 
-    @Null
-    private Long folderSeq;
 
     @NotNull
     @Positive
@@ -33,8 +31,7 @@ public class FolderCreateRequestDto {
     private String folderScope;
 
     @Builder
-    public FolderCreateRequestDto(Long folderSeq, Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope) {
-        this.folderSeq = folderSeq;
+    public FolderCreateRequestDto(Long userId, Long folderParentSeq, String folderName, String folderCaption, String folderScope) {
         this.userId = userId;
         this.folderParentSeq = folderParentSeq;
         this.folderName = folderName;
@@ -44,7 +41,6 @@ public class FolderCreateRequestDto {
 
     public FolderCreateServiceRequestDto toServiceRequestDto() {
         return FolderCreateServiceRequestDto.builder()
-                .folderSeq(this.folderSeq)
                 .userId(this.userId)
                 .folderParentSeq(this.folderParentSeq)
                 .folderName(this.folderName)
