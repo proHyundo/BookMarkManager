@@ -4,8 +4,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
 @Configuration
-public class SwaggerConfig implements WebMvcConfigurer {
+public class StaticResourceConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -16,5 +17,9 @@ public class SwaggerConfig implements WebMvcConfigurer {
         // Swagger UI의 리소스 핸들러를 설정합니다.
         registry.addResourceHandler("/api/docs/swagger/**")
                 .addResourceLocations("classpath:/META-INF/resources/");
+
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
