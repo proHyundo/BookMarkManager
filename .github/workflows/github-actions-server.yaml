@@ -56,7 +56,6 @@ jobs:
           retention-days: 1
 
       # Create application.properties for test
-      - name: Create application.properties for test
       - uses: actions/checkout@v3
       - run: touch ./src/test/resources/application.yml
       - run: echo -e "${{secrets.APPLICATION_TEST}}" | base64 --decode > ./src/test/resources/application.properties
@@ -67,7 +66,6 @@ jobs:
           retention-days: 1
 
       # Create data.sql for test
-      - name: Create data.sql for test
       - uses: actions/checkout@v3
       - run: touch ./src/test/resources/data.sql
       - run: echo -e "${{secrets.DATA_SQL}}" | base64 --decode > ./src/test/resources/data.sql
@@ -78,7 +76,6 @@ jobs:
           retention-days: 1
 
       # Create schema-mariadb-init.sql for test
-      - name: Create schema-mariadb-init.sql for test
       - uses: actions/checkout@v3
       - run: touch ./src/test/resources/schema-mariadb-init.sql
       - run: echo -e "${{secrets.INIT_SQL}}" | base64 --decode > ./src/test/resources/schema-mariadb-init.sql
