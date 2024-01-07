@@ -17,7 +17,6 @@ jobs:
     services:
       mariadb:
         image: mariadb:10.6
-        restart: always
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
           MYSQL_DATABASE: 'bookmarkshare-test'
