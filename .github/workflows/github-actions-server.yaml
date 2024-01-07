@@ -38,8 +38,8 @@ jobs:
           character set server: 'utf8mb3'
           collation server: 'utf8mb3_general_ci'
           mysql root password: ${{ secrets.MARIADB_ROOT_PASSWORD }}
-      # start mariadb
-      - run: sudo service mysql start
+#      # start mariadb
+#      - run: sudo service mysql start
 
       # Create application.yml
       - uses: actions/checkout@v3
