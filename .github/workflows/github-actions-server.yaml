@@ -1,5 +1,5 @@
 name: SpringBoot CICD with Gradle version 1.4.4 24-01-07
-# Add log4jdbc.log4j2.properties
+# Add Services mariaDB instead market tool
 
 on:
   push:
@@ -13,6 +13,18 @@ permissions:
 jobs:
   springboot-build-and-deploy:
     runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.6
+        restart: always
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+          MYSQL_DATABASE: 'bookmarkshare-test'
+        ports:
+          - 3306:3306
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
@@ -24,20 +36,20 @@ jobs:
             distribution: 'temurin'
 
       # Shutdown the Default MySQL
-      - name: Shutdown Ubuntu MySQL (SUDO)
-        run: sudo service mysql stop
+#      - name: Shutdown Ubuntu MySQL (SUDO)
+#        run: sudo service mysql stop
 
       # MariaDB for Springboot Test - getong/mariadb-action@v1.1
-      - name: Set up MariaDB
-        uses: getong/mariadb-action@v1.1
-        with:
-          host port: 3306
-          container port: 3306
-          mariadb version: '10.6'
-          mysql database: 'bookmarkshare-test'
-          character set server: 'utf8mb3'
-          collation server: 'utf8mb3_general_ci'
-          mysql root password: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+#      - name: Set up MariaDB
+#        uses: getong/mariadb-action@v1.1
+#        with:
+#          host port: 3306
+#          container port: 3306
+#          mariadb version: '10.6'
+#          mysql database: 'bookmarkshare-test'
+#          character set server: 'utf8mb3'
+#          collation server: 'utf8mb3_general_ci'
+#          mysql root password: ${{ secrets.MARIADB_ROOT_PASSWORD }}
 #      # start mariadb
 #      - run: sudo service mysql start
 
