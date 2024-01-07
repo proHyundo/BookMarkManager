@@ -1,5 +1,5 @@
-name: SpringBoot CICD with Gradle version 1.4.3 24-01-07
-# Add MariaDB for Springboot Test
+name: SpringBoot CICD with Gradle version 1.4.4 24-01-07
+# Add MariaDB character set server: 'utf8mb3' collation server: 'utf8mb3_general_ci'
 
 on:
   push:
@@ -35,7 +35,11 @@ jobs:
           container port: 3306
           mariadb version: '10.6'
           mysql database: 'bookmarkshare-test'
+          character set server: 'utf8mb3'
+          collation server: 'utf8mb3_general_ci'
           mysql root password: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+#      # start mariadb
+#      - run: sudo service mysql start
 
       # Create application.yml
       - uses: actions/checkout@v3
