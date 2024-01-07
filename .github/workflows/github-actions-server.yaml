@@ -36,8 +36,8 @@ jobs:
             distribution: 'temurin'
 
       # Shutdown the Default MySQL
-      - name: Shutdown Ubuntu MySQL (SUDO)
-        run: sudo service mysql stop
+#      - name: Shutdown Ubuntu MySQL (SUDO)
+#        run: sudo service mysql stop
 
       # MariaDB for Springboot Test - getong/mariadb-action@v1.1
 #      - name: Set up MariaDB
