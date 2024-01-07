@@ -1,4 +1,4 @@
-name: SpringBoot CICD with Gradle version 1.4.2 24-01-02
+name: SpringBoot CICD with Gradle version 1.4.3 24-01-07
 # Add MariaDB for Springboot Test
 
 on:
@@ -37,15 +37,7 @@ jobs:
           mysql database: 'bookmarkshare-test'
           mysql root password: ${{ secrets.MARIADB_ROOT_PASSWORD }}
 
-#      - name: Set up MariaDB
-#      - uses: actions/checkout@v4
-#      - uses: shogo82148/actions-setup-mysql@v1
-#        with:
-#          distribution: "mariadb"
-#          mysql-version: "10.6"
-#          root-password: ${{ secrets.MARIADB_ROOT_PASSWORD }}
-
-      # Create application.properties
+      # Create application.yml
       - uses: actions/checkout@v3
       - run: touch ./src/main/resources/application.yml
       - run: echo -e "${{secrets.APPLICATION}}" | base64 --decode > ./src/main/resources/application.yml
@@ -56,35 +48,30 @@ jobs:
           retention-days: 1
 
       # Create application.properties for test
-      - uses: actions/checkout@v3
-      - run: mkdir ./src/test/resources
-      - run: touch ./src/test/resources/application.properties
-      - run: echo -e "${{secrets.APPLICATION_TEST}}" | base64 --decode > ./src/test/resources/application.properties
+      - run: |
+          mkdir -p ./src/test/resources
+          touch ./src/test/resources/application.properties
+          echo -e "${{secrets.APPLICATION_TEST}}" | base64 --decode > ./src/test/resources/application.properties
+          touch ./src/test/resources/data.sql
+          echo -e "${{secrets.DATA_SQL}}" | base64 --decode > ./src/test/resources/data.sql
+          touch ./src/test/resources/schema-mariadb-init.sql
+          echo -e "${{secrets.INIT_SQL}}" | base64 --decode > ./src/test/resources/schema-mariadb-init.sql
       - uses: actions/upload-artifact@v3
         with:
           name: application.properties
           path: ./src/test/resources/application.properties
           retention-days: 1
-
-      # Create data.sql for test
-      - uses: actions/checkout@v3
-      - run: touch ./src/test/resources/data.sql
-      - run: echo -e "${{secrets.DATA_SQL}}" | base64 --decode > ./src/test/resources/data.sql
       - uses: actions/upload-artifact@v3
         with:
           name: data.sql
           path: ./src/test/resources/data.sql
           retention-days: 1
-
-      # Create schema-mariadb-init.sql for test
-      - uses: actions/checkout@v3
-      - run: touch ./src/test/resources/schema-mariadb-init.sql
-      - run: echo -e "${{secrets.INIT_SQL}}" | base64 --decode > ./src/test/resources/schema-mariadb-init.sql
       - uses: actions/upload-artifact@v3
         with:
           name: schema-mariadb-init.sql
           path: ./src/test/resources/schema-mariadb-init.sql
           retention-days: 1
+
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
