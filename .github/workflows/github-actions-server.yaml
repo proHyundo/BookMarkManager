@@ -57,6 +57,7 @@ jobs:
 
       # Create application.properties for test
       - uses: actions/checkout@v3
+      - run: mkdir ./src/test/resources
       - run: touch ./src/test/resources/application.properties
       - run: echo -e "${{secrets.APPLICATION_TEST}}" | base64 --decode > ./src/test/resources/application.properties
       - uses: actions/upload-artifact@v3
