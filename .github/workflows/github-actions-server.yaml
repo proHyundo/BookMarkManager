@@ -1,5 +1,5 @@
 name: SpringBoot CICD with Gradle version 1.4.5 24-01-08
-# Add mysql user, permission write all
+# Add mysql user, permission write
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - '.github/workflows/github-actions-server.yaml'
 
 permissions:
-  contents: write-all
+  contents: write
 
 jobs:
   springboot-build-and-deploy:
