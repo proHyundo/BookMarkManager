@@ -24,13 +24,13 @@ public class DatabaseConnectTest {
 	public void printDBInfo() throws SQLException {
 		Connection connection = dataSource.getConnection();
         // DB 접속 정보 출력
-        log.info("connection.getMetaData().getURL(): {}", connection.getMetaData().getURL());
+        log.warn("connection.getMetaData().getURL(): {}", connection.getMetaData().getURL());
         System.out.println("connection.getMetaData().getURL(): " + connection.getMetaData().getURL());
         // DB 접속 계정 정보 출력
-        log.info("connection.getMetaData().getUserName(): {}", connection.getMetaData().getUserName());
+        log.warn("connection.getMetaData().getUserName(): {}", connection.getMetaData().getUserName());
         System.out.println("connection.getMetaData().getUserName(): " + connection.getMetaData().getUserName());
         // DB 접속 드라이버 정보 출력
-        log.info("connection.getMetaData().getDriverName(): {}", connection.getMetaData().getDriverName());
+        log.warn("connection.getMetaData().getDriverName(): {}", connection.getMetaData().getDriverName());
         System.out.println("connection.getMetaData().getDriverName(): " + connection.getMetaData().getDriverName());
 	}
 }
