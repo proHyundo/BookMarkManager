@@ -1,5 +1,5 @@
-name: SpringBoot CICD with Gradle version 1.4.4 24-01-07
-# Add Services mariaDB instead market tool
+name: SpringBoot CICD with Gradle version 1.4.5 24-01-08
+# Add mysql user, permission write all
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - '.github/workflows/github-actions-server.yaml'
 
 permissions:
-  contents: read
+  contents: write-all
 
 jobs:
   springboot-build-and-deploy:
@@ -18,6 +18,8 @@ jobs:
       mariadb:
         image: mariadb:10.6
         env:
+          MYSQL_USER: 'root'
+          MYSQL_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
           MYSQL_DATABASE: 'bookmarkshare-test'
         ports:
