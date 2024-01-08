@@ -1,5 +1,5 @@
 name: SpringBoot CICD with Gradle version 1.4.5 24-01-08
-# Add mysql user, permission write
+# Delete mysql user
 
 on:
   push:
@@ -18,8 +18,6 @@ jobs:
       mariadb:
         image: mariadb:10.6
         env:
-          MYSQL_USER: 'root'
-          MYSQL_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
           MYSQL_DATABASE: 'bookmarkshare-test'
         ports:
