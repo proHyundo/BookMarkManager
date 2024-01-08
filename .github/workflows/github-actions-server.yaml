@@ -1,5 +1,5 @@
 name: SpringBoot CICD with Gradle version 1.4.6 24-01-08
-# Add root host, run database script
+# Update mariadb version to latest
 
 on:
   push:
@@ -16,11 +16,11 @@ jobs:
 
     services:
       mariadb:
-        image: mariadb:10.6
+        image: mariadb:latest
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
-          MYSQL_DATABASE: 'bookmarkshare-test'
-          MYSQL_ROOT_HOST: "%"
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+          MARIADB_DATABASE: 'bookmarkshare-test'
+          MARIADB_ROOT_HOST: "%"
         ports:
           - 3306:3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -28,9 +28,17 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
-      - run: |
-            sudo systemctl start mariadb.service
-            mariadb -h 127.0.0.1 --port 3306 -u root -p${{ secrets.MARIADB_ROOT_PASSWORD }} -e 'CREATE DATABASE IF NOT EXISTS `bookmarkshare-test`;'
+
+      - name: Verify MariaDB connection
+          env:
+            PORT: ${{ job.services.mariadb.ports[3306] }}
+          run: |
+            while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+              sleep 1
+            done
+#      - run: |
+#            sudo systemctl start mariadb.service
+#            mariadb -h 127.0.0.1 --port 3306 -u root -p${{ secrets.MARIADB_ROOT_PASSWORD }} -e 'CREATE DATABASE IF NOT EXISTS `bookmarkshare-test`;'
 
       - name: Set up JDK 11
         uses: actions/setup-java@v3
