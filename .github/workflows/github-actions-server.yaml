@@ -1,5 +1,5 @@
-name: SpringBoot CICD with Gradle version 1.4.5 24-01-08
-# Delete mysql user
+name: SpringBoot CICD with Gradle version 1.4.6 24-01-08
+# Add root host, run database script
 
 on:
   push:
@@ -20,9 +20,13 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
           MYSQL_DATABASE: 'bookmarkshare-test'
+          MYSQL_ROOT_HOST: "%"
         ports:
           - 3306:3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
+        steps:
+          - uses: actions/checkout@v1
+          - run: mariadb -h 127.0.0.1 --port 3306 -u root -p${{ secrets.MARIADB_ROOT_PASSWORD }} -e 'CREATE DATABASE IF NOT EXISTS `bookmarkshare-test`;'
 
     steps:
       - name: Checkout the repo
