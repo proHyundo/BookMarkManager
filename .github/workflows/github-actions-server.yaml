@@ -1,5 +1,5 @@
-name: SpringBoot CICD with Gradle version 1.4.7 24-01-08
-# Update mariadb character set server: 'utf8mb4' collation server: 'utf8mb4_unicode_ci'
+name: SpringBoot CICD with Gradle version 1.4.8 24-01-08
+# Update rename schema-mariadb-init.sql to schema.sql
 
 on:
   push:
@@ -84,8 +84,8 @@ jobs:
           echo -e "${{secrets.APPLICATION_TEST}}" | base64 --decode > ./src/test/resources/application.properties
           touch ./src/test/resources/data.sql
           echo -e "${{secrets.DATA_SQL}}" | base64 --decode > ./src/test/resources/data.sql
-          touch ./src/test/resources/schema-mariadb-init.sql
-          echo -e "${{secrets.INIT_SQL}}" | base64 --decode > ./src/test/resources/schema-mariadb-init.sql
+          touch ./src/test/resources/schema.sql
+          echo -e "${{secrets.INIT_SQL}}" | base64 --decode > ./src/test/resources/schema.sql
           touch ./src/test/resources/log4jdbc.log4j2.properties
             echo -e "${{secrets.LOG4JDBC}}" | base64 --decode > ./src/test/resources/log4jdbc.log4j2.properties
       - uses: actions/upload-artifact@v3
@@ -101,7 +101,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: schema-mariadb-init.sql
-          path: ./src/test/resources/schema-mariadb-init.sql
+          path: ./src/test/resources/schema.sql
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
