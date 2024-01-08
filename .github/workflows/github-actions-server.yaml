@@ -23,7 +23,7 @@ jobs:
           MARIADB_ROOT_HOST: "%"
           MARIADB_CHARACTER_SET_SERVER: 'utf8mb4'
           MARIADB_COLLATION_SERVER: 'utf8mb4_unicode_ci'
-
+          MARIADB_LOWER_CASE_TABLE_NAMES: '1'
         ports:
           - 3306:3306
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
