@@ -100,7 +100,7 @@ jobs:
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
-          name: schema-mariadb-init.sql
+          name: schema.sql
           path: ./src/test/resources/schema.sql
           retention-days: 1
       - uses: actions/upload-artifact@v3
