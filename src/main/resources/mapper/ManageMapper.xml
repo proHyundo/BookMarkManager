@@ -57,11 +57,11 @@
             FROM TFOLDER a
                      INNER JOIN CTE b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
         )
-        SELECT CTE.*, tbookmark.BOOK_SEQ, tbookmark.USER_SEQ, tbookmark.FOLDER_SEQ,
-               tbookmark.BOOK_TITLE, tbookmark.BOOK_CAPTION, tbookmark.BOOK_URL, tbookmark.BOOK_ORDER, tbookmark.BOOK_REG_DATE,
-               tbookmark.BOOK_MOD_DATE, tbookmark.BOOK_DEL_FLAG
+        SELECT CTE.*, TBOOKMARK.BOOK_SEQ, TBOOKMARK.USER_SEQ, TBOOKMARK.FOLDER_SEQ,
+               TBOOKMARK.BOOK_TITLE, TBOOKMARK.BOOK_CAPTION, TBOOKMARK.BOOK_URL, TBOOKMARK.BOOK_ORDER, TBOOKMARK.BOOK_REG_DATE,
+               TBOOKMARK.BOOK_MOD_DATE, TBOOKMARK.BOOK_DEL_FLAG
         FROM CTE
-                 LEFT JOIN tbookmark on CTE.FOLDER_SEQ = tbookmark.FOLDER_SEQ;
+                 LEFT JOIN TBOOKMARK on CTE.FOLDER_SEQ = TBOOKMARK.FOLDER_SEQ;
     </select>
 
 </mapper>
