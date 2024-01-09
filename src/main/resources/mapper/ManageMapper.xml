@@ -39,7 +39,7 @@
                 FOLDER_SCOPE,
                 FOLDER_REG_DATE,
                 FOLDER_MOD_DATE
-            FROM tfolder
+            FROM TFOLDER
             WHERE FOLDER_PARENT_SEQ = 0 AND USER_SEQ = #{userSeq} AND FOLDER_DEL_FLAG = 'n'
 
             UNION ALL

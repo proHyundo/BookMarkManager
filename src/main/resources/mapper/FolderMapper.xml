@@ -57,7 +57,7 @@
             SELECT
                 FOLDER_SEQ,
                 FOLDER_PARENT_SEQ
-            FROM tfolder
+            FROM TFOLDER
             WHERE FOLDER_PARENT_SEQ = #{ancestor} AND USER_SEQ = #{userId} AND FOLDER_DEL_FLAG = 'n'
 
             UNION ALL
@@ -83,13 +83,13 @@
             resultMap="folderEntityResultMap">
         WITH RECURSIVE CTE AS (
             SELECT *
-            FROM tfolder
+            FROM TFOLDER
             WHERE FOLDER_PARENT_SEQ = #{folderSeq} AND USER_SEQ = #{userId} AND FOLDER_DEL_FLAG = 'n'
 
             UNION ALL
 
             SELECT a.*
-            FROM tfolder AS a
+            FROM TFOLDER AS a
                 JOIN CTE AS b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
         )
         SELECT * FROM CTE;
