@@ -1,5 +1,5 @@
-name: SpringBoot CICD with Gradle version 1.4.8 24-01-08
-# Update rename schema-mariadb-init.sql to schema.sql
+name: SpringBoot CICD with Gradle version 1.4.8 24-01-09
+# Update all table names lower case to upper case
 
 on:
   push:
