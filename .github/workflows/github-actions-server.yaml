@@ -1,4 +1,4 @@
-name: SpringBoot CICD with Gradle version 1.4.8 24-01-09
+name: SpringBoot CICD with Gradle version 1.4.9 24-01-09
 # Update all table names lower case to upper case
 
 on:
