@@ -65,7 +65,7 @@
             SELECT
                 a.FOLDER_SEQ,
                 a.FOLDER_PARENT_SEQ
-            FROM tfolder a
+            FROM TFOLDER a
                      INNER JOIN CTE b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
         )
         SELECT FOLDER_SEQ, FOLDER_PARENT_SEQ FROM CTE;

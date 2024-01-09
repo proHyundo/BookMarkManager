@@ -54,7 +54,7 @@
                 a.FOLDER_SCOPE,
                 a.FOLDER_REG_DATE,
                 a.FOLDER_MOD_DATE
-            FROM tfolder a
+            FROM TFOLDER a
                      INNER JOIN CTE b ON a.FOLDER_PARENT_SEQ = b.FOLDER_SEQ
         )
         SELECT CTE.*, tbookmark.BOOK_SEQ, tbookmark.USER_SEQ, tbookmark.FOLDER_SEQ,
