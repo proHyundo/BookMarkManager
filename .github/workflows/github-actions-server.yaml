@@ -1,5 +1,5 @@
 name: SpringBoot CICD with Gradle version 1.5.0 24-01-14
-# Update build gradle and static resource config for swagger-ui
+# Add api for serve open-api-3.0.1.json
 
 on:
   push:
