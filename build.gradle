@@ -112,13 +112,14 @@ tasks.withType(GenerateSwaggerUI) {
 
 /* */
 tasks.register('copySwaggerUI', Copy) {
-	dependsOn 'generateSwaggerUI'
+	dependsOn 'generateSwaggerUISample'
 
 	def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
 	project.logger.info("generateSwaggerUISampleTask.outputDir : ${generateSwaggerUISampleTask.outputDir}")
+	project.logger.info("project.buildDir : ${project.buildDir}")
 	copy {
 		from ("${generateSwaggerUISampleTask.outputDir}")
-		into ("${project.buildDir}/resources/static/docs/")
+		into ("${project.buildDir}/resources/main/static/docs/")
 	}
 
 }
@@ -128,9 +129,9 @@ tasks.register('copySwaggerUI', Copy) {
 bootJar{
 	dependsOn 'copySwaggerUI'
 
-	def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
-
-	from ("${generateSwaggerUISampleTask.outputDir}/open-api-3.0.1.json") {
-		into 'static/docs'
-	}
+//	def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+//
+//	from ("${generateSwaggerUISampleTask.outputDir}/open-api-3.0.1.json") {
+//		into 'static/docs'
+//	}
 }
