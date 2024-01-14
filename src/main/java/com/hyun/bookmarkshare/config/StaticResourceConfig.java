@@ -14,12 +14,15 @@ public class StaticResourceConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/docs/**")
                 .addResourceLocations("classpath:/static/docs/");
 
-        // Swagger UI의 리소스 핸들러를 설정합니다.
-        registry.addResourceHandler("/api/docs/swagger/**")
-                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/api/docs/**")
+                .addResourceLocations("classpath:/static/docs/");
 
-
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+//        // Swagger UI의 리소스 핸들러를 설정합니다.
+//        registry.addResourceHandler("/api/docs/swagger/**")
+//                .addResourceLocations("classpath:/META-INF/resources/");
+//
+//
+//        registry.addResourceHandler("/webjars/**")
+//                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }

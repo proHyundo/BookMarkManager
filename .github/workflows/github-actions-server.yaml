@@ -1,5 +1,5 @@
-name: SpringBoot CICD with Gradle version 1.5.0 24-01-09
-# Update all table names lower case to upper case
+name: SpringBoot CICD with Gradle version 1.5.0 24-01-14
+# Update build gradle and static resource config for swagger-ui
 
 on:
   push:
