@@ -58,7 +58,7 @@ public class SecurityConfig {
             .mvcMatchers("/", "/api/v1/user/signup", "/api/v1/user/login", "/api/v1/user/refresh").permitAll()
             .mvcMatchers("/api/v1/user/email/check", "/api/v1/email/verification/check").permitAll()
             .mvcMatchers("/v3/api-docs/**", "/documentation/swagger*/**", "/documentation/swagger-ui/**",
-                    "/docs/open-api-3.0.1.json", "/api/docs/swagger*/**", "/docs/swagger-ui/**").permitAll()
+                    "/docs/open-api-3.0.1.json", "/api/docs/swagger*/**", "/docs/swagger-ui/**", "/api/docs/open-api-3.0.1.json").permitAll()
             .mvcMatchers("/api/test/developer/**").permitAll()
             .mvcMatchers("/api/v1/social/kakao/callback", "/api/v1/social/kakao/login", "/api/v1/social/kakao/signup").permitAll()
             .mvcMatchers(GET,"/**").hasAnyRole("USER", "MANAGER", "ADMIN")

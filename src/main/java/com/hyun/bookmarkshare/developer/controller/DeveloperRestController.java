@@ -71,5 +71,10 @@ public class DeveloperRestController {
         return ApiResponse.of(HttpStatus.OK, null);
     }
 
+    @GetMapping("/api/docs/open-api-3.0.1.json")
+    public String getSwaggerAsset(){
+        return "classpath:/docs/open-api-3.0.1.json";
+    }
+
 
 }
