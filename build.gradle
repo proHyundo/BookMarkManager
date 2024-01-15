@@ -12,7 +12,7 @@ plugins {
 	//restdocs-api-spec → restdocs extension  포함함
 	id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
 	//swagger generator 플러그인 추가
-	id 'org.hidetake.swagger.generator' version '2.18.2'
+	id 'org.hidetake.swagger.generator' version '2.19.2'
 }
 
 group = 'com.hyun'
@@ -64,8 +64,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	/* RestDocs + Swagger */
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.16.4'
+
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 	swaggerUI 'org.webjars:swagger-ui:4.11.1'
 
@@ -83,25 +84,19 @@ tasks.named('test') {
 
 swaggerSources{
 	sample {
-		setInputFile(file("${project.buildDir}/resources/main/static/docs/open-api-3.0.1.json"))
+		setInputFile(file("${project.buildDir}/api-spec/openapi3.yaml"))
 	}
 }
 
 openapi3 {
-//	def Properties properties = new Properties()
-//	InputStream inputStream = new FileInputStream(project.rootProject.file('src/main/resources/application.yml'))
-//	server = properties.getProperty("property.doc.docUrl", "http://localhost:9090")
 	server = "https://bookmark-tool.com"
 	title = "Bookmark-tool API Documentation"
 	description = "Spring REST Docs with SwaggerUI. </br>" +
 			"Deploy URL : <a href='https://bookmark-tool.com' target='_blank' rel='noopener noreferrer'>https://bookmark-tool.com</a> </br>" +
 			"Github URL : <a href='https://https://github.com/proHyundo/BookMarkManager' target='_blank' rel='noopener noreferrer'>https://https://github.com/proHyundo/BookMarkManager</a>"
 	version = "0.0.1"
-	outputFileNamePrefix = 'open-api-3.0.1'
-	format = 'json'
+	format = 'yaml'
 
-	// /static/docs/open-api-3.0.1.json 생성 → jar 파일만 배포할 예정이기에 build 에 출력
-	outputDirectory = 'build/resources/main/static/docs'
 }
 
 
@@ -110,28 +105,22 @@ tasks.withType(GenerateSwaggerUI) {
 
 }
 
-/* */
+// 생성된 SwaggerUI 를 jar 에 포함시키기 위해 build/resources 경로로 로 복사
 tasks.register('copySwaggerUI', Copy) {
 	dependsOn 'generateSwaggerUISample'
 
 	def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
-	project.logger.info("generateSwaggerUISampleTask.outputDir : ${generateSwaggerUISampleTask.outputDir}")
-	project.logger.info("project.buildDir : ${project.buildDir}")
-	copy {
-		from ("${generateSwaggerUISampleTask.outputDir}")
-		into ("${project.buildDir}/resources/main/static/docs/")
-	}
+
+	from("${generateSwaggerUISampleTask.outputDir}")
+	into("${project.buildDir}/resources/main/static/docs")
+
+	from ("${project.buildDir}/api-spec/openapi3.yaml")
+	into ("${project.buildDir}/resources/main/static/docs/")
 
 }
 
-
-// build -> bootJar -> copySwaggerUI -> generateSwaggerUI -> openapi3
-bootJar{
+// bootJar 실행 전, copySwaggerUI 를 실행하도록 설정
+bootJar {
 	dependsOn 'copySwaggerUI'
 
-//	def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
-//
-//	from ("${generateSwaggerUISampleTask.outputDir}/open-api-3.0.1.json") {
-//		into 'static/docs'
-//	}
 }

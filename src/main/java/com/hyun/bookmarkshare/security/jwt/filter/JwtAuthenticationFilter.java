@@ -86,7 +86,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String[] permitUrls = {"/api/v1/email/verification/check", "/api/v1/user/signup", "/api/v1/user/login",
                                 "/api/v1/user/refresh", "/api/v1/user/email/check", "/api/test/developer/whoami/port",
                                 "/api/test/developer/whoami/profile", "/api/v1/social/kakao/callback", "/api/v1/social/kakao/login",
-                                "/api/v1/social/kakao/signup", "/api/docs/open-api-3.0.1.json"};
+                                "/api/v1/social/kakao/signup", "/docs/openapi3.yaml", "/api-spec/openapi3.yaml"};
         return Arrays.asList(permitUrls).contains(request.getRequestURI());
     }
 
