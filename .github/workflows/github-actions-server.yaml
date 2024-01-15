@@ -1,5 +1,5 @@
 name: SpringBoot CICD with Gradle version 1.5.0 24-01-14
-# Add api for serve open-api-3.0.1.json
+# Update build gradle, application.yml, staticResourceConfig for serving static resources openapi3.yaml
 
 on:
   push:

@@ -10,14 +10,30 @@ public class StaticResourceConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Swagger UI의 JSON 파일 경로를 설정합니다.
+//        registry.addResourceHandler("/swagger-ui.html")
+//                .addResourceLocations("classpath:/META-INF/resources/");
+//
+//        registry.addResourceHandler("/webjars/**")
+//                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+//
+//        registry.addResourceHandler("/static/**")
+//                .addResourceLocations("classpath:/static/");
+//
+//        registry.addResourceHandler("/docs/**")
+//                .addResourceLocations("classpath:/BOOT-INF/resources/static/docs/");
+
         registry.addResourceHandler("/docs/**")
                 .addResourceLocations("classpath:/static/docs/");
-
-        registry.addResourceHandler("/api/docs/**")
-                .addResourceLocations("classpath:/static/docs/");
-
-//        // Swagger UI의 리소스 핸들러를 설정합니다.
+//
+//        registry.addResourceHandler("/api/docs/**")
+//                .addResourceLocations("classpath:/static/docs/");
+//
+//        registry.addResourceHandler("/static/**")
+//                .addResourceLocations("classpath:/static/");
+//
+//        registry.addResourceHandler("/docs/**")
+//                .addResourceLocations("classpath:/BOOT-INF/resources/static/docs/");
+//
 //        registry.addResourceHandler("/api/docs/swagger/**")
 //                .addResourceLocations("classpath:/META-INF/resources/");
 //
