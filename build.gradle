@@ -111,6 +111,9 @@ tasks.register('copySwaggerUI', Copy) {
 
 	def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
 
+	// generateSwaggerUISampleTask.outputDir 출력
+	logger.info("generateSwaggerUISampleTask.outputDir : ${generateSwaggerUISampleTask.outputDir}")
+
 	from("${generateSwaggerUISampleTask.outputDir}")
 	into("${project.buildDir}/resources/main/static/docs")
 

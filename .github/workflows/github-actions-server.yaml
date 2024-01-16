@@ -1,5 +1,5 @@
 name: SpringBoot CICD with Gradle version 1.5.0 24-01-14
-# Update build gradle, application.yml, staticResourceConfig for serving static resources openapi3.yaml
+# Update nginx app.conf to serving openapi3.yaml file
 
 on:
   push:
@@ -48,24 +48,6 @@ jobs:
         with:
             java-version: 11
             distribution: 'temurin'
-
-      # Shutdown the Default MySQL
-#      - name: Shutdown Ubuntu MySQL (SUDO)
-#        run: sudo service mysql stop
-
-      # MariaDB for Springboot Test - getong/mariadb-action@v1.1
-#      - name: Set up MariaDB
-#        uses: getong/mariadb-action@v1.1
-#        with:
-#          host port: 3306
-#          container port: 3306
-#          mariadb version: '10.6'
-#          mysql database: 'bookmarkshare-test'
-#          character set server: 'utf8mb3'
-#          collation server: 'utf8mb3_general_ci'
-#          mysql root password: ${{ secrets.MARIADB_ROOT_PASSWORD }}
-#      # start mariadb
-#      - run: sudo service mysql start
 
       # Create application.yml
       - uses: actions/checkout@v3
@@ -136,15 +118,6 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image:latest
           no-cache: true
 
-#      - name : Build NginX Image And Push
-#        uses: docker/build-push-action@v4
-#        with:
-#          context: .
-#          file: Dockerfile-nginx
-#          push: true
-#          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-nginx-image:latest
-#          no-cache: true
-
       - name: Copy docker-compose.yml to VM
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -168,14 +141,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/bookmark-server-image
             sudo docker compose -f /home/ubuntu/docker-compose.yaml up -d server
             docker image prune -a -f
-#          script: |
-#            if [ "$(docker ps -qa)" ]; then
-#              sudo docker rm -f $(docker ps -qa)
-#              sudo docker rmi $(docker images -q)
-#            fi
-#            sudo docker pull ${{ secrets.DOCKER_REPO }}/bookmark-server-image
-#            sudo docker compose -f /home/ubuntu/docker-compose.yaml up -d --force-recreate
-#            docker image prune -a -f
+
 
       - name: Send Github Actions Result to Slack
         uses: 8398a7/action-slack@v3
