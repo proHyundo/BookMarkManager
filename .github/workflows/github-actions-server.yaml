@@ -1,5 +1,5 @@
-name: SpringBoot CICD with Gradle version 1.5.0 24-01-14
-# Update nginx app.conf to serving openapi3.yaml file
+name: SpringBoot CICD with Gradle version 1.5.0 24-01-16
+# Add swagger-ui image to docker-compose.yaml
 
 on:
   push:
