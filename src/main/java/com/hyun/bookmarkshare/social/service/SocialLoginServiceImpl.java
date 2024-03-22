@@ -1,6 +1,8 @@
 package com.hyun.bookmarkshare.social.service;
 
 import com.google.gson.Gson;
+import com.hyun.bookmarkshare.social.exception.SocialLoginErrorCode;
+import com.hyun.bookmarkshare.social.exception.SocialLoginException;
 import com.hyun.bookmarkshare.social.service.request.KakaoUser;
 import com.hyun.bookmarkshare.social.service.resposne.KakaoAccessTokenDto;
 import com.hyun.bookmarkshare.social.service.resposne.KakaoUserInfoDto;
@@ -122,7 +124,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 
     @Override
     public KakaoUser getKakaoUserInfo(String kakaoAccessToken){
-
+        log.info("getKakaoUserInfo method start");
         KakaoUser kakaoUser = null;
 
         RestTemplate restTemplate = new RestTemplate();
@@ -132,13 +134,18 @@ public class SocialLoginServiceImpl implements SocialLoginService{
         headers.set("Authorization", "Bearer " + kakaoAccessToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+//        params.add("property_keys", "kakao_account.email");
+
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
         if(response.getStatusCode() == HttpStatus.OK){
             KakaoUserInfoDto kakaoUserInfoDto = gson.fromJson(response.getBody(), KakaoUserInfoDto.class);
 
-            checkRequiredKakaoUserInfo(kakaoUserInfoDto.getKakao_account().getEmail(), kakaoAccessToken);
+            log.info("kakaoUserInfoDto : {}", kakaoUserInfoDto.toString());
+
+            checkRequiredKakaoUserInfo(kakaoUserInfoDto, kakaoAccessToken);
 
             kakaoUser = KakaoUser.builder()
                     .kakaoUserId(kakaoUserInfoDto.getId())
@@ -153,11 +160,12 @@ public class SocialLoginServiceImpl implements SocialLoginService{
         return kakaoUser;
     }
 
-    private void checkRequiredKakaoUserInfo(String kakaoUserEmail, String kakaoAccessToken) {
-        log.info("checkRequiredKakaoUserInfo private method start", kakaoUserEmail.isEmpty());
-        if(kakaoUserEmail == null || kakaoUserEmail.equals("")) {
+    private void checkRequiredKakaoUserInfo(KakaoUserInfoDto kakaoUserInfoDto, String kakaoAccessToken) {
+        log.info("checkRequiredKakaoUserInfo private method start", kakaoUserInfoDto.toString());
+        if(kakaoUserInfoDto.getKakao_account().getEmail() == null || kakaoUserInfoDto.getKakao_account().getEmail().equals("")) {
+            log.info("카카오 로그인 실패 : 이메일 정보가 없습니다.");
             unLinkKakaoAccount(kakaoAccessToken);
-            throw new IllegalArgumentException("카카오 로그인 실패 : 이메일 정보가 없습니다.");
+            throw new SocialLoginException(SocialLoginErrorCode.KAKAO_LOGIN_NO_EMAIL,"카카오 로그인 실패 : 이메일 정보가 없습니다.");
         }
     }
 
